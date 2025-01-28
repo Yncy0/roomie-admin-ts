@@ -14,12 +14,15 @@
     "@supabase/supabase-js": "^2.48.1",
     "@tailwindcss/vite": "^4.0.0",
     "@tanstack/react-query": "^5.65.1",
+    "@tanstack/react-router": "^1.97.25",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@tanstack/router-devtools": "^1.97.25",
+    "@tanstack/router-plugin": "^1.97.25",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react-swc": "^3.5.0",
