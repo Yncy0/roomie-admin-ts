@@ -1,5 +1,5 @@
 import React from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   ChevronRight,
   ChevronLeft,
@@ -103,6 +103,8 @@ function Rooms() {
     return <div>Error loading rooms</div>;
   }
 
+  const navigate = useNavigate();
+
   return (
     <div
       className="flex flex-col px-8 py-8 round-box gap-2 mx-auto my-5 w-[95%]"
@@ -121,7 +123,7 @@ function Rooms() {
           className="flex items-center justify-center text-[#35487a] bg-transparent border-2 border-solid 
           border-[#35487a] rounded-lg py-2 px-8 text-sm font-medium cursor-pointer transition-colors duration-300 
           hover:bg-[#35487a] hover:text-white mt-4"
-          onClick={() => setOpen(true)}
+          onClick={() => navigate({ to: "/rooms_add" })}
         >
           Add Room
         </button>

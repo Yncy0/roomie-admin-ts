@@ -18,6 +18,7 @@ import { Route as rootRoute } from "./routes/__root";
 
 const UsersLazyImport = createFileRoute("/users")();
 const ScheduleLazyImport = createFileRoute("/schedule")();
+const RoomsaddLazyImport = createFileRoute("/rooms_add")();
 const RoomsLazyImport = createFileRoute("/rooms")();
 const BookedroomsLazyImport = createFileRoute("/booked_rooms")();
 const BacklogsLazyImport = createFileRoute("/backlogs")();
@@ -37,6 +38,12 @@ const ScheduleLazyRoute = ScheduleLazyImport.update({
   path: "/schedule",
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import("./routes/schedule.lazy").then((d) => d.Route));
+
+const RoomsaddLazyRoute = RoomsaddLazyImport.update({
+  id: "/rooms_add",
+  path: "/rooms_add",
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import("./routes/rooms_add.lazy").then((d) => d.Route));
 
 const RoomsLazyRoute = RoomsLazyImport.update({
   id: "/rooms",
@@ -107,6 +114,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof RoomsLazyImport;
       parentRoute: typeof rootRoute;
     };
+    "/rooms_add": {
+      id: "/rooms_add";
+      path: "/rooms_add";
+      fullPath: "/rooms_add";
+      preLoaderRoute: typeof RoomsaddLazyImport;
+      parentRoute: typeof rootRoute;
+    };
     "/schedule": {
       id: "/schedule";
       path: "/schedule";
@@ -132,6 +146,7 @@ export interface FileRoutesByFullPath {
   "/backlogs": typeof BacklogsLazyRoute;
   "/booked_rooms": typeof BookedroomsLazyRoute;
   "/rooms": typeof RoomsLazyRoute;
+  "/rooms_add": typeof RoomsaddLazyRoute;
   "/schedule": typeof ScheduleLazyRoute;
   "/users": typeof UsersLazyRoute;
 }
@@ -142,6 +157,7 @@ export interface FileRoutesByTo {
   "/backlogs": typeof BacklogsLazyRoute;
   "/booked_rooms": typeof BookedroomsLazyRoute;
   "/rooms": typeof RoomsLazyRoute;
+  "/rooms_add": typeof RoomsaddLazyRoute;
   "/schedule": typeof ScheduleLazyRoute;
   "/users": typeof UsersLazyRoute;
 }
@@ -153,6 +169,7 @@ export interface FileRoutesById {
   "/backlogs": typeof BacklogsLazyRoute;
   "/booked_rooms": typeof BookedroomsLazyRoute;
   "/rooms": typeof RoomsLazyRoute;
+  "/rooms_add": typeof RoomsaddLazyRoute;
   "/schedule": typeof ScheduleLazyRoute;
   "/users": typeof UsersLazyRoute;
 }
@@ -165,6 +182,7 @@ export interface FileRouteTypes {
     | "/backlogs"
     | "/booked_rooms"
     | "/rooms"
+    | "/rooms_add"
     | "/schedule"
     | "/users";
   fileRoutesByTo: FileRoutesByTo;
@@ -174,6 +192,7 @@ export interface FileRouteTypes {
     | "/backlogs"
     | "/booked_rooms"
     | "/rooms"
+    | "/rooms_add"
     | "/schedule"
     | "/users";
   id:
@@ -183,6 +202,7 @@ export interface FileRouteTypes {
     | "/backlogs"
     | "/booked_rooms"
     | "/rooms"
+    | "/rooms_add"
     | "/schedule"
     | "/users";
   fileRoutesById: FileRoutesById;
@@ -194,6 +214,7 @@ export interface RootRouteChildren {
   BacklogsLazyRoute: typeof BacklogsLazyRoute;
   BookedroomsLazyRoute: typeof BookedroomsLazyRoute;
   RoomsLazyRoute: typeof RoomsLazyRoute;
+  RoomsaddLazyRoute: typeof RoomsaddLazyRoute;
   ScheduleLazyRoute: typeof ScheduleLazyRoute;
   UsersLazyRoute: typeof UsersLazyRoute;
 }
@@ -204,6 +225,7 @@ const rootRouteChildren: RootRouteChildren = {
   BacklogsLazyRoute: BacklogsLazyRoute,
   BookedroomsLazyRoute: BookedroomsLazyRoute,
   RoomsLazyRoute: RoomsLazyRoute,
+  RoomsaddLazyRoute: RoomsaddLazyRoute,
   ScheduleLazyRoute: ScheduleLazyRoute,
   UsersLazyRoute: UsersLazyRoute,
 };
@@ -223,6 +245,7 @@ export const routeTree = rootRoute
         "/backlogs",
         "/booked_rooms",
         "/rooms",
+        "/rooms_add",
         "/schedule",
         "/users"
       ]
@@ -241,6 +264,9 @@ export const routeTree = rootRoute
     },
     "/rooms": {
       "filePath": "rooms.lazy.tsx"
+    },
+    "/rooms_add": {
+      "filePath": "rooms_add.lazy.tsx"
     },
     "/schedule": {
       "filePath": "schedule.lazy.tsx"

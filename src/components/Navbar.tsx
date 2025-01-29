@@ -37,7 +37,7 @@ export default function NavBar() {
   return (
     <nav
       className={cn(
-        "flex flex-col h-screen bg-[#6b92e5] text-white transition-all duration-300 items-center gap-10 pt-11",
+        "flex flex-col min-h-full bg-[#6b92e5] text-white transition-all duration-300 items-center gap-10 pt-11",
         isClose ? "w-64" : "w-32"
       )}
     >
