@@ -19,7 +19,6 @@ import { Route as rootRoute } from './routes/__root'
 const UsersLazyImport = createFileRoute('/users')()
 const ScheduleLazyImport = createFileRoute('/schedule')()
 const RoomsLazyImport = createFileRoute('/rooms')()
-const DashboardLazyImport = createFileRoute('/dashboard')()
 const BookedRoomsLazyImport = createFileRoute('/bookedRooms')()
 const BacklogsLazyImport = createFileRoute('/backlogs')()
 const ArchiveLazyImport = createFileRoute('/archive')()
@@ -44,12 +43,6 @@ const RoomsLazyRoute = RoomsLazyImport.update({
   path: '/rooms',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/rooms.lazy').then((d) => d.Route))
-
-const DashboardLazyRoute = DashboardLazyImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/dashboard.lazy').then((d) => d.Route))
 
 const BookedRoomsLazyRoute = BookedRoomsLazyImport.update({
   id: '/bookedRooms',
@@ -107,13 +100,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookedRoomsLazyImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/rooms': {
       id: '/rooms'
       path: '/rooms'
@@ -145,7 +131,6 @@ export interface FileRoutesByFullPath {
   '/archive': typeof ArchiveLazyRoute
   '/backlogs': typeof BacklogsLazyRoute
   '/bookedRooms': typeof BookedRoomsLazyRoute
-  '/dashboard': typeof DashboardLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
@@ -156,7 +141,6 @@ export interface FileRoutesByTo {
   '/archive': typeof ArchiveLazyRoute
   '/backlogs': typeof BacklogsLazyRoute
   '/bookedRooms': typeof BookedRoomsLazyRoute
-  '/dashboard': typeof DashboardLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
@@ -168,7 +152,6 @@ export interface FileRoutesById {
   '/archive': typeof ArchiveLazyRoute
   '/backlogs': typeof BacklogsLazyRoute
   '/bookedRooms': typeof BookedRoomsLazyRoute
-  '/dashboard': typeof DashboardLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
@@ -181,7 +164,6 @@ export interface FileRouteTypes {
     | '/archive'
     | '/backlogs'
     | '/bookedRooms'
-    | '/dashboard'
     | '/rooms'
     | '/schedule'
     | '/users'
@@ -191,7 +173,6 @@ export interface FileRouteTypes {
     | '/archive'
     | '/backlogs'
     | '/bookedRooms'
-    | '/dashboard'
     | '/rooms'
     | '/schedule'
     | '/users'
@@ -201,7 +182,6 @@ export interface FileRouteTypes {
     | '/archive'
     | '/backlogs'
     | '/bookedRooms'
-    | '/dashboard'
     | '/rooms'
     | '/schedule'
     | '/users'
@@ -213,7 +193,6 @@ export interface RootRouteChildren {
   ArchiveLazyRoute: typeof ArchiveLazyRoute
   BacklogsLazyRoute: typeof BacklogsLazyRoute
   BookedRoomsLazyRoute: typeof BookedRoomsLazyRoute
-  DashboardLazyRoute: typeof DashboardLazyRoute
   RoomsLazyRoute: typeof RoomsLazyRoute
   ScheduleLazyRoute: typeof ScheduleLazyRoute
   UsersLazyRoute: typeof UsersLazyRoute
@@ -224,7 +203,6 @@ const rootRouteChildren: RootRouteChildren = {
   ArchiveLazyRoute: ArchiveLazyRoute,
   BacklogsLazyRoute: BacklogsLazyRoute,
   BookedRoomsLazyRoute: BookedRoomsLazyRoute,
-  DashboardLazyRoute: DashboardLazyRoute,
   RoomsLazyRoute: RoomsLazyRoute,
   ScheduleLazyRoute: ScheduleLazyRoute,
   UsersLazyRoute: UsersLazyRoute,
@@ -244,7 +222,6 @@ export const routeTree = rootRoute
         "/archive",
         "/backlogs",
         "/bookedRooms",
-        "/dashboard",
         "/rooms",
         "/schedule",
         "/users"
@@ -261,9 +238,6 @@ export const routeTree = rootRoute
     },
     "/bookedRooms": {
       "filePath": "bookedRooms.lazy.tsx"
-    },
-    "/dashboard": {
-      "filePath": "dashboard.lazy.tsx"
     },
     "/rooms": {
       "filePath": "rooms.lazy.tsx"

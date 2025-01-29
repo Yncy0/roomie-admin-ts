@@ -1,70 +1,194 @@
 @import "tailwindcss";
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+* {
+  padding: 0;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+img,
+svg {
+  max-width: 100%;
+  display: block;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  border-radius: 0;
+  text-align: inherit;
+  background: none;
+  box-shadow: none;
+  padding: 0;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  border: none;
+  color: inherit;
+  font: inherit;
 }
 
-@media (prefers-color-scheme: light) {
+html {
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  font-family: var(--ff-main);
+}
+
+p {
+  font-size: 1rem;
+}
+
+ol,
+ul,
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--cl-black-500);
+}
+
+input {
+  outline: none;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #6b92e5; /* Match the background color of menu-container */
+}
+
+.round-box {
+  border-radius: 0.375rem;
+  /* box-shadow: 0 2.3px 2px 2px var(--cl-box-shadow); */
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background-color: white;
+}
+
+.svg-inline--fa {
+  font-size: 1rem;
+}
+
+/* HEADER COMPONENT */
+.header-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 40px;
+  padding-top: 25px;
+  padding-bottom: 20px;
+  max-width: 100vw;
+  max-height: 100px;
+  border-bottom: 1px solid black; /* Border at the bottom */
+  border-top-left-radius: 40px; /* Rounded top-left corner */
+  border-top-right-radius: 40px; /* Rounded top-right corner */
+  box-shadow: 7.5px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.input-search {
+  padding: 9px;
+  padding-left: 50px;
+  outline: none;
+  border: 2px solid #35487a; /* Black border */
+  background-color: transparent; /* Transparent background */
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  color: #35487a; /* Text color black */
+  border-radius: 40px; /* Rounded top-left corner */
+}
+
+.fa-magnifying-glass {
+  position: absolute;
+  color: #35487a; /* Black icon color */
+  padding: 10px;
+  min-width: 40px;
+}
+
+.input-search[type="text"]::placeholder {
+  color: #35487a; /* Placeholder text color black */
+}
+
+.flex-end {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+/* BREAK */
+
+/* MENU */
+.hamburger-react {
+  z-index: 12;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #6b92e5;
+  text-align: start;
+  min-height: 100vh;
+  max-width: 100%;
+  border: none; /* Ensure no border */
+  box-shadow: none; /* Remove box-shadow to prevent any subtle lines */
+
+  /* position: fixed;
+  top: 0;
+  left: 0; */
+}
+
+.span-text {
+  display: none;
+}
+
+.menu-list .svg-inline--fa {
+  font-size: 1.2rem;
+}
+/* BREAK */
+
+/* HAMBURGER BUTTON */
+.button-menu-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.button-menu-div h1 {
+  font-family: var(--ff-logo);
+  z-index: 12;
+}
+
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --radius: 0.5rem;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+/* BODY COMPONENT */
+.body-container {
+  background-color: #eff7fe; /* Light background for the body */
+  border-radius: 40px; /* Increased border-radius for a more rounded effect */
+  flex: 1; /* Ensures the body takes available space in the flex container */
+  margin: 10px; /* Adjusted margin for spacing */
+  padding-top: 0; /* Removed padding-top to remove gap */
+}
+
+.body-container .content {
+  background-color: #e7eae5; /* White background for inner content */
+  border-radius: 40px; /* Increased border-radius for inner content */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Light shadow for inner content */
 }
