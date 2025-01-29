@@ -61,7 +61,7 @@ function BookedRoomss() {
               <Table.Cell>{booking.rooms?.room_name}</Table.Cell>
               <Table.Cell>{booking.course_and_section}</Table.Cell>
               <Table.Cell>{booking.subject_code}</Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell>{booking.status}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

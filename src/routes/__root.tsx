@@ -3,6 +3,7 @@ import HeaderComponent from "../components/Header";
 import Navbar from "../components/Navbar";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { Theme } from "@radix-ui/themes";
+
 //import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 //TODO: Navbar here
