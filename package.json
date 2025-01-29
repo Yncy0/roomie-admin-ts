@@ -11,10 +11,14 @@
     "update-types": "npx supabase gen types --lang=typescript --project-id \"vjvuhazfxkuqegqlkums\" > database.types.ts"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@supabase/supabase-js": "^2.48.1",
     "@tailwindcss/vite": "^4.0.0",
     "@tanstack/react-query": "^5.65.1",
     "@tanstack/react-router": "^1.97.25",
+    "font-awesome": "^4.7.0",
     "lucide-react": "^0.474.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -2,33 +2,34 @@
 
 import { useState } from "react";
 import {
-  Home,
-  BookOpen,
-  Users,
-  LayoutDashboard,
-  Calendar,
-  History,
-  Archive,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+  faLayerGroup,
+  faObjectUngroup,
+  faObjectGroup,
+  faBoxArchive,
+  faUserGroup,
+  faCalendar,
+  faCalendarWeek,
+  faBook,
+} from "@fortawesome/free-solid-svg-icons";
+import { ChevronFirst, ChevronLast } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "../lib/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface NavItem {
-  icon: React.ElementType;
+  icon: typeof faLayerGroup;
   label: string;
   href: string;
 }
 
 const navItems: NavItem[] = [
-  { icon: Home, label: "Index", href: "/" },
-  { icon: BookOpen, label: "Booked Rooms", href: "/booked-rooms" },
-  { icon: Users, label: "Users", href: "/users" },
-  { icon: LayoutDashboard, label: "Rooms", href: "/rooms" },
-  { icon: Calendar, label: "Schedule", href: "/schedule" },
-  { icon: History, label: "Backlogs", href: "/backlogs" },
-  { icon: Archive, label: "Archive", href: "/archive" },
+  { icon: faObjectGroup, label: "Index", href: "/" },
+  { icon: faBook, label: "Booked Rooms", href: "/booked-rooms" },
+  { icon: faUserGroup, label: "Users", href: "/users" },
+  { icon: faLayerGroup, label: "Rooms", href: "/rooms" },
+  { icon: faCalendar, label: "Schedule", href: "/schedule" },
+  { icon: faObjectUngroup, label: "Backlogs", href: "/backlogs" },
+  { icon: faBoxArchive, label: "Archive", href: "/archive" },
 ];
 
 export default function NavBar() {
@@ -46,9 +47,9 @@ export default function NavBar() {
         className="flex items-center justify-end p-4 hover:bg-white/10 transition-colors "
       >
         {isExpanded ? (
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronFirst className="w-6 h-6" />
         ) : (
-          <ChevronRight className="w-6 h-6" />
+          <ChevronLast className="w-6 h-6" />
         )}
       </button>
 
@@ -58,11 +59,11 @@ export default function NavBar() {
             key={item.href}
             to={item.href}
             className={cn(
-              "flex items-center px-4 py-3 hover:bg-white/10 transition-colors gap-2",
+              "flex items-center px-4 py-3 hover:bg-white/10 transition-colors gap-2.5",
               !isExpanded && "justify-center"
             )}
           >
-            <item.icon className="w-6 h-6 shrink-0" />
+            <FontAwesomeIcon icon={item.icon} className="w-6 h-6 shrink-0" />
             {isExpanded && (
               <span className="ml-4 text-sm font-medium">{item.label}</span>
             )}
