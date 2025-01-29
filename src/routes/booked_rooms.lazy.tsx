@@ -3,8 +3,8 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { fetchBookedRooms } from "@/hooks/queries/booking/useFetchBookedRooms";
 import dayjs from "dayjs";
 
-import * as Dialog from "@radix-ui/themes";
-import { Table } from "@radix-ui/themes";
+import { Table, Badge, Dialog } from "@radix-ui/themes";
+import StatusDialog from "@/components/dialogs/StatusDialog";
 
 export const Route = createLazyFileRoute("/booked_rooms")({
   component: BookedRoomss,
@@ -12,24 +12,9 @@ export const Route = createLazyFileRoute("/booked_rooms")({
 
 function BookedRoomss() {
   const { data, isLoading, error } = fetchBookedRooms();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedBooking, setSelectedBooking] = React.useState(null);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-
-  function openModal() {
-    setIsModalOpen(true);
-  }
-
-  function closeModal() {
-    setIsModalOpen(false);
-  }
-
-  const handleStatusClick = (booking: any) => {
-    setSelectedBooking(booking);
-    setIsModalOpen(true);
-  };
 
   return (
     <div className="min-w-full gap-7 flex flex-col">
@@ -61,7 +46,14 @@ function BookedRoomss() {
               <Table.Cell>{booking.rooms?.room_name}</Table.Cell>
               <Table.Cell>{booking.course_and_section}</Table.Cell>
               <Table.Cell>{booking.subject_code}</Table.Cell>
-              <Table.Cell>{booking.status}</Table.Cell>
+              <Table.Cell>
+                <div className="flex flex-row items-center gap-2">
+                  <Badge color="orange">{booking.status}</Badge>
+                  <Dialog.Root>
+                    <StatusDialog status={booking.status || ""} />
+                  </Dialog.Root>
+                </div>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
