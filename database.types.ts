@@ -120,10 +120,32 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           email: string | null
+          "expo-push-token": string | null
           full_name: string | null
           id: string
           is_archived: boolean | null
@@ -137,6 +159,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           email?: string | null
+          "expo-push-token"?: string | null
           full_name?: string | null
           id: string
           is_archived?: boolean | null
@@ -150,6 +173,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           email?: string | null
+          "expo-push-token"?: string | null
           full_name?: string | null
           id?: string
           is_archived?: boolean | null

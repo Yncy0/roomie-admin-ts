@@ -1,5 +1,6 @@
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms";
+import { insertNotification } from "@/hooks/queries/useNotifications";
 import {
   Button,
   Dialog,
@@ -22,6 +23,11 @@ const StatusDialog = ({ item }: Props) => {
 
   const onHandleClick = async () => {
     if (update) await update;
+
+    await insertNotification(
+      item.profiles.id,
+      `Your booking status is set to ${item.status}`
+    );
 
     await insertBacklogs(
       "UPDATE",
