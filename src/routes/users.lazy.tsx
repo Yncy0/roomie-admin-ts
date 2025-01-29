@@ -49,7 +49,7 @@ function Users() {
               <Table.Cell>
                 <div className="flex flex-row gap-2">
                   <Dialog.Root>
-                    <ProfileEditDialog />
+                    <ProfileEditDialog items={items} />
                   </Dialog.Root>
                   <Dialog.Root>
                     <ProfileDeleteDialog />
