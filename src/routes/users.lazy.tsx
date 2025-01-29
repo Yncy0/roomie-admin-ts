@@ -21,9 +21,7 @@ function Users() {
     <div className="min-w-full gap-7 flex flex-col">
       <h1 className="text-center">Users List</h1>
       <div>
-        <div>
-          <Button>Add</Button>
-        </div>
+        <div></div>
       </div>
       <Table.Root>
         <Table.Header>

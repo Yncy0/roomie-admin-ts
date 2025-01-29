@@ -1,4 +1,6 @@
+import BuildingSelect from "@/components/selector/BuildingSelect";
 import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
+import { Select } from "@radix-ui/themes";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import React from "react";
 
@@ -16,13 +18,11 @@ function RouteComponent() {
 
   const insert = insertRooms(room_name, room_image, room_type, room_capacity);
 
-  const onHandleInsert = () => {
-    if (insert) {
-      insert;
+  const onHandleInsert = async () => {
+    await insert;
 
-      alert("Data saved successfully");
-      navigate({ to: "/rooms" });
-    }
+    alert("Data saved successfully");
+    navigate({ to: "/rooms" });
   };
 
   return (
@@ -231,6 +231,7 @@ function RouteComponent() {
         </label>
       </div>
 
+      {/*TODO: Dropdown */}
       {/* Room Location */}
       <div
         className="inputGroup"
@@ -240,29 +241,10 @@ function RouteComponent() {
           position: "relative",
         }}
       >
-        <input
-          id="roomLocation"
-          value={room_location}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomLocation(e.target.value)}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
         <label
           htmlFor="roomLocation"
           style={{
             fontSize: "100%",
-            position: "absolute",
-            left: "0",
             padding: "0.8em",
             marginLeft: "0.5em",
             pointerEvents: "none",
@@ -272,6 +254,9 @@ function RouteComponent() {
         >
           Room Location/Building
         </label>
+        <Select.Root>
+          <BuildingSelect />
+        </Select.Root>
       </div>
 
       {/* Buttons */}
