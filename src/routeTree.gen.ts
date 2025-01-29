@@ -19,7 +19,7 @@ import { Route as rootRoute } from './routes/__root'
 const UsersLazyImport = createFileRoute('/users')()
 const ScheduleLazyImport = createFileRoute('/schedule')()
 const RoomsLazyImport = createFileRoute('/rooms')()
-const BookedRoomsLazyImport = createFileRoute('/bookedRooms')()
+const BookedroomsLazyImport = createFileRoute('/booked_rooms')()
 const BacklogsLazyImport = createFileRoute('/backlogs')()
 const ArchiveLazyImport = createFileRoute('/archive')()
 const IndexLazyImport = createFileRoute('/')()
@@ -44,11 +44,11 @@ const RoomsLazyRoute = RoomsLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/rooms.lazy').then((d) => d.Route))
 
-const BookedRoomsLazyRoute = BookedRoomsLazyImport.update({
-  id: '/bookedRooms',
-  path: '/bookedRooms',
+const BookedroomsLazyRoute = BookedroomsLazyImport.update({
+  id: '/booked_rooms',
+  path: '/booked_rooms',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/bookedRooms.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/booked_rooms.lazy').then((d) => d.Route))
 
 const BacklogsLazyRoute = BacklogsLazyImport.update({
   id: '/backlogs',
@@ -93,11 +93,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BacklogsLazyImport
       parentRoute: typeof rootRoute
     }
-    '/bookedRooms': {
-      id: '/bookedRooms'
-      path: '/bookedRooms'
-      fullPath: '/bookedRooms'
-      preLoaderRoute: typeof BookedRoomsLazyImport
+    '/booked_rooms': {
+      id: '/booked_rooms'
+      path: '/booked_rooms'
+      fullPath: '/booked_rooms'
+      preLoaderRoute: typeof BookedroomsLazyImport
       parentRoute: typeof rootRoute
     }
     '/rooms': {
@@ -130,7 +130,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/archive': typeof ArchiveLazyRoute
   '/backlogs': typeof BacklogsLazyRoute
-  '/bookedRooms': typeof BookedRoomsLazyRoute
+  '/booked_rooms': typeof BookedroomsLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
@@ -140,7 +140,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/archive': typeof ArchiveLazyRoute
   '/backlogs': typeof BacklogsLazyRoute
-  '/bookedRooms': typeof BookedRoomsLazyRoute
+  '/booked_rooms': typeof BookedroomsLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
@@ -151,7 +151,7 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/archive': typeof ArchiveLazyRoute
   '/backlogs': typeof BacklogsLazyRoute
-  '/bookedRooms': typeof BookedRoomsLazyRoute
+  '/booked_rooms': typeof BookedroomsLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
@@ -163,7 +163,7 @@ export interface FileRouteTypes {
     | '/'
     | '/archive'
     | '/backlogs'
-    | '/bookedRooms'
+    | '/booked_rooms'
     | '/rooms'
     | '/schedule'
     | '/users'
@@ -172,7 +172,7 @@ export interface FileRouteTypes {
     | '/'
     | '/archive'
     | '/backlogs'
-    | '/bookedRooms'
+    | '/booked_rooms'
     | '/rooms'
     | '/schedule'
     | '/users'
@@ -181,7 +181,7 @@ export interface FileRouteTypes {
     | '/'
     | '/archive'
     | '/backlogs'
-    | '/bookedRooms'
+    | '/booked_rooms'
     | '/rooms'
     | '/schedule'
     | '/users'
@@ -192,7 +192,7 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   ArchiveLazyRoute: typeof ArchiveLazyRoute
   BacklogsLazyRoute: typeof BacklogsLazyRoute
-  BookedRoomsLazyRoute: typeof BookedRoomsLazyRoute
+  BookedroomsLazyRoute: typeof BookedroomsLazyRoute
   RoomsLazyRoute: typeof RoomsLazyRoute
   ScheduleLazyRoute: typeof ScheduleLazyRoute
   UsersLazyRoute: typeof UsersLazyRoute
@@ -202,7 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   ArchiveLazyRoute: ArchiveLazyRoute,
   BacklogsLazyRoute: BacklogsLazyRoute,
-  BookedRoomsLazyRoute: BookedRoomsLazyRoute,
+  BookedroomsLazyRoute: BookedroomsLazyRoute,
   RoomsLazyRoute: RoomsLazyRoute,
   ScheduleLazyRoute: ScheduleLazyRoute,
   UsersLazyRoute: UsersLazyRoute,
@@ -221,7 +221,7 @@ export const routeTree = rootRoute
         "/",
         "/archive",
         "/backlogs",
-        "/bookedRooms",
+        "/booked_rooms",
         "/rooms",
         "/schedule",
         "/users"
@@ -236,8 +236,8 @@ export const routeTree = rootRoute
     "/backlogs": {
       "filePath": "backlogs.lazy.tsx"
     },
-    "/bookedRooms": {
-      "filePath": "bookedRooms.lazy.tsx"
+    "/booked_rooms": {
+      "filePath": "booked_rooms.lazy.tsx"
     },
     "/rooms": {
       "filePath": "rooms.lazy.tsx"
