@@ -8,194 +8,194 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
+import { Route as rootRoute } from "./routes/__root";
 
 // Create Virtual Routes
 
-const UsersLazyImport = createFileRoute('/users')()
-const ScheduleLazyImport = createFileRoute('/schedule')()
-const RoomsLazyImport = createFileRoute('/rooms')()
-const BookedroomsLazyImport = createFileRoute('/booked_rooms')()
-const BacklogsLazyImport = createFileRoute('/backlogs')()
-const ArchiveLazyImport = createFileRoute('/archive')()
-const IndexLazyImport = createFileRoute('/')()
+const UsersLazyImport = createFileRoute("/users")();
+const ScheduleLazyImport = createFileRoute("/schedule")();
+const RoomsLazyImport = createFileRoute("/rooms")();
+const BookedroomsLazyImport = createFileRoute("/booked_rooms")();
+const BacklogsLazyImport = createFileRoute("/backlogs")();
+const ArchiveLazyImport = createFileRoute("/archive")();
+const IndexLazyImport = createFileRoute("/")();
 
 // Create/Update Routes
 
 const UsersLazyRoute = UsersLazyImport.update({
-  id: '/users',
-  path: '/users',
+  id: "/users",
+  path: "/users",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/users.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/users.lazy").then((d) => d.Route));
 
 const ScheduleLazyRoute = ScheduleLazyImport.update({
-  id: '/schedule',
-  path: '/schedule',
+  id: "/schedule",
+  path: "/schedule",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/schedule.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/schedule.lazy").then((d) => d.Route));
 
 const RoomsLazyRoute = RoomsLazyImport.update({
-  id: '/rooms',
-  path: '/rooms',
+  id: "/rooms",
+  path: "/rooms",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/rooms.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/rooms.lazy").then((d) => d.Route));
 
 const BookedroomsLazyRoute = BookedroomsLazyImport.update({
-  id: '/booked_rooms',
-  path: '/booked_rooms',
+  id: "/booked_rooms",
+  path: "/booked_rooms",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/booked_rooms.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/booked_rooms.lazy").then((d) => d.Route));
 
 const BacklogsLazyRoute = BacklogsLazyImport.update({
-  id: '/backlogs',
-  path: '/backlogs',
+  id: "/backlogs",
+  path: "/backlogs",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/backlogs.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/backlogs.lazy").then((d) => d.Route));
 
 const ArchiveLazyRoute = ArchiveLazyImport.update({
-  id: '/archive',
-  path: '/archive',
+  id: "/archive",
+  path: "/archive",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/archive.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/archive.lazy").then((d) => d.Route));
 
 const IndexLazyRoute = IndexLazyImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any).lazy(() => import("./routes/index.lazy").then((d) => d.Route));
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/archive': {
-      id: '/archive'
-      path: '/archive'
-      fullPath: '/archive'
-      preLoaderRoute: typeof ArchiveLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/backlogs': {
-      id: '/backlogs'
-      path: '/backlogs'
-      fullPath: '/backlogs'
-      preLoaderRoute: typeof BacklogsLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/booked_rooms': {
-      id: '/booked_rooms'
-      path: '/booked_rooms'
-      fullPath: '/booked_rooms'
-      preLoaderRoute: typeof BookedroomsLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/rooms': {
-      id: '/rooms'
-      path: '/rooms'
-      fullPath: '/rooms'
-      preLoaderRoute: typeof RoomsLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/schedule': {
-      id: '/schedule'
-      path: '/schedule'
-      fullPath: '/schedule'
-      preLoaderRoute: typeof ScheduleLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/users': {
-      id: '/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof UsersLazyImport
-      parentRoute: typeof rootRoute
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexLazyImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/archive": {
+      id: "/archive";
+      path: "/archive";
+      fullPath: "/archive";
+      preLoaderRoute: typeof ArchiveLazyImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/backlogs": {
+      id: "/backlogs";
+      path: "/backlogs";
+      fullPath: "/backlogs";
+      preLoaderRoute: typeof BacklogsLazyImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/booked_rooms": {
+      id: "/booked_rooms";
+      path: "/booked_rooms";
+      fullPath: "/booked_rooms";
+      preLoaderRoute: typeof BookedroomsLazyImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/rooms": {
+      id: "/rooms";
+      path: "/rooms";
+      fullPath: "/rooms";
+      preLoaderRoute: typeof RoomsLazyImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/schedule": {
+      id: "/schedule";
+      path: "/schedule";
+      fullPath: "/schedule";
+      preLoaderRoute: typeof ScheduleLazyImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/users": {
+      id: "/users";
+      path: "/users";
+      fullPath: "/users";
+      preLoaderRoute: typeof UsersLazyImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/archive': typeof ArchiveLazyRoute
-  '/backlogs': typeof BacklogsLazyRoute
-  '/booked_rooms': typeof BookedroomsLazyRoute
-  '/rooms': typeof RoomsLazyRoute
-  '/schedule': typeof ScheduleLazyRoute
-  '/users': typeof UsersLazyRoute
+  "/": typeof IndexLazyRoute;
+  "/archive": typeof ArchiveLazyRoute;
+  "/backlogs": typeof BacklogsLazyRoute;
+  "/booked_rooms": typeof BookedroomsLazyRoute;
+  "/rooms": typeof RoomsLazyRoute;
+  "/schedule": typeof ScheduleLazyRoute;
+  "/users": typeof UsersLazyRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/archive': typeof ArchiveLazyRoute
-  '/backlogs': typeof BacklogsLazyRoute
-  '/booked_rooms': typeof BookedroomsLazyRoute
-  '/rooms': typeof RoomsLazyRoute
-  '/schedule': typeof ScheduleLazyRoute
-  '/users': typeof UsersLazyRoute
+  "/": typeof IndexLazyRoute;
+  "/archive": typeof ArchiveLazyRoute;
+  "/backlogs": typeof BacklogsLazyRoute;
+  "/booked_rooms": typeof BookedroomsLazyRoute;
+  "/rooms": typeof RoomsLazyRoute;
+  "/schedule": typeof ScheduleLazyRoute;
+  "/users": typeof UsersLazyRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/archive': typeof ArchiveLazyRoute
-  '/backlogs': typeof BacklogsLazyRoute
-  '/booked_rooms': typeof BookedroomsLazyRoute
-  '/rooms': typeof RoomsLazyRoute
-  '/schedule': typeof ScheduleLazyRoute
-  '/users': typeof UsersLazyRoute
+  __root__: typeof rootRoute;
+  "/": typeof IndexLazyRoute;
+  "/archive": typeof ArchiveLazyRoute;
+  "/backlogs": typeof BacklogsLazyRoute;
+  "/booked_rooms": typeof BookedroomsLazyRoute;
+  "/rooms": typeof RoomsLazyRoute;
+  "/schedule": typeof ScheduleLazyRoute;
+  "/users": typeof UsersLazyRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/archive'
-    | '/backlogs'
-    | '/booked_rooms'
-    | '/rooms'
-    | '/schedule'
-    | '/users'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/archive"
+    | "/backlogs"
+    | "/booked_rooms"
+    | "/rooms"
+    | "/schedule"
+    | "/users";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/archive'
-    | '/backlogs'
-    | '/booked_rooms'
-    | '/rooms'
-    | '/schedule'
-    | '/users'
+    | "/"
+    | "/archive"
+    | "/backlogs"
+    | "/booked_rooms"
+    | "/rooms"
+    | "/schedule"
+    | "/users";
   id:
-    | '__root__'
-    | '/'
-    | '/archive'
-    | '/backlogs'
-    | '/booked_rooms'
-    | '/rooms'
-    | '/schedule'
-    | '/users'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/archive"
+    | "/backlogs"
+    | "/booked_rooms"
+    | "/rooms"
+    | "/schedule"
+    | "/users";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  ArchiveLazyRoute: typeof ArchiveLazyRoute
-  BacklogsLazyRoute: typeof BacklogsLazyRoute
-  BookedroomsLazyRoute: typeof BookedroomsLazyRoute
-  RoomsLazyRoute: typeof RoomsLazyRoute
-  ScheduleLazyRoute: typeof ScheduleLazyRoute
-  UsersLazyRoute: typeof UsersLazyRoute
+  IndexLazyRoute: typeof IndexLazyRoute;
+  ArchiveLazyRoute: typeof ArchiveLazyRoute;
+  BacklogsLazyRoute: typeof BacklogsLazyRoute;
+  BookedroomsLazyRoute: typeof BookedroomsLazyRoute;
+  RoomsLazyRoute: typeof RoomsLazyRoute;
+  ScheduleLazyRoute: typeof ScheduleLazyRoute;
+  UsersLazyRoute: typeof UsersLazyRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -206,11 +206,11 @@ const rootRouteChildren: RootRouteChildren = {
   RoomsLazyRoute: RoomsLazyRoute,
   ScheduleLazyRoute: ScheduleLazyRoute,
   UsersLazyRoute: UsersLazyRoute,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

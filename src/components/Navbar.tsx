@@ -37,7 +37,7 @@ export default function NavBar() {
   return (
     <nav
       className={cn(
-        "flex flex-col h-screen bg-[#6b92e5] text-white transition-all duration-300 items-center gap-10",
+        "flex flex-col h-screen bg-[#6b92e5] text-white transition-all duration-300 items-center gap-10 pt-11",
         isClose ? "w-64" : "w-32"
       )}
     >
@@ -65,9 +65,8 @@ export default function NavBar() {
           <Link
             key={item.href}
             to={item.href}
-            style={{ padding: "0.5rem 1.5rem" }}
             className={cn(
-              "flex flex-row items-center hover:bg-[rgba(226,240,253,0.4)] hover:text-blue-500 hover:shadow-lg  transition-colors gap-3 rounded-sm",
+              "flex flex-row items-center py-2 px-6 hover:bg-[rgba(226,240,253,0.4)] hover:text-blue-500 hover:shadow-lg  transition-colors gap-3 rounded-sm",
               !isClose && "justify-center"
             )}
           >
