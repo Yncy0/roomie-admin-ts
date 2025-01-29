@@ -1,3 +1,4 @@
+import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { updateProfiles } from "@/hooks/queries/profiles/useUpdateProfiles";
 import { Button, Dialog, Flex, TextField, Text } from "@radix-ui/themes";
 import React from "react";
@@ -24,6 +25,11 @@ const ProfileEditDialog = ({ items }: Props) => {
         email,
         userRole,
         userDepartment
+      );
+
+      await insertBacklogs(
+        "UPDATE",
+        `The profile of ${username} has been changed`
       );
       console.log("Profile updated:", data);
     } catch (error) {

@@ -1,3 +1,4 @@
+import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { fetchRoomsWithId } from "@/hooks/queries/rooms/useFetchRooms";
 import { updateRooms } from "@/hooks/queries/rooms/useUpdateRooms";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -53,6 +54,8 @@ function RouteComponent() {
       if (update) {
         await update;
         alert("Data saved successfully");
+
+        await insertBacklogs("UPDATE", `The room ${roomName} has been edited`);
         navigate({ to: "/rooms" });
       }
     } catch (error) {

@@ -34,7 +34,7 @@ function BookedRoomss() {
         </Table.Header>
         <Table.Body>
           {data?.map((booking, index) => (
-            <Table.Row key={index}>
+            <Table.Row key={index} align={"center"}>
               <Table.Cell>{booking.date}</Table.Cell>
               <Table.Cell>
                 {dayjs(booking.time_in).format("HH:mm:ss")}

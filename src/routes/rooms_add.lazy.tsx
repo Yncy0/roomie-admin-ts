@@ -1,4 +1,5 @@
 import BuildingSelect from "@/components/selector/BuildingSelect";
+import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
 import { Select } from "@radix-ui/themes";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
@@ -20,6 +21,8 @@ function RouteComponent() {
 
   const onHandleInsert = async () => {
     await insert;
+
+    await insertBacklogs("INSERT", `The new ${room_name} has been added`);
 
     alert("Data saved successfully");
     navigate({ to: "/rooms" });

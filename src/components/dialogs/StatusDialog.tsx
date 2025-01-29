@@ -1,3 +1,4 @@
+import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms";
 import {
   Button,
@@ -21,6 +22,11 @@ const StatusDialog = ({ item }: Props) => {
 
   const onHandleClick = async () => {
     if (update) await update;
+
+    await insertBacklogs(
+      "UPDATE",
+      `The booking request of ${item.profiles?.username} has granted status ${item.status}`
+    );
   };
 
   return (
