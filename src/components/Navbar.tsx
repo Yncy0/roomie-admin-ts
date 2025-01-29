@@ -8,7 +8,6 @@ import {
   faBoxArchive,
   faUserGroup,
   faCalendar,
-  faCalendarWeek,
   faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChevronFirst, ChevronLast } from "lucide-react";
@@ -38,14 +37,22 @@ export default function NavBar() {
   return (
     <nav
       className={cn(
-        "flex flex-col h-screen bg-[#6b92e5] text-white transition-all duration-300 items",
-        isExpanded ? "w-64" : "w-16"
+        "flex flex-col h-screen bg-[#6b92e5] text-white transition-all duration-300 items-center gap-10",
+        isExpanded ? "w-64" : "w-32"
       )}
     >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-end p-4 hover:bg-white/10 transition-colors "
+        className="flex items-center justify-end p-4 hover:bg-white/10 transition-colors gap-5 "
       >
+        <h1
+          className={cn(
+            "font-righteous text-white text-xl mr-auto",
+            !isExpanded && "hidden"
+          )}
+        >
+          ROOMIE
+        </h1>
         {isExpanded ? (
           <ChevronFirst className="w-6 h-6" />
         ) : (
@@ -53,17 +60,18 @@ export default function NavBar() {
         )}
       </button>
 
-      <div className="flex-col flex gap-3">
+      <div className="flex-col flex gap-6 ">
         {navItems.map((item) => (
           <Link
             key={item.href}
             to={item.href}
+            style={{ padding: "0.5rem 1.5rem" }}
             className={cn(
-              "flex items-center px-4 py-3 hover:bg-white/10 transition-colors gap-2.5",
+              "flex flex-row items-center hover:bg-[rgba(226,240,253,0.4)] hover:text-blue-500 hover:shadow-lg  transition-colors gap-3 rounded-sm",
               !isExpanded && "justify-center"
             )}
           >
-            <FontAwesomeIcon icon={item.icon} className="w-6 h-6 shrink-0" />
+            <FontAwesomeIcon icon={item.icon} className="w-6 h-6 " />
             {isExpanded && (
               <span className="ml-4 text-sm font-medium">{item.label}</span>
             )}
