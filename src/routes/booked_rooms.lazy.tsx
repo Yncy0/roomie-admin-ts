@@ -50,7 +50,7 @@ function BookedRoomss() {
                 <div className="flex flex-row items-center gap-2">
                   <Badge color="orange">{booking.status}</Badge>
                   <Dialog.Root>
-                    <StatusDialog status={booking.status || ""} />
+                    <StatusDialog item={booking} />
                   </Dialog.Root>
                 </div>
               </Table.Cell>

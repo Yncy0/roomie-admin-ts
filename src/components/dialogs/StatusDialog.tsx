@@ -1,3 +1,4 @@
+import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms";
 import {
   Button,
   Dialog,
@@ -7,12 +8,21 @@ import {
   Select,
 } from "@radix-ui/themes";
 import { Pencil } from "lucide-react";
+import React from "react";
 
 type Props = {
-  status: string;
+  item: any;
 };
 
-const StatusDialog = ({ status }: Props) => {
+const StatusDialog = ({ item }: Props) => {
+  const [value, setValue] = React.useState(item.status);
+
+  const update = updateBookedRoomsStatus(item.id, value);
+
+  const onHandleClick = async () => {
+    if (update) await update;
+  };
+
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -25,7 +35,7 @@ const StatusDialog = ({ status }: Props) => {
         <Dialog.Description size="2" mb="4">
           Select the type of approval in this booked room
         </Dialog.Description>
-        <Select.Root defaultValue={status}>
+        <Select.Root onValueChange={setValue} defaultValue={value}>
           <Select.Trigger />
           <Select.Content>
             <Select.Group>
@@ -43,7 +53,7 @@ const StatusDialog = ({ status }: Props) => {
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button>Save</Button>
+            <Button onClick={onHandleClick}>Save</Button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>
