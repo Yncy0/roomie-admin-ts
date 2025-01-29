@@ -1,5 +1,3 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   flexRender,
@@ -7,15 +5,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  LucideFilter,
-  ChevronsLeftIcon,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsRight,
-} from "lucide-react";
-import { Table } from "@radix-ui/themes";
-import React from "react";
+import { Table, Button } from "@radix-ui/themes";
 import { fetchProfiles } from "@/hooks/queries/profiles/useFetchProfiles";
 
 export const Route = createLazyFileRoute("/users")({
@@ -28,6 +18,11 @@ function Users() {
   return (
     <div className="min-w-full gap-7 flex flex-col">
       <h1 className="text-center">Users List</h1>
+      <div>
+        <div>
+          <Button>Add</Button>
+        </div>
+      </div>
       <Table.Root>
         <Table.Header>
           <Table.Row>
@@ -37,6 +32,7 @@ function Users() {
             <Table.ColumnHeaderCell>Email</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>User Role</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>User Department</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Options</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -48,6 +44,12 @@ function Users() {
               <Table.Cell>{items.email}</Table.Cell>
               <Table.Cell>{items.user_role}</Table.Cell>
               <Table.Cell>{items.user_department}</Table.Cell>
+              <Table.Cell>
+                <div className="flex flex-row gap-2">
+                  <Button>Edit</Button>
+                  <Button>Delete</Button>
+                </div>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
