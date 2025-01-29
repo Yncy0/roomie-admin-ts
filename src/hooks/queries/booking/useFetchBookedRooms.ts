@@ -1,5 +1,8 @@
 import supabase from "@/utils/supabase";
 import { useQuery } from "@tanstack/react-query";
+import { Tables } from "database.types";
+
+type BookedRooms = Tables<"booked_rooms">;
 
 export const fetchBookedRooms = () => {
     return useQuery({
@@ -7,7 +10,7 @@ export const fetchBookedRooms = () => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("booked_rooms")
-                .select("*, profiles(*), rooms(*)");
+                .select(`*, profiles(*), rooms(*)`);
 
             if (error) {
                 console.log(error);
