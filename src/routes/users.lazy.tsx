@@ -5,8 +5,10 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table, Button } from "@radix-ui/themes";
+import { Table, Button, Dialog } from "@radix-ui/themes";
 import { fetchProfiles } from "@/hooks/queries/profiles/useFetchProfiles";
+import ProfileEditDialog from "@/components/dialogs/ProfileEditDialog";
+import ProfileDeleteDialog from "@/components/dialogs/ProfileDeleteDialog";
 
 export const Route = createLazyFileRoute("/users")({
   component: Users,
@@ -46,8 +48,12 @@ function Users() {
               <Table.Cell>{items.user_department}</Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row gap-2">
-                  <Button>Edit</Button>
-                  <Button>Delete</Button>
+                  <Dialog.Root>
+                    <ProfileEditDialog />
+                  </Dialog.Root>
+                  <Dialog.Root>
+                    <ProfileDeleteDialog />
+                  </Dialog.Root>
                 </div>
               </Table.Cell>
             </Table.Row>
