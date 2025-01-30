@@ -1,5 +1,14 @@
 import { fetchRoomsWithId } from "@/hooks/queries/rooms/useFetchRooms";
-import { Dialog, Button, Flex, TextField, Text } from "@radix-ui/themes";
+import { fetchScheduleWithId } from "@/hooks/queries/schedule/useFetchSchedule";
+import {
+  Dialog,
+  Button,
+  Flex,
+  TextField,
+  Text,
+  Inset,
+  Table,
+} from "@radix-ui/themes";
 import { useNavigate } from "@tanstack/react-router";
 
 type Props = {
@@ -8,13 +17,14 @@ type Props = {
 
 export default function RoomsPreview({ id }: Props) {
   const { data } = fetchRoomsWithId(id);
+  const { data: sched } = fetchScheduleWithId(id);
 
   const nav = useNavigate();
 
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <Button>View </Button>
+        <Button>View</Button>
       </Dialog.Trigger>
 
       <Dialog.Content size="4" maxWidth="800px">
@@ -44,7 +54,41 @@ export default function RoomsPreview({ id }: Props) {
           </Flex>
         </Flex>
 
-        <Flex gap="3" mt="4" justify="end">
+        <Dialog.Description>Schedule of Room</Dialog.Description>
+        <Inset side="x" my="5">
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeaderCell>Subject Name</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>
+                  Course & Section
+                </Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Profile</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Time In</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Time Out</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {sched &&
+                sched.map((items, index) => (
+                  <Table.Row key={index}>
+                    <Table.RowHeaderCell>
+                      {items?.subject?.subject_code}
+                    </Table.RowHeaderCell>
+                    <Table.Cell>{items?.course?.course_name}</Table.Cell>
+                    <Table.Cell>{items?.profiles?.username}</Table.Cell>
+                    <Table.Cell>{items?.timef_in}</Table.Cell>
+                    <Table.Cell>{items?.timef_out}</Table.Cell>
+                    <Table.Cell>{items?.status}</Table.Cell>
+                  </Table.Row>
+                ))}
+            </Table.Body>
+          </Table.Root>
+        </Inset>
+
+        <Flex gap="3" mt="4" justify="end" pt="6">
           <Dialog.Close>
             <Button variant="soft" color="gray">
               Cancel
