@@ -5,6 +5,7 @@ export const insertRooms = async (
     room_image: string,
     room_type: string,
     room_capacity: number,
+    location: string,
 ) => {
     const { data, error } = await supabase
         .from("rooms")
@@ -13,6 +14,7 @@ export const insertRooms = async (
             room_image: room_image,
             room_type: room_type,
             room_capacity: room_capacity,
+            location: location,
         }])
         .select();
 

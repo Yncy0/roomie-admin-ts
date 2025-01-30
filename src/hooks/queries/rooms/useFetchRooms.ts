@@ -7,7 +7,7 @@ export const fetchRooms = () => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("rooms")
-                .select("*, building(*)");
+                .select("*");
 
             if (error) {
                 console.log(error);
@@ -25,7 +25,7 @@ export const fetchRoomsWithId = (id: any) => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("rooms")
-                .select("*, building(*)")
+                .select("*")
                 .eq("id", id)
                 .single();
 

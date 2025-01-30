@@ -17,8 +17,21 @@ function RouteComponent() {
   const [room_location, setRoomLocation] = React.useState("");
   const [room_image, setRoomImage] = React.useState("");
 
+  React.useEffect(() => {
+    if (room_location) {
+      // Handle any updates or side effects here
+      console.log("Room Location (Building ID) Updated:", room_location);
+    }
+  }, [room_location]);
+
   const onHandleInsert = async () => {
-    await insertRooms(room_name, room_image, room_type, room_capacity);
+    await insertRooms(
+      room_name,
+      room_image,
+      room_type,
+      room_capacity,
+      room_location
+    );
 
     await insertBacklogs("INSERT", `The new ${room_name} has been added`);
 
@@ -256,7 +269,7 @@ function RouteComponent() {
           Room Location/Building
         </label>
         <Select.Root>
-          <BuildingSelect />
+          <BuildingSelect setBuilding={setRoomLocation} />
         </Select.Root>
       </div>
 

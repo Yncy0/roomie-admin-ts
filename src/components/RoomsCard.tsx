@@ -4,21 +4,19 @@ import React from "react";
 type Props = {
   id: string;
   room_image: string;
-  room_location: string;
   room_name: string;
   room_capacity: number;
   room_type: string;
-  building_id: string;
+  location: string;
 };
 
 export default function RoomsCard({
   id,
   room_image,
-  room_location,
   room_name,
   room_capacity,
   room_type,
-  building_id,
+  location,
 }: Props) {
   const navigate = useNavigate({ from: "/rooms" });
 
@@ -52,7 +50,7 @@ export default function RoomsCard({
       {/* Room Details */}
       <div>
         <p className="block font-sans text-base font-light leading-relaxed text-gray-500 antialiased">
-          {room_location}
+          {location}
         </p>
         <h5
           className="mb-2 block font-sans text-xl font-semibold 
