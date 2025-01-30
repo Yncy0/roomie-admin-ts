@@ -17,10 +17,8 @@ function RouteComponent() {
   const [room_location, setRoomLocation] = React.useState("");
   const [room_image, setRoomImage] = React.useState("");
 
-  const insert = insertRooms(room_name, room_image, room_type, room_capacity);
-
   const onHandleInsert = async () => {
-    await insert;
+    await insertRooms(room_name, room_image, room_type, room_capacity);
 
     await insertBacklogs("INSERT", `The new ${room_name} has been added`);
 
