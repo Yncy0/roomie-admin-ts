@@ -64,84 +64,40 @@ function RouteComponent() {
     navigate({ to: "/rooms" });
   };
 
+  //FIXME: USE GAP INSTEAD OF MARGIN, AND USE TAILWIND CSS FOR MORE CONVENIENCE
+
   return (
-    <div
-      style={{
-        padding: "2.5rem 2rem",
-        backgroundColor: "#fff",
-        gap: "1.25rem",
-      }}
-    >
-      <h1
-        style={{
-          textAlign: "center",
-          fontWeight: "bold",
-          fontSize: "1.25rem",
-          paddingBottom: "30px",
-        }}
-      >
-        Create New Room
-      </h1>
+    <div className="p-10 bg-white flex flex-col gap-6">
+      <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
 
       {/* Image Preview */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className="flex justify-center">
         <img
           src={roomImage ? roomImage : "src/assets/dummy/image-placeholder.png"}
           alt="Room Preview"
-          style={{ objectFit: "cover", width: "16rem" }} // 64px equivalent
+          className="object-cover w-80"
         />
       </div>
 
       {/* Image File Input */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.7em 0",
-          position: "relative",
-        }}
-      >
+      <div className="inputGroup font-sans  relative">
         <input
           id="imageInput"
           type="file"
           accept="image/*"
-          onChange={() => handleImageChange}
-          style={{
-            fontSize: "100%",
-            padding: "30px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
+          onChange={handleImageChange}
+          className="w-full text-base p-8 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
         />
         <label
           htmlFor="imageInput"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
+          className="text-base absolute left-0 p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
         >
           Upload Image
         </label>
       </div>
 
       {/* Room Name */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
+      <div className="inputGroup font-sans  relative">
         <input
           id="roomName"
           value={roomName}
@@ -149,42 +105,18 @@ function RouteComponent() {
           placeholder=" "
           onChange={(e) => setRoomName(e.target.value)}
           required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
+          className="w-full text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
         />
         <label
           htmlFor="roomName"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
+          className="text-base absolute left-0 p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
         >
           Room Name
         </label>
       </div>
 
       {/* Room Description */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
+      <div className="inputGroup font-sans  relative">
         <input
           id="roomDescription"
           value={roomType}
@@ -192,42 +124,18 @@ function RouteComponent() {
           placeholder=" "
           onChange={(e) => setRoomType(e.target.value)}
           required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
+          className="w-full text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
         />
         <label
           htmlFor="roomDescription"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "14px",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
+          className="text-base absolute left-0 p-3.5 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
         >
           Room Description
         </label>
       </div>
 
       {/* Room Capacity */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
+      <div className="inputGroup font-sans  relative">
         <input
           id="roomCapacity"
           value={roomCapacity}
@@ -235,51 +143,21 @@ function RouteComponent() {
           placeholder=" "
           onChange={(e) => setRoomCapacity(Number(e.target.value))}
           required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
+          className="w-full text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
         />
         <label
           htmlFor="roomCapacity"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
+          className="text-base absolute left-0 p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
         >
           Room Capacity
         </label>
       </div>
 
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
+      {/* Room Location */}
+      <div className="inputGroup font-sans relative">
         <label
           htmlFor="roomLocation"
-          style={{
-            fontSize: "100%",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
+          className="text-base p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
         >
           Room Location/Building
         </label>
@@ -289,53 +167,16 @@ function RouteComponent() {
       </div>
 
       {/* Buttons */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "2rem",
-          width: "100%",
-        }}
-      >
+      <div className="flex justify-center gap-8 w-full">
         <button
           onClick={() => navigate({ to: "/rooms" })}
-          style={{
-            border: "2px solid #d1d1d1",
-            backgroundColor: "#f1f1f1",
-            borderRadius: "0.9em",
-            cursor: "pointer",
-            padding: "0.8em 1.2em",
-            fontSize: "16px",
-            fontWeight: 500,
-            color: "#333",
-            transition: "background-color 0.2s ease-in-out",
-            width: "100%", // Full width
-            maxWidth: "100%", // Ensure it doesn't exceed the screen width
-            textAlign: "center", // Center text inside the button
-          }}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = "#e1e1e1")}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = "#f1f1f1")}
+          className="w-full max-w-full text-center border-2 border-[#d1d1d1] bg-[#f1f1f1] rounded-xl cursor-pointer py-3 px-5 text-base font-medium text-[#333] transition-colors duration-200 ease-in-out hover:bg-[#e1e1e1]"
         >
           Cancel
         </button>
         <button
           onClick={onHandleUpdate}
-          style={{
-            border: "2px solid #35487a",
-            backgroundColor: "#6b92e5",
-            borderRadius: "0.9em",
-            cursor: "pointer",
-            padding: "0.8em 1.2em",
-            fontSize: "16px",
-            fontWeight: 600,
-            color: "#fff",
-            transition: "background-color 0.2s ease-in-out",
-            width: "100%", // Full width
-            maxWidth: "100%", // Ensure it doesn't exceed the screen width
-            textAlign: "center", // Center text inside the button
-          }}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = "#35487a")}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = "#6b92e5")}
+          className="w-full max-w-full text-center border-2 border-[#35487a] bg-[#6b92e5] rounded-xl cursor-pointer py-3 px-5 text-base font-semibold text-white transition-colors duration-200 ease-in-out hover:bg-[#35487a]"
         >
           Create
         </button>
@@ -344,20 +185,20 @@ function RouteComponent() {
       {/* Style for animation in Add Room Forms */}
       <style>
         {`
-    .inputGroup input:focus ~ label,
-    .inputGroup input:valid ~ label {
-      transform: translateY(-50%) scale(0.9); /* Raised higher */
-      margin-left: 1.3em;
-      padding: 0.4em;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 5) 0%, rgba(255,255, 255, 3) 70%, transparent 100%);
-      border-radius: 20px; /* Rounded corners */
-    }
+      .inputGroup input:focus ~ label,
+      .inputGroup input:valid ~ label {
+        transform: translateY(-50%) scale(0.9);
+        margin-left: 1.3em;
+        padding: 0.4em;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 5) 0%, rgba(255,255, 255, 3) 70%, transparent 100%);
+        border-radius: 20px;
+      }
 
-    .inputGroup input:focus,
-    .inputGroup input:valid {
-      border-color: rgb(150, 150, 200);
-    }
-  `}
+      .inputGroup input:focus,
+      .inputGroup input:valid {
+        border-color: rgb(150, 150, 200);
+      }
+    `}
       </style>
     </div>
   );

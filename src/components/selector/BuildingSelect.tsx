@@ -11,7 +11,7 @@ const BuildingSelect = ({ setBuilding }: Props) => {
   };
 
   return (
-    <Select.Root defaultValue="apple" onValueChange={handleChange}>
+    <Select.Root defaultValue="Buildings" onValueChange={handleChange}>
       <Select.Trigger />
       <Select.Content>
         <Select.Group>
