@@ -1,5 +1,7 @@
+import { Dialog } from "@radix-ui/themes";
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
+import RoomsPreview from "./dialogs/RoomsPreview";
 
 type Props = {
   id: string;
@@ -62,7 +64,7 @@ export default function RoomsCard({
 
       {/* View Room Button */}
       <div className="pt-4">
-        <button
+        {/* <button
           type="button"
           className="select-none rounded-lg bg-[#35487a] py-3 px-6 text-center align-middle 
         font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all 
@@ -71,7 +73,10 @@ export default function RoomsCard({
           onClick={() => navigate({ to: "/room_edit/$id", params: { id: id } })}
         >
           VIEW ROOM
-        </button>
+        </button> */}
+        <Dialog.Root>
+          <RoomsPreview id={id} />
+        </Dialog.Root>
       </div>
     </div>
   );
