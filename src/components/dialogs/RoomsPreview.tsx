@@ -27,7 +27,7 @@ export default function RoomsPreview({ id }: Props) {
         <Button>View</Button>
       </Dialog.Trigger>
 
-      <Dialog.Content size="4" maxWidth="800px">
+      <Dialog.Content size="4" maxWidth="1000px">
         <Dialog.Title>Room Information</Dialog.Title>
 
         <Flex direction="row" gap="6">
@@ -63,6 +63,7 @@ export default function RoomsPreview({ id }: Props) {
                 <Table.ColumnHeaderCell>
                   Course & Section
                 </Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Day</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Profile</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Time In</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Time Out</Table.ColumnHeaderCell>
@@ -78,6 +79,7 @@ export default function RoomsPreview({ id }: Props) {
                       {items?.subject?.subject_code}
                     </Table.RowHeaderCell>
                     <Table.Cell>{items?.course?.course_name}</Table.Cell>
+                    <Table.Cell>{items?.days}</Table.Cell>
                     <Table.Cell>{items?.profiles?.username}</Table.Cell>
                     <Table.Cell>{items?.timef_in}</Table.Cell>
                     <Table.Cell>{items?.timef_out}</Table.Cell>
