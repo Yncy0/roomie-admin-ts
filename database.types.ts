@@ -84,24 +84,6 @@ export type Database = {
           },
         ]
       }
-      building: {
-        Row: {
-          building_name: string | null
-          created_at: string
-          id: string
-        }
-        Insert: {
-          building_name?: string | null
-          created_at?: string
-          id?: string
-        }
-        Update: {
-          building_name?: string | null
-          created_at?: string
-          id?: string
-        }
-        Relationships: []
-      }
       course: {
         Row: {
           course_name: string | null
@@ -120,10 +102,40 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           email: string | null
+          "expo-push-token": string | null
           full_name: string | null
           id: string
           is_archived: boolean | null
@@ -137,6 +149,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           email?: string | null
+          "expo-push-token"?: string | null
           full_name?: string | null
           id: string
           is_archived?: boolean | null
@@ -150,6 +163,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           email?: string | null
+          "expo-push-token"?: string | null
           full_name?: string | null
           id?: string
           is_archived?: boolean | null
@@ -164,44 +178,36 @@ export type Database = {
       }
       rooms: {
         Row: {
-          building_id: string | null
           created_at: string
           id: string
           is_archived: boolean | null
+          location: string | null
           room_capacity: number | null
           room_image: string | null
           room_name: string | null
           room_type: string | null
         }
         Insert: {
-          building_id?: string | null
           created_at?: string
           id?: string
           is_archived?: boolean | null
+          location?: string | null
           room_capacity?: number | null
           room_image?: string | null
           room_name?: string | null
           room_type?: string | null
         }
         Update: {
-          building_id?: string | null
           created_at?: string
           id?: string
           is_archived?: boolean | null
+          location?: string | null
           room_capacity?: number | null
           room_image?: string | null
           room_name?: string | null
           room_type?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "rooms_building_id_fkey"
-            columns: ["building_id"]
-            isOneToOne: false
-            referencedRelation: "building"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       schedule: {
         Row: {

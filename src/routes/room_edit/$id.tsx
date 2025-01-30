@@ -1,6 +1,8 @@
+import BuildingSelect from "@/components/selector/BuildingSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { fetchRoomsWithId } from "@/hooks/queries/rooms/useFetchRooms";
 import { updateRooms } from "@/hooks/queries/rooms/useUpdateRooms";
+import { Select } from "@radix-ui/themes";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import React from "react";
 
@@ -28,14 +30,12 @@ function RouteComponent() {
   React.useEffect(() => {
     if (data) {
       setRoomName(data.room_name || "");
-      setRoomLocation(data.building?.building_name || "");
+      setRoomLocation(data.location || "");
       setRoomCapacity(data.room_capacity || 0);
       setRoomType(data.room_type || "");
       setRoomImage(data.room_image || "");
     }
   }, [data]);
-
-  const update = updateRooms(id, roomName, roomImage, roomType, roomCapacity);
 
   const handleImageChange = (event: any) => {
     const file = event.target.files[0];
@@ -48,20 +48,20 @@ function RouteComponent() {
     }
   };
 
-  const onHandleUpdate = async (e: any) => {
-    e.preventDefault();
-    try {
-      if (update) {
-        await update;
-        alert("Data saved successfully");
+  const onHandleUpdate = async () => {
+    await updateRooms(
+      id,
+      roomName,
+      roomImage,
+      roomType,
+      roomCapacity,
+      roomLocation
+    );
+    console.log(updateRooms);
+    alert("Data saved successfully");
 
-        await insertBacklogs("UPDATE", `The room ${roomName} has been edited`);
-        navigate({ to: "/rooms" });
-      }
-    } catch (error) {
-      console.error("Update failed: ", error);
-      alert("An error occurred while saving the data. Please try again.");
-    }
+    await insertBacklogs("UPDATE", `The room ${roomName} has been edited`);
+    navigate({ to: "/rooms" });
   };
 
   return (
@@ -262,7 +262,6 @@ function RouteComponent() {
         </label>
       </div>
 
-      {/* Room Location */}
       <div
         className="inputGroup"
         style={{
@@ -271,29 +270,10 @@ function RouteComponent() {
           position: "relative",
         }}
       >
-        <input
-          id="roomLocation"
-          value={roomLocation}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomLocation(e.target.value)}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
         <label
           htmlFor="roomLocation"
           style={{
             fontSize: "100%",
-            position: "absolute",
-            left: "0",
             padding: "0.8em",
             marginLeft: "0.5em",
             pointerEvents: "none",
@@ -303,6 +283,9 @@ function RouteComponent() {
         >
           Room Location/Building
         </label>
+        <Select.Root>
+          <BuildingSelect setBuilding={setRoomLocation} />
+        </Select.Root>
       </div>
 
       {/* Buttons */}

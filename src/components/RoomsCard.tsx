@@ -1,24 +1,24 @@
+import { Dialog } from "@radix-ui/themes";
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
+import RoomsPreview from "./dialogs/RoomsPreview";
 
 type Props = {
   id: string;
   room_image: string;
-  room_location: string;
   room_name: string;
   room_capacity: number;
   room_type: string;
-  building_id: string;
+  location: string;
 };
 
 export default function RoomsCard({
   id,
   room_image,
-  room_location,
   room_name,
   room_capacity,
   room_type,
-  building_id,
+  location,
 }: Props) {
   const navigate = useNavigate({ from: "/rooms" });
 
@@ -52,7 +52,7 @@ export default function RoomsCard({
       {/* Room Details */}
       <div>
         <p className="block font-sans text-base font-light leading-relaxed text-gray-500 antialiased">
-          {room_location}
+          {location}
         </p>
         <h5
           className="mb-2 block font-sans text-xl font-semibold 
@@ -64,7 +64,7 @@ export default function RoomsCard({
 
       {/* View Room Button */}
       <div className="pt-4">
-        <button
+        {/* <button
           type="button"
           className="select-none rounded-lg bg-[#35487a] py-3 px-6 text-center align-middle 
         font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all 
@@ -73,7 +73,10 @@ export default function RoomsCard({
           onClick={() => navigate({ to: "/room_edit/$id", params: { id: id } })}
         >
           VIEW ROOM
-        </button>
+        </button> */}
+        <Dialog.Root>
+          <RoomsPreview id={id} />
+        </Dialog.Root>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ export const updateRooms = async (
     room_image: string,
     room_type: string,
     room_capacity: number,
+    location: string,
 ) => {
     const { error } = await supabase
         .from("rooms")
@@ -14,6 +15,7 @@ export const updateRooms = async (
             room_image: room_image,
             room_type: room_type,
             room_capacity: room_capacity,
+            location: location,
         })
         .eq("id", id)
         .select();

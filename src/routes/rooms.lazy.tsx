@@ -41,11 +41,10 @@ function Rooms() {
                 key={item.id}
                 id={item.id}
                 room_image={item.room_image}
-                room_location={item.building?.building_name}
+                location={item.location}
                 room_name={item.room_name}
                 room_capacity={item.room_capacity}
                 room_type={item.room_type}
-                building_id={item.building?.building_id}
               />
             ))}
           </div>
