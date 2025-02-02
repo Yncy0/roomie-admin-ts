@@ -1,0 +1,22 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;  /* Full screen height */
+  }
+  
+  .loader-image {
+    width: 100px;  /* Adjust based on the size of your image */
+    height: 100px;
+    animation: pulse 1.5s infinite ease-in-out;  /* Apply the pulse animation */
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);  /* Normal size */
+    }
+    50% {
+      transform: scale(1.2);  /* Scale up to 1.2 times the original size */
+    }
+  }
+  

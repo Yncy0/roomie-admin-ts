@@ -6,9 +6,8 @@ import ProfileDeleteDialog from "@/components/dialogs/ProfileDeleteDialog";
 import * as Avatar from "@radix-ui/react-avatar";
 import PaginationControls from "@/components/PaginationControls";
 import { MagnifyingGlassIcon, PersonIcon, HomeIcon } from "@radix-ui/react-icons";
-// Alternative: Use Heroicons for a better building icon
-// import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
 import { useState, useMemo } from "react";
+import Loader from "@/components/loader/Loader"; // Import the loader component
 import "../styles/user.css";
 
 export const Route = createLazyFileRoute("/users")({
@@ -16,7 +15,7 @@ export const Route = createLazyFileRoute("/users")({
 });
 
 function Users() {
-  const { data, error } = fetchProfiles();
+  const { data, error, isLoading } = fetchProfiles(); // Assuming isLoading is part of the hook's return
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -51,6 +50,11 @@ function Users() {
     if (action === "next" && currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
     if (action === "last") setCurrentPage(totalPages - 1);
   };
+
+  // Render Loader if data is loading
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="users-container">

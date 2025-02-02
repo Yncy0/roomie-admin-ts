@@ -3,7 +3,8 @@ import { fetchBacklogs } from "@/hooks/queries/backlogs/useFetchBacklogs";
 import { Table } from "@radix-ui/themes";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import dayjs from "dayjs";
-import PaginationControls from "@/components/PaginationControls"; // Make sure to import PaginationControls
+import PaginationControls from "@/components/PaginationControls";
+import Loader from "@/components/loader/Loader";
 import "../styles/backlogs.css";
 
 export const Route = createLazyFileRoute("/backlogs")({
@@ -14,8 +15,18 @@ function Backlogs() {
   const { data = [] } = fetchBacklogs();
   const rowsPerPage = 5; // Show 5 items per page
 
-  // Pagination state
   const [currentPage, setCurrentPage] = React.useState(0);
+  const [showLoader, setShowLoader] = React.useState(true);
+
+  // Simulate a 4-second loader display
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowLoader(false); // Hide the loader after 4 seconds
+    }, 4000); // 4000 ms = 4 seconds
+
+    // Cleanup the timeout if the component unmounts
+    return () => clearTimeout(timeout);
+  }, []);
 
   // Handle pagination logic
   const handlePagination = (action: string) => {
@@ -30,6 +41,8 @@ function Backlogs() {
     const start = currentPage * rowsPerPage;
     return data.slice(start, start + rowsPerPage);
   }, [data, currentPage, rowsPerPage]);
+
+  if (showLoader || !data.length) return <Loader />; // Show loader while fetching data or during the delay
 
   return (
     <div className="backlogs-container">

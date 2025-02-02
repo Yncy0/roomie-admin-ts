@@ -6,7 +6,8 @@ import "../styles/bookedRooms.css";
 import { Table, Badge, Dialog } from "@radix-ui/themes";
 import StatusDialog from "@/components/dialogs/StatusDialog";
 import PaginationControls from "@/components/PaginationControls";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Loader from "@/components/loader/Loader";
 
 export const Route = createLazyFileRoute("/booked_rooms")({
   component: BookedRoomss,
@@ -17,7 +18,22 @@ function BookedRoomss() {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 5; // Adjust as needed
 
-  if (isLoading) return <div className="error-message">Loading...</div>;
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Simulate a 4-second loader display
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowLoader(false); // Hide the loader after 4 seconds
+    }, 4000); // 4000 ms = 4 seconds
+
+    // Cleanup the timeout if the component unmounts
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Show loader when loading or before 4 seconds
+  if (showLoader || isLoading) return <Loader />;
+
+  // Handle error
   if (error) return <div className="error-message">Error: {error.message}</div>;
 
   const totalPages = Math.ceil((data?.length || 0) / pageSize);
@@ -83,3 +99,4 @@ function BookedRoomss() {
     </div>
   );
 }
+

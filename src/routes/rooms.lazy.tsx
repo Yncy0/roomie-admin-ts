@@ -9,6 +9,7 @@ import {
 import { fetchRooms } from "@/hooks/queries/rooms/useFetchRooms";
 import { Table, Button, Card, Heading } from "@radix-ui/themes";
 import RoomsCard from "@/components/RoomsCard";
+import Loader from "@/components/loader/Loader";
 import RoomsLoader from "@/components/RoomsLoader";
 import PaginationControls from "@/components/PaginationControls";
 import "@/styles/rooms.css";
@@ -19,8 +20,9 @@ export const Route = createLazyFileRoute("/rooms")({
 
 function Rooms() {
   const [showLoader, setShowLoader] = React.useState(true);
+  const [showRoomsLoader, setShowRoomsLoader] = React.useState(false);
   const { data = [], isLoading, error } = fetchRooms();
-  const roomsPerRow = 3;
+  const roomsPerRow = 3; // Maintain the correct number of rooms per row
 
   const columns = React.useMemo(
     () => [
@@ -28,7 +30,7 @@ function Rooms() {
         header: "Rooms",
         accessorKey: "rooms",
         cell: ({ row }: any) => (
-          <div className="flex gap-4">
+          <div className="rooms-row">
             {row.original.rooms.map((item: any) => (
               <RoomsCard
                 key={item.id}
@@ -64,13 +66,13 @@ function Rooms() {
   });
 
   const handlePagination = (action: string) => {
-    setShowLoader(true);
+    setShowRoomsLoader(true);
     setTimeout(() => {
       if (action === "first") table.setPageIndex(0);
       else if (action === "prev") table.previousPage();
       else if (action === "next") table.nextPage();
       else if (action === "last") table.setPageIndex(table.getPageCount() - 1);
-      setShowLoader(false);
+      setShowRoomsLoader(false);
     }, 1000);
   };
 
@@ -78,7 +80,7 @@ function Rooms() {
     if (!isLoading && data.length > 0) setShowLoader(false);
   }, [isLoading, data]);
 
-  if (error) return <div>Error loading rooms</div>;
+  if (error) return <div className="rooms-error">Error loading rooms</div>;
 
   const navigate = useNavigate();
 
@@ -86,37 +88,42 @@ function Rooms() {
   const currentPage = table.getState().pagination.pageIndex;
 
   return (
-    <Card className="container">
-      <div className="header">
+    <Card className="rooms-container">
+      <div className="rooms-header">
         <Heading size="4">Rooms</Heading>
         <Button
           onClick={() => navigate({ to: "/rooms_add" })}
-          className="addRoomButton"
+          className="rooms-add-button"
         >
           Add Room
         </Button>
       </div>
 
       {showLoader ? (
-        <RoomsLoader />
+        <Loader />
       ) : (
-        <Table.Root>
-          <Table.Body>
-            {table.getRowModel().rows.map((row) => (
-              <Table.Row key={row.id} className="tableRow">
-                <Table.Cell>
-                  {flexRender(
-                    row.getVisibleCells()[0].column.columnDef.cell,
-                    row.getVisibleCells()[0].getContext()
-                  )}
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
+        <>
+          {showRoomsLoader ? (
+            <RoomsLoader />
+          ) : (
+            <Table.Root className="rooms-table">
+              <Table.Body>
+                {table.getRowModel().rows.map((row) => (
+                  <Table.Row key={row.id} className="rooms-table-row">
+                    <Table.Cell>
+                      {flexRender(
+                        row.getVisibleCells()[0].column.columnDef.cell,
+                        row.getVisibleCells()[0].getContext()
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+          )}
+        </>
       )}
 
-      {/* Pagination Controls */}
       <PaginationControls
         currentPage={currentPage}
         totalPages={totalPages}
@@ -125,3 +132,5 @@ function Rooms() {
     </Card>
   );
 }
+
+export default Rooms;
