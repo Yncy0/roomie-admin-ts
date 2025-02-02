@@ -7,9 +7,8 @@ export const fetchSchedule = () => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("schedule")
-                .select("*")
-                .eq("status", "DONE")
-                
+                .select("*");
+
             if (error) {
                 console.log(error);
                 throw error;
@@ -26,8 +25,7 @@ export const fetchScheduleWithId = (id: any) => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("schedule")
-                .select("*")
-                .eq("status", "DONE")
+                .select("*, subject(*), course(*), profiles(*)");
 
             if (error) {
                 console.log(error);
