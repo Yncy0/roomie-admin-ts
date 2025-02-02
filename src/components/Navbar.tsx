@@ -9,6 +9,8 @@ import {
   faUserGroup,
   faCalendar,
   faBook,
+  faAddressCard,
+  faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -27,6 +29,7 @@ const navItems: NavItem[] = [
   { icon: faUserGroup, label: "Users", href: "/users" },
   { icon: faLayerGroup, label: "Rooms", href: "/rooms" },
   { icon: faCalendar, label: "Schedule", href: "/schedule" },
+  { icon: faCalendarPlus, label: "User Schedule", href: "/user_schedule" },
   { icon: faObjectUngroup, label: "Backlogs", href: "/backlogs" },
   { icon: faBoxArchive, label: "Archive", href: "/archive" },
 ];
