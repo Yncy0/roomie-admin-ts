@@ -80,17 +80,47 @@ function RouteComponent() {
       </div>
 
       {/* Image File Input */}
-      <div className="inputGroup font-sans  relative">
+      <div
+        className="inputGroup"
+        style={{
+          fontFamily: "'Segoe UI', sans-serif",
+          margin: "1.7em 0",
+          position: "relative",
+        }}
+      >
         <input
           id="imageInput"
           type="file"
           accept="image/*"
-          onChange={handleImageChange}
-          className="w-full text-base p-8 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
+          onChange={(e) =>
+            setRoomImage(
+              e.target.files && e.target.files[0]
+                ? URL.createObjectURL(e.target.files[0])
+                : ""
+            )
+          }
+          style={{
+            fontSize: "100%",
+            padding: "30px",
+            outline: "none",
+            border: "2px solid #35487a",
+            backgroundColor: "transparent",
+            borderRadius: "20px",
+            width: "100%",
+          }}
         />
         <label
           htmlFor="imageInput"
-          className="text-base absolute left-0 p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
+          style={{
+            fontSize: "100%",
+            position: "absolute",
+            left: "0",
+            padding: "0.8em",
+            marginLeft: "0.5em",
+            pointerEvents: "none",
+            transition: "all 0.3s ease",
+            color: "#35487a",
+          }}
         >
           Upload Image
         </label>

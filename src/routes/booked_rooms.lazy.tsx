@@ -99,4 +99,3 @@ function BookedRoomss() {
     </div>
   );
 }
-

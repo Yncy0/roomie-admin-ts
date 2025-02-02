@@ -1,14 +1,8 @@
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
+import { deleteBookedRoomsCancel } from "@/hooks/queries/booking/useDeleteBookedRooms";
 import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms";
 import { insertNotification } from "@/hooks/queries/useNotifications";
-import {
-  Button,
-  Dialog,
-  Flex,
-  TextField,
-  Text,
-  Select,
-} from "@radix-ui/themes";
+import { Button, Dialog, Flex, Select } from "@radix-ui/themes";
 import { Pencil } from "lucide-react";
 import React from "react";
 
@@ -18,23 +12,36 @@ type Props = {
 
 const StatusDialog = ({ item }: Props) => {
   const [value, setValue] = React.useState(item.status);
+  const latestValueRef = React.useRef(value);
 
-  const update = updateBookedRoomsStatus(item.id, value);
+  React.useEffect(() => {
+    latestValueRef.current = value;
+  }, [value]);
+
+  console.log(value);
 
   const onHandleClick = async () => {
+    // Use the latest value from the ref
+    const latestValue = latestValueRef.current;
+    console.log("Latest value:", latestValue); // Debugging: Check the latest value
+
+    // Call the update function with the latest value
+    const update = updateBookedRoomsStatus(item.id, latestValue);
     if (update) await update;
 
-    await insertNotification(
+    // Use the latest value for notifications
+    insertNotification(
       item.profiles.id,
-      `Your booking status is set to ${item.status}`
+      `Your booking status is set to ${latestValue}`
     );
 
-    await insertBacklogs(
+    insertBacklogs(
       "UPDATE",
-      `The booking request of ${item.profiles?.username} has granted status ${item.status}`
+      `The booking request of ${item.profiles?.username} has granted status ${latestValue}`
     );
-  };
 
+    await deleteBookedRoomsCancel();
+  };
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -54,7 +61,7 @@ const StatusDialog = ({ item }: Props) => {
               <Select.Label>Status</Select.Label>
               <Select.Item value="ON GOING">ON GOING</Select.Item>
               <Select.Item value="PENDING RESERVE">PENDING RESERVE</Select.Item>
-              <Select.Item value="CANCEL RESERVE">CANCEL RESERVE</Select.Item>
+              <Select.Item value="CANCEL REQUEST">CANCEL REQUEST</Select.Item>
             </Select.Group>
           </Select.Content>
         </Select.Root>

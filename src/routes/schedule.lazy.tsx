@@ -1,9 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
+import SchedulePage from "../components/scheduler/SchedulePage"
 
 export const Route = createLazyFileRoute("/schedule")({
-  component: RouteComponent,
+  component: ScheduleComponent,
 });
 
-function RouteComponent() {
-  return <div>HELP ME CANNOT PUT SCHEDULER</div>;
+function ScheduleComponent() {
+  return <SchedulePage />
 }
