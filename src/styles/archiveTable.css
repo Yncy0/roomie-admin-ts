@@ -1,0 +1,115 @@
+/* General container styles */
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    overflow: hidden
+  }
+  
+  /* Header title */
+  .header {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #1f2947;
+  }
+  
+  /* Table styles */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 2rem;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect */
+    overflow: hidden;
+    background-color: white;
+  }
+  
+  /* Table header */
+  .table th {
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    background-color: white;
+    color: #718EBF;
+  }
+  
+  /* Table cells */
+  .table td {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #E6EFF5;
+    background-color: white;
+  }
+  
+  /* Table row hover effect */
+  .table tr:hover {
+    background-color: #f9f9f9;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  /* Pagination controls */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 16px;
+  }
+  
+  /* Pagination buttons */
+  .pagination button {
+    padding: 8px 12px;
+    background-color: #102b53;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .pagination button:hover {
+    background-color: #405a7a;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Text messages */
+  .loading-text,
+  .error-text,
+  .no-data-text {
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .loading-text {
+    color: #555;
+  }
+  
+  .error-text {
+    color: red;
+  }
+  
+  .no-data-text {
+    color: #666;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .table th,
+    .table td {
+      font-size: 0.9rem;
+    }
+  
+    .table {
+      margin: 10px;
+    }
+  }
+  

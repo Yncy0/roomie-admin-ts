@@ -1,0 +1,36 @@
+.edit-button {
+    background-color: white; /* Set initial background to white */
+    color: #123288; /* Text color for the edit button */
+    padding: 8px 15px;
+    border: 1px solid #123288; /* Thinner border */
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-button:hover {
+    background-color: #123288; /* Background color on hover */
+    color: white; /* Change text color to white on hover */
+  }
+  
+  .dialog-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .delete-button {
+    background-color: white; /* Set initial background to white */
+    color: #CC2E41; /* Text color for the delete button */
+    padding: 8px 15px;
+    border: 1px solid #CC2E41; /* Thinner border */
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #CC2E41; /* Background color on hover */
+    color: white; /* Change text color to white on hover */
+  }
+  

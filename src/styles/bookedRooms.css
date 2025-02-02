@@ -1,0 +1,73 @@
+/* General container for the page */
+.container {
+    min-width: 100%; /* Ensures the container takes up full width */
+    gap: 1.75rem; /* Space between child elements */
+    display: flex; /* Flexbox layout for column direction */
+    flex-direction: column; /* Stacks items vertically */
+    padding: 1.5rem; /* Padding inside the container */
+  }
+  
+  /* Title at the top of the page */
+  .title {
+    text-align: center; /* Centers the title */
+    font-size: 1.25rem; /* Font size for the title */
+    font-weight: 600; /* Bold text */
+    color: #4b5563; /* Dark gray color */
+  }
+  
+  /* Table styles */
+  .table {
+    width: 100%; /* Table width */
+    max-width: 1200px; /* Optional: Limit max width of the table */
+    margin: 0 auto; /* Center the table horizontally */
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    outline: none;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow below the table */
+    overflow: hidden; /* Ensure corners stay rounded */
+  }
+  
+  /* Table header background */
+  .table-header {
+    background-color: white; /* Light gray background for header */
+  }
+  
+  /* Table column header cells */
+  .table-column-header-cell {
+    padding: 12px;
+    text-align: center; /* Centers the text */
+    color: #718EBF; /* Text color for headers */
+  }
+  
+  /* Table rows */
+  .table-row {
+    border-bottom: 1px solid #bbb; /* Light border for rows */
+  }
+  
+  /* Remove bottom border from the last row */
+  .table-row:last-child {
+    border-bottom: none; /* Removes the last row's bottom border */
+  }
+  
+  /* Table cells inside rows */
+  .table-cell {
+    padding: 12px; /* Padding inside cells */
+    text-align: center; /* Center-align text */
+    font-size: 0.875rem; /* Smaller font size */
+    background-color: white; /* White background for cells */
+  }
+  
+  /* Status badge styles */
+  .status-badge {
+    padding: 0.25rem 0.5rem; /* Padding inside badge */
+    font-size: 0.75rem; /* Smaller font size */
+    border-radius: 0.25rem; /* Rounded corners for badge */
+  }
+  
+  /* Error message */
+  .error-message {
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+  }

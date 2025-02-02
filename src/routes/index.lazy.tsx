@@ -1,6 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import ColumnCard from "@/components/ColumnCard";
-import DashbaordTable from "@/components/DashboardTable";
+import DashboardTable from "@/components/DashboardTable";
+import BookingTrendsChart from "@/components/BookingTrendsChart"; // Default import
+import RoomAvailabilityChart from "@/components/RoomAvailabilityChart"; // Default import
+import "@/styles/dashboard.css";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -8,30 +10,28 @@ export const Route = createLazyFileRoute("/")({
 
 function Index() {
   return (
-    <div className="flex flex-col m-2 gap-6">
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-col gap-8">
-          <ColumnCard
-            header={"Bookings"}
-            stats={287}
-            percent={"+3%"}
-            description={"more than last week"}
-          />
-          <ColumnCard
-            header={"Rooms"}
-            stats={287}
-            percent={"+3%"}
-            description={"more than last week"}
-          />
-          <ColumnCard
-            header={"Users"}
-            stats={287}
-            percent={"+3%"}
-            description={"more than last week"}
-          />
+    <div className="dashboard-container">
+      <h2 className="dashboard-title">Overview</h2>
+
+      {/* Charts Section (Row Layout) */}
+      <div className="charts-section">
+        <div className="chart-box">
+          <h3 className="chart-title">Room Availability</h3>
+          <RoomAvailabilityChart />
+        </div>
+
+        <div className="chart-box">
+          <h3 className="chart-title">Booking Trends</h3>
+          <BookingTrendsChart />
         </div>
       </div>
-      <DashbaordTable />
+
+      {/* Recent Activity */}
+      <div className="activity-section">
+        <DashboardTable />
+      </div>
     </div>
   );
 }
+
+export default Index;

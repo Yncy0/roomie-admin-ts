@@ -1,16 +1,14 @@
 import supabase from "@/utils/supabase";
 import { useQuery } from "@tanstack/react-query";
-import { Tables } from "database.types";
 
-type BookedRooms = Tables<"booked_rooms">;
-
-export const fetchBookedRooms = () => {
+export const fetchArchivedRooms = () => {
     return useQuery({
-        queryKey: ["booked_rooms"],
+        queryKey: ["rooms"],
         queryFn: async () => {
             const { data, error } = await supabase
-                .from("booked_rooms")
-                .select(`*, profiles(*), rooms(*)`);
+                .from("rooms")
+                .select("*")
+                .eq("is_archived", true);
 
             if (error) {
                 console.log(error);
