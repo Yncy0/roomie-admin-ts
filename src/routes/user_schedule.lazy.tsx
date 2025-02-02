@@ -91,7 +91,6 @@ const UserSchedulePage: React.FC = () => {
   const [formData, setFormData] = useState<any>({})
   const [selectedEvent, setSelectedEvent] = useState<any>(null)
   const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false)
-  const [addUserModalOpen, setAddUserModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState(0)
   const {
@@ -131,7 +130,7 @@ const UserSchedulePage: React.FC = () => {
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name as string]: value }))
+    setFormData((prev: any) => ({ ...prev, [name as string]: value }))
   }
 
   const handleFormSubmit = async () => {
@@ -252,14 +251,7 @@ const UserSchedulePage: React.FC = () => {
 
   return (
     <Box sx={{ position: "relative" }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setAddUserModalOpen(true)}
-        sx={{ fontWeight: "bold", position: "absolute", top: "5%", right: "5%", fontSize: "15px" }}
-      >
-        Add User+
-      </Button>
+     
 
       <Box sx={{ padding: 3, color: "black", display: "flex" }}>
         <Box sx={{ width: "200px", borderRight: "1px solid #ccc" }}>
@@ -360,7 +352,7 @@ const UserSchedulePage: React.FC = () => {
                       <Table sx={{ minWidth: 650 }}>
                         <TableHead>
                           <TableRow>
-                            {<TableCell>Booking ID</TableCell>}
+                            {<TableCell hidden>Booking ID</TableCell>}
                             <TableCell>Room Name</TableCell>
                             <TableCell>Subject Code</TableCell>
                             <TableCell>Section</TableCell>
@@ -374,12 +366,14 @@ const UserSchedulePage: React.FC = () => {
                             .filter((event) => event.user_name === selectedUser)
                             .map((event, index) => (
                               <TableRow key={index} onClick={() => openModal("booking", event)}>
-                                {<TableCell>{event.id}</TableCell>}
+                                {<TableCell hidden>{event.id}</TableCell>}
                                 <TableCell>{event.room_name}</TableCell>
                                 <TableCell>{event.subject}</TableCell>
                                 <TableCell>{event.course_section}</TableCell>
                                 <TableCell>{event.date}</TableCell>
-                                <TableCell>{`${event.book_timeIn} - ${event.book_timeOut}`}</TableCell>
+                                <TableCell>
+                                  {`${dayjs(event.book_timeIn).utc().format("h:mm A")} - ${dayjs(event.book_timeOut).utc().format("h:mm A")}`}
+                                </TableCell>
                                 <TableCell>
                                   <Button
                                     variant="contained"
@@ -429,7 +423,7 @@ const UserSchedulePage: React.FC = () => {
                       <Table sx={{ minWidth: 650 }}>
                         <TableHead>
                           <TableRow>
-                            {<TableCell>Schedule ID</TableCell>}
+                            {<TableCell hidden>Schedule ID</TableCell>}
                             <TableCell>Room Name</TableCell>
                             <TableCell>Subject Code</TableCell>
                             <TableCell>Section</TableCell>
@@ -443,12 +437,12 @@ const UserSchedulePage: React.FC = () => {
                             .filter((event) => event.user_name === selectedUser)
                             .map((event, index) => (
                               <TableRow key={index} onClick={() => openModal("schedule", event)}>
-                                {<TableCell>{event.id}</TableCell>}
+                                {<TableCell hidden>{event.id}</TableCell>}
                                 <TableCell>{event.room_name}</TableCell>
                                 <TableCell>{event.subject_code}</TableCell>
                                 <TableCell>{event.course_name}</TableCell>
                                 <TableCell>{event.days}</TableCell>
-                                <TableCell>{`${event.time_in} - ${event.time_out}`}</TableCell>
+                                <TableCell>{`${dayjs(event.time_in, "HH:mm:ss").format("h:mm A")} - ${dayjs(event.time_out, "HH:mm:ss").format("h:mm A")}`}</TableCell>
                                 <TableCell>
                                   <Button
                                     variant="contained"
@@ -500,11 +494,9 @@ const UserSchedulePage: React.FC = () => {
         closeStatusModal={() => setStatusModalOpen(false)}
         selectedEvent={selectedEvent}
         FormData={async () => {
-          // Refresh data using the custom hook
-          const { isLoading, bookingData, scheduleData, rooms, users, userInfo } = useSupabaseQueries(selectedUser)
-          // Update local state if needed
-          //setIsLoading(isLoading)
-          // ... (update other state variables as needed)
+         
+          useSupabaseQueries(selectedUser)
+        
         }}
       />
 

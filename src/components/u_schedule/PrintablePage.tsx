@@ -1,26 +1,59 @@
-import React from 'react';
-import { Card, CardContent, Typography, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper } from '@mui/material';
-import { ReactNode } from '@tanstack/react-router';
+import type React from "react"
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableContainer,
+  Paper,
+} from "@mui/material"
+import type { BookingData, ScheduleData, UserInfo } from "../../routes/user_schedule.lazy"
+import dayjs from "dayjs"
 
-const PrintablePage = ({ selectedUser, userInfo, scheduleData }) => {
+interface PrintablePageProps {
+  selectedUser: string | null
+  userInfo: UserInfo | null
+  bookingData: BookingData[]
+  scheduleData: ScheduleData[]
+}
+
+const PrintablePage: React.FC<PrintablePageProps> = ({ selectedUser, userInfo, bookingData, scheduleData }) => {
   return (
     <div className="printable-page">
       {/* User Information Section */}
-      <Card sx={{ marginBottom: 2, boxShadow: 'none' }}>
+      <Card sx={{ marginBottom: 2, boxShadow: "none" }}>
         <CardContent>
-          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2 }}>User Information</Typography>
-          <p><strong>ID:</strong> {userInfo?.user_id || "Unknown"}</p>
-          <p><strong>Full Name:</strong> {userInfo?.full_name || "Unknown"}</p>
-          <p><strong>Email:</strong> {userInfo?.user_email || "Unknown"}</p>
-          <p><strong>Mobile Number:</strong> {userInfo?.mobile_number || "Unknown"}</p>
-          <p><strong>Department:</strong> {userInfo?.user_department || "Unknown"}</p>
+          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+            User Information
+          </Typography>
+          <p>
+            <strong>ID:</strong> {userInfo?.user_id || "Unknown"}
+          </p>
+          <p>
+            <strong>Full Name:</strong> {userInfo?.full_name || "Unknown"}
+          </p>
+          <p>
+            <strong>Email:</strong> {userInfo?.user_email || "Unknown"}
+          </p>
+          <p>
+            <strong>Mobile Number:</strong> {userInfo?.mobile_number || "Unknown"}
+          </p>
+          <p>
+            <strong>Department:</strong> {userInfo?.user_department || "Unknown"}
+          </p>
         </CardContent>
       </Card>
 
       {/* Schedule Information Section */}
-      <Card sx={{ boxShadow: 'none' }}>
+      <Card sx={{ boxShadow: "none" }}>
         <CardContent>
-          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2 }}>Schedule Information</Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+            Schedule Information
+          </Typography>
           <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
@@ -30,23 +63,20 @@ const PrintablePage = ({ selectedUser, userInfo, scheduleData }) => {
                   <TableCell>Section</TableCell>
                   <TableCell>Weekday</TableCell>
                   <TableCell>Time</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell hidden>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {scheduleData
-                  .filter((event: { user_name: any; }) => event.user_name === selectedUser)
-                  .map((event: {
-                    course_name: ReactNode;
-                    days: ReactNode; room_name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; subject_code: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; section: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; weekday: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; time_in: any; time_out: any; status: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; 
-}, index: React.Key | null | undefined) => (
+                  .filter((event) => event.user_name === selectedUser)
+                  .map((event, index) => (
                     <TableRow key={index}>
                       <TableCell>{event.room_name}</TableCell>
                       <TableCell>{event.subject_code}</TableCell>
                       <TableCell>{event.course_name}</TableCell>
                       <TableCell>{event.days}</TableCell>
-                      <TableCell>{`${event.time_in} - ${event.time_out}`}</TableCell>
-                      <TableCell>{event.status}</TableCell>
+                      <TableCell>{`${dayjs(event.time_in, "HH:mm:ss").format("h:mm A")} - ${dayjs(event.time_out, "HH:mm:ss").format("h:mm A")}`}</TableCell>
+                      <TableCell hidden>{event.status}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -74,26 +104,21 @@ const PrintablePage = ({ selectedUser, userInfo, scheduleData }) => {
             }
 
             .printable-page {
-              display: fixed;
               position: absolute;
               top: 0;
               left: 0;
               width: 100%;
-              
-         
             }
 
             .printable-page table {
               width: 100%;
               border-collapse: collapse;
-        
             }
 
             .printable-page th, .printable-page td {
               border: 1px solid black;
               padding: 8px;
               text-align: left;
-              
             }
 
             .printable-page th {
@@ -103,7 +128,8 @@ const PrintablePage = ({ selectedUser, userInfo, scheduleData }) => {
         `}
       </style>
     </div>
-  );
-};
+  )
+}
 
-export default PrintablePage;
+export default PrintablePage
+
