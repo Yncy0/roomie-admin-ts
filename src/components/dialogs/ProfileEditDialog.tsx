@@ -2,6 +2,7 @@ import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { updateProfiles } from "@/hooks/queries/profiles/useUpdateProfiles";
 import { Button, Dialog, Flex, TextField, Text } from "@radix-ui/themes";
 import React from "react";
+import "@/styles/dialog.css";
 
 type Props = {
   items: any;
@@ -40,7 +41,7 @@ const ProfileEditDialog = ({ items }: Props) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <Button>Edit</Button>
+        <Button className="edit-button">Edit</Button>
       </Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Title>Edit Profile</Dialog.Title>

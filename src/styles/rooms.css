@@ -1,0 +1,30 @@
+.container {
+    width: 95%;
+    margin: 20px auto;
+    padding: 32px;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.addRoomButton {
+    border: 2px solid #35487a;
+    color: #35487a;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.3s, color 0.3s;
+    position: relative;
+}
+
+.addRoomButton:hover {
+    background: #35487a;
+    color: white;
+}

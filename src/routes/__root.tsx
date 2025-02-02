@@ -1,8 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import HeaderComponent from "../components/Header";
+import BodyComponent from "@/components/BodyComponent";
 import Navbar from "../components/Navbar";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRoute} from "@tanstack/react-router";
 import { Theme } from "@radix-ui/themes";
+import "../styles/style.css";
+
 
 //import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
@@ -11,18 +13,15 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <QueryClientProvider client={new QueryClient()}>
-        <Theme>
+        <Theme className="root_theme">
           <div className="flex flex-row">
             <Navbar />
-            <div className="body-container ">
-              <main className="flex flex-col gap-4 w-full">
-                <HeaderComponent />
-                <Outlet />
-              </main>
-            </div>
+            <main className="flex flex-col gap-4 w-full">
+                <BodyComponent/>  
+            </main>
           </div>
           {/* <TanStackRouterDevtools /> */}
-        </Theme>
+          </Theme>
       </QueryClientProvider>
     </>
   ),
