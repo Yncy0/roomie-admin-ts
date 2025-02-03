@@ -1,94 +1,213 @@
 import dayjs from "dayjs"
+import isBetween from "dayjs/plugin/isBetween"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 import supabase from "@/utils/supabase"
+import type { BookingData, ScheduleData, Conflict } from "../types"
 
+dayjs.extend(isBetween)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 
-interface FormattedData {
-  room_id: string
-  days: string
-  time_in: string
-  time_out: string
-  date: string
-  selectedUserId: string
-  id: string
+interface TimeRange {
+  start: dayjs.Dayjs
+  end: dayjs.Dayjs
 }
 
-const conflictChecker = async (formattedData: FormattedData): Promise<string | null> => {
-    if (!formattedData || !formattedData.room_id || !formattedData.days || !formattedData.time_in || !formattedData.time_out || !formattedData.date || !formattedData.selectedUserId || !formattedData.id) {
-        console.error("Missing required fields in formattedData:", formattedData);
-        return "Error: Missing required data.";
+export function checkTimeOverlap(range1: TimeRange, range2: TimeRange): boolean {
+  return (
+    (range1.start.isBefore(range2.end) && range1.end.isAfter(range2.start)) ||
+    range1.start.isSame(range2.start) ||
+    range1.end.isSame(range2.end)
+  )
+}
+
+export function checkDayOverlap(days1: string[], days2: string[]): boolean {
+  const normalizedDays1 = days1.map((d) => d.trim().toLowerCase())
+  const normalizedDays2 = days2.map((d) => d.trim().toLowerCase())
+  return normalizedDays1.some((day) => normalizedDays2.includes(day))
+}
+
+export async function findDatabaseConflicts(newEvent: BookingData | ScheduleData): Promise<Conflict[]> {
+  const conflicts: Conflict[] = []
+  const isNewEventBooking = "date" in newEvent
+
+  try {
+    // Check booked_rooms table for conflicts
+    if (isNewEventBooking) {
+      const { data: bookingConflicts, error: bookingError } = await supabase
+        .from("booked_rooms")
+        .select(`
+          id,
+          room_id,
+          date,
+          time_in,
+          time_out,
+          profiles:profile_id (username)
+        `)
+        .eq("room_id", newEvent.room_id)
+        .eq("date", newEvent.date)
+        .neq("id", newEvent.id || "") // Exclude current event if updating
+        .not("status", "eq", "Cancelled") // Exclude cancelled bookings
+
+      if (bookingError) throw bookingError
+
+      if (bookingConflicts) {
+        const newTimeRange = {
+          start: dayjs(`${newEvent.date} ${newEvent.book_timeIn}`),
+          end: dayjs(`${newEvent.date} ${newEvent.book_timeOut}`),
+        }
+
+        bookingConflicts.forEach((conflict, index) => {
+          const existingTimeRange = {
+            start: dayjs(`${conflict.date} ${conflict.time_in}`),
+            end: dayjs(`${conflict.date} ${conflict.time_out}`),
+          }
+
+          if (checkTimeOverlap(newTimeRange, existingTimeRange)) {
+            conflicts.push({
+              type: "booking",
+              user: conflict.profiles?.username || "Unknown",
+              rowNumber: index + 1,
+              details: `Booking time conflict on ${conflict.date}`,
+            })
+          }
+        })
       }
-    
-      const { room_id, days, time_in, time_out, date, selectedUserId, id } = formattedData;
-    
-      const newStart = dayjs(time_in, "HH:mm");
-      const newEnd = dayjs(time_out, "HH:mm");
-    
-      if (!newStart.isValid() || !newEnd.isValid()) {
-        console.error("Invalid time format for time_in or time_out.");
-        return null;
+
+      // Also check schedule table for conflicts with the booking day
+      const bookingDay = dayjs(newEvent.date).format("dddd")
+      const { data: scheduleConflicts, error: scheduleError } = await supabase
+        .from("schedule")
+        .select(`
+          id,
+          room_id,
+          days,
+          time_in,
+          time_out,
+          profiles:profile_id (username)
+        `)
+        .eq("room_id", newEvent.room_id)
+        .not("status", "eq", "Cancelled")
+        .ilike("days", `%${bookingDay}%`)
+
+      if (scheduleError) throw scheduleError
+
+      if (scheduleConflicts) {
+        const newTimeRange = {
+          start: dayjs(newEvent.book_timeIn, "HH:mm:ss"),
+          end: dayjs(newEvent.book_timeOut, "HH:mm:ss"),
+        }
+
+        scheduleConflicts.forEach((conflict, index) => {
+          const existingTimeRange = {
+            start: dayjs(conflict.time_in, "HH:mm:ss"),
+            end: dayjs(conflict.time_out, "HH:mm:ss"),
+          }
+
+          if (checkTimeOverlap(newTimeRange, existingTimeRange)) {
+            conflicts.push({
+              type: "schedule",
+              user: conflict.profiles?.username || "Unknown",
+              rowNumber: index + 1,
+              details: `Booking conflicts with existing schedule on ${bookingDay}`,
+            })
+          }
+        })
       }
-    
-      try {
-        // Check for booking conflicts (specific date)
-        if (date) {
-          const { data: existingBookings, error: bookingError } = await supabase
-            .from("booked_rooms")
-            .select("*, rooms (*), profiles (*)")
-            .eq("room_id", room_id)
-            .eq("date", date)
-            .neq("id", id);  // Exclude current record by ID if updating
-    
-          if (bookingError) throw new Error(bookingError.message);
-    
-          for (const record of existingBookings) {
-            const recordStart = dayjs(record.time_in).tz("Asia/Manila", true); // Convert timestampz to Manila time
-            const recordEnd = dayjs(record.time_out).tz("Asia/Manila", true); // Convert timestampz to Manila time
-    
-            if (
-              newStart.isBetween(recordStart, recordEnd, null, "[)") ||
-              newEnd.isBetween(recordStart, recordEnd, null, "(]") ||
-              (newStart.isSameOrBefore(recordStart) && newEnd.isSameOrAfter(recordEnd))
-            ) {
-              const userName = record.profiles?.username || "Unknown User";
-              return `Conflict detected with a booking on ${date} by ${userName}.`;
+    } else {
+      // Check schedule table for conflicts
+      const { data: scheduleConflicts, error: scheduleError } = await supabase
+        .from("schedule")
+        .select(`
+          id,
+          room_id,
+          days,
+          time_in,
+          time_out,
+          profiles:profile_id (username)
+        `)
+        .eq("room_id", newEvent.room_id)
+        .neq("id", newEvent.id || "") // Exclude current event if updating
+        .not("status", "eq", "Cancelled")
+
+      if (scheduleError) throw scheduleError
+
+      if (scheduleConflicts) {
+        const newDays = newEvent.days.split(",")
+        const newTimeRange = {
+          start: dayjs(newEvent.time_in, "HH:mm:ss"),
+          end: dayjs(newEvent.time_out, "HH:mm:ss"),
+        }
+
+        scheduleConflicts.forEach((conflict, index) => {
+          const existingDays = conflict.days.split(",")
+          if (checkDayOverlap(newDays, existingDays)) {
+            const existingTimeRange = {
+              start: dayjs(conflict.time_in, "HH:mm:ss"),
+              end: dayjs(conflict.time_out, "HH:mm:ss"),
+            }
+
+            if (checkTimeOverlap(newTimeRange, existingTimeRange)) {
+              conflicts.push({
+                type: "schedule",
+                user: conflict.profiles?.username || "Unknown",
+                rowNumber: index + 1,
+                details: `Schedule time conflict on ${existingDays.join(", ")}`,
+              })
             }
           }
-        }
-    
-        // Check for schedule conflicts (specific weekday)
-        const { data: existingSchedules, error: scheduleError } = await supabase
-          .from("schedule")
-          .select("*, rooms (*), profiles (*), subject (*), course (*)")
-          .eq("room_id", room_id)
-          .eq("days", days)
-          .neq("id", id);  // Exclude current record by ID if updating
-    
-        if (scheduleError) throw new Error(scheduleError.message);
-    
-        for (const record of existingSchedules) {
-          const recordStart = dayjs(record.time_in, "HH:mm");
-          const recordEnd = dayjs(record.time_out, "HH:mm");
-    
-          if (
-            newStart.isBetween(recordStart, recordEnd, null, "[)") ||
-            newEnd.isBetween(recordStart, recordEnd, null, "(]") ||
-            (newStart.isSameOrBefore(recordStart) && newEnd.isSameOrAfter(recordEnd))
-          ) {
-            const userName = record.profiles?.username || "Unknown User";
-            return `Conflict detected with a schedule on ${days} by ${userName}.`;
-          }
-        }
-      } catch (error) {
-        console.error("Error in conflictChecker:", error.message);
-        return "Error checking conflicts. Please try again.";
+        })
       }
-    
-      return null;  // No conflict found
-    };
 
-export default conflictChecker
+      // Also check booked_rooms table for conflicts with the schedule days
+      const newDays = newEvent.days.split(",").map((d: string) => d.trim())
+      const { data: bookingConflicts, error: bookingError } = await supabase
+        .from("booked_rooms")
+        .select(`
+          id,
+          room_id,
+          date,
+          time_in,
+          time_out,
+          profiles:profile_id (username)
+        `)
+        .eq("room_id", newEvent.room_id)
+        .not("status", "eq", "Cancelled")
+
+      if (bookingError) throw bookingError
+
+      if (bookingConflicts) {
+        const newTimeRange = {
+          start: dayjs(newEvent.time_in, "HH:mm:ss"),
+          end: dayjs(newEvent.time_out, "HH:mm:ss"),
+        }
+
+        bookingConflicts.forEach((conflict, index) => {
+          const bookingDay = dayjs(conflict.date).format("dddd")
+          if (newDays.includes(bookingDay)) {
+            const existingTimeRange = {
+              start: dayjs(conflict.time_in, "HH:mm:ss"),
+              end: dayjs(conflict.time_out, "HH:mm:ss"),
+            }
+
+            if (checkTimeOverlap(newTimeRange, existingTimeRange)) {
+              conflicts.push({
+                type: "booking",
+                user: conflict.profiles?.username || "Unknown",
+                rowNumber: index + 1,
+                details: `Schedule conflicts with existing booking on ${bookingDay}`,
+              })
+            }
+          }
+        })
+      }
+    }
+
+    return conflicts
+  } catch (error) {
+    console.error("Error checking for conflicts:", error)
+    throw error
+  }
+}
 
