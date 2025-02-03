@@ -1,10 +1,11 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table } from "@radix-ui/themes";
 import PaginationControls from "@/components/PaginationControls";
 import { fetchProfiles } from "@/hooks/queries/profiles/useArchiveProfiles";
 import { fetchArchivedRooms } from "@/hooks/queries/rooms/useArchiveRooms";
 import { fetchArchivedSchedule } from "@/hooks/queries/schedule/useArchiveSchedule";
+import Loader from "@/components/loader/Loader";
 import "@/styles/archive.css";
 
 export const Route = createLazyFileRoute("/archive")({
@@ -20,6 +21,18 @@ function Archive() {
   const { data: archivedUsers, isLoading: isLoadingUsers, error: usersError } = fetchProfiles();
   const { data: archivedRooms, isLoading: isLoadingRooms, error: roomsError } = fetchArchivedRooms();
   const { data: archivedSchedule, isLoading: isLoadingSchedule, error: scheduleError } = fetchArchivedSchedule();
+
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Simulate a 4-second loader display
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowLoader(false); // Hide the loader after 4 seconds
+    }, 4000); // 4000 ms = 4 seconds
+
+    // Cleanup the timeout if the component unmounts
+    return () => clearTimeout(timeout);
+  }, []);
 
   const paginateData = (data: any[], page: number) => {
     const startIndex = page * itemsPerPage;
@@ -78,33 +91,22 @@ function Archive() {
     }
   };
 
-  if (isLoadingUsers || isLoadingRooms || isLoadingSchedule) {
-    return (
-      <div className="dot-spinner">
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-      </div>
-    );
+  if (showLoader || isLoadingUsers || isLoadingRooms || isLoadingSchedule) {
+    return <Loader />; // Display loader while data is loading or until 4 seconds pass
   }
 
   return (
-    <div className="archives-container">
-      <h1 className="archives-title">Archives</h1>
+    <div className="archive-page-container">
+      <h1 className="archive-page-title">Archives</h1>
 
       {/* Archived Users */}
-      <div className="container">
-        <h2 className="header">Archived Users</h2>
+      <div className="archive-section">
+        <h2 className="archive-section-header">Archived Users</h2>
         {usersError ? (
-          <p className="table">Error: {usersError.message}</p>
+          <p className="archive-error-message">Error: {usersError.message}</p>
         ) : archivedUsers && archivedUsers.length > 0 ? (
           <>
-            <Table.Root>
+            <Table.Root className="archive-table-root">
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
@@ -134,13 +136,13 @@ function Archive() {
       </div>
 
       {/* Archived Rooms */}
-      <div className="container">
-        <h2 className="header">Archived Rooms</h2>
+      <div className="archive-section">
+        <h2 className="archive-section-header">Archived Rooms</h2>
         {roomsError ? (
-          <p className="table">Error: {roomsError.message}</p>
+          <p className="archive-error-message">Error: {roomsError.message}</p>
         ) : archivedRooms && archivedRooms.length > 0 ? (
           <>
-            <Table.Root>
+            <Table.Root className="archive-table-root">
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeaderCell>Room Name</Table.ColumnHeaderCell>
@@ -151,7 +153,7 @@ function Archive() {
               <Table.Body>
                 {paginateData(archivedRooms, currentPageRooms).map((room) => (
                   <Table.Row key={room.id}>
-                    <Table.Cell>{ room.room_name}</Table.Cell>
+                    <Table.Cell>{room.room_name}</Table.Cell>
                     <Table.Cell>{room.capacity}</Table.Cell>
                     <Table.Cell>{room.location}</Table.Cell>
                   </Table.Row>
@@ -170,13 +172,13 @@ function Archive() {
       </div>
 
       {/* Archived Schedule */}
-      <div className="container">
-        <h2 className="header">Archived Schedule</h2>
+      <div className="archive-section">
+        <h2 className="archive-section-header">Archived Schedule</h2>
         {scheduleError ? (
-          <p className="table">Error: {scheduleError.message}</p>
+          <p className="archive-error-message">Error: {scheduleError.message}</p>
         ) : archivedSchedule && archivedSchedule.length > 0 ? (
           <>
-            <Table.Root>
+            <Table.Root className="archive-table-root">
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeaderCell>Course</Table.ColumnHeaderCell>
@@ -207,3 +209,5 @@ function Archive() {
     </div>
   );
 }
+
+export default Archive;

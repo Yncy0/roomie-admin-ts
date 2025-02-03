@@ -1,23 +1,19 @@
+import "@/styles/roomsLoader.css";
+
 const RoomsLoader = () => {
   return (
-    <div className="grid grid-cols-3 gap-4 mb-4">
+    <div className="rooms-loader">
       {[...Array(3)].map((_, index) => (
-        <div
-          key={index}
-          className="relative flex flex-col w-80 rounded-xl bg-white p-6 gap-4 animate-pulse"
-        >
+        <div key={index} className="loader-card">
           {/* Image Skeleton */}
-          <div className="h-40 bg-gray-300 rounded-xl mb-4"></div>
+          <div className="image-skeleton"></div>
           {/* Room Details Skeleton */}
-          <div>
-            <div className="h-4 bg-gray-200 rounded-full mb-2"></div>{" "}
-            {/* Room Name */}
-            <div className="h-3 bg-gray-200 rounded-full w-3/4"></div>{" "}
-            {/* Location */}
+          <div className="details-skeleton">
+            <div className="text-skeleton"></div> {/* Room Name */}
+            <div className="text-skeleton short"></div> {/* Location */}
           </div>
           {/* Button Skeleton */}
-          <div className="h-12 bg-gray-300 rounded-lg w-40 mt-4"></div>{" "}
-          {/* Button */}
+          <div className="button-skeleton"></div>
         </div>
       ))}
     </div>

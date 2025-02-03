@@ -24,8 +24,8 @@ ChartJS.register(
 
 const RoomAvailabilityChart = () => {
   // Fetch data
-  const { data: rooms, isLoading: roomsLoading } = fetchAvailableRooms(); // Updated hook
-  const { data: bookedRooms, isLoading: bookedRoomsLoading } = fetchAvailableBookedRooms(); // Updated hook
+  const { data: rooms } = fetchAvailableRooms(); // Updated hook
+  const { data: bookedRooms } = fetchAvailableBookedRooms(); // Updated hook
 
   // Process data to calculate the total rooms inputted each day
   const roomsAvailable = rooms?.map((room) => {
@@ -79,10 +79,6 @@ const RoomAvailabilityChart = () => {
       },
     },
   };
-
-  if (roomsLoading || bookedRoomsLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="w-full h-[300px]">
