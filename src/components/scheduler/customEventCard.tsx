@@ -22,10 +22,7 @@ interface CustomEventCardProps {
 const CustomEventCard: React.FC<CustomEventCardProps> = ({ event }) => {
   const { extendedProps } = event.event
 
-  // Check if the booking status is Pending
-  if (extendedProps.status === "Pending") {
-    return null // Do not render anything if status is Pending
-  }
+ 
 
   return (
     <Tooltip
@@ -44,6 +41,9 @@ const CustomEventCard: React.FC<CustomEventCardProps> = ({ event }) => {
               </Typography>
               <Typography variant="body2" sx={{ display: "block", marginTop: "2px" }}>
                 <strong>Professor:</strong> {extendedProps.user_name}
+              </Typography>
+              <Typography variant="body2" sx={{ display: "block", marginTop: "2px" }}>
+                <strong>Status:</strong> {extendedProps.status}
               </Typography>
             </Box>
           </CardContent>
@@ -92,6 +92,17 @@ const CustomEventCard: React.FC<CustomEventCardProps> = ({ event }) => {
             }}
           >
             {extendedProps.subject_name || extendedProps.subject_code}
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              fontSize: "0.5rem",
+              lineHeight: 1.1,
+              fontStyle: "italic",
+            }}
+          >
+            
           </Typography>
         </CardContent>
       </Card>
