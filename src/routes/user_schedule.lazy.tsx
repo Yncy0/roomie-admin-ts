@@ -20,6 +20,7 @@ import {
   ListItemText,
   List,
   ListItem,
+  Fab,
 } from "@mui/material"
 
 import supabase from "@/utils/supabase"
@@ -84,7 +85,6 @@ function RouteComponent() {
   return <UserSchedulePage />
 }
 
-
 const UserSchedulePage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [modalType, setModalType] = useState<"booking" | "schedule">("booking")
@@ -135,8 +135,17 @@ const UserSchedulePage: React.FC = () => {
 
   const handleFormSubmit = async () => {
     try {
-      if (!formData.course_name) {
-        console.error("Course name is required.")
+      // Check for required fields
+      const requiredFields = ["course_name", "room_id", "subject_code"]
+      if (modalType === "booking") {
+        requiredFields.push("date", "time_in", "time_out")
+      } else {
+        requiredFields.push("days", "time_in", "time_out")
+      }
+
+      const missingFields = requiredFields.filter((field) => !formData[field])
+      if (missingFields.length > 0) {
+        alert(`Please fill in all required fields: ${missingFields.join(", ")}`)
         return
       }
 
@@ -164,7 +173,7 @@ const UserSchedulePage: React.FC = () => {
         .single()
 
       if (profileError || !profileData) {
-        console.error("Invalid profile_id: No matching record found in profiles.")
+        alert("Invalid profile_id: No matching record found in profiles.")
         return
       }
 
@@ -189,7 +198,7 @@ const UserSchedulePage: React.FC = () => {
           .single()
 
         if (subjectError || !subjectData) {
-          console.error("Error fetching subject_id:", subjectError || "No subject found for the given subject_code.")
+          alert("Error fetching subject_id: No subject found for the given subject_code.")
           return
         }
 
@@ -206,9 +215,23 @@ const UserSchedulePage: React.FC = () => {
         }
 
         if (formData.id) {
-          await updateSchedule({ ...scheduleData, id: formData.id })
+          const { data, error } = await updateSchedule({ ...scheduleData, id: formData.id })
+          if (error) {
+            alert(`Failed to update schedule: ${error.message}`)
+          } else {
+            alert("Schedule updated successfully!")
+            refreshData()
+            closeModal()
+          }
         } else {
-          await addSchedule(scheduleData)
+          const { data, error } = await addSchedule(scheduleData)
+          if (error) {
+            alert(`Failed to add schedule: ${error.message}`)
+          } else {
+            alert("Schedule added successfully!")
+            refreshData()
+            closeModal()
+          }
         }
       } else if (modalType === "booking") {
         const bookingData = {
@@ -222,17 +245,28 @@ const UserSchedulePage: React.FC = () => {
         }
 
         if (formData.id) {
-          await updateBooking({ ...bookingData, id: formData.id })
+          const { data, error } = await updateBooking({ ...bookingData, id: formData.id })
+          if (error) {
+            alert(`Failed to update booking: ${error.message}`)
+          } else {
+            alert("Booking updated successfully!")
+            refreshData()
+            closeModal()
+          }
         } else {
-          await addBooking(bookingData)
+          const { data, error } = await addBooking(bookingData)
+          if (error) {
+            alert(`Failed to add booking: ${error.message}`)
+          } else {
+            alert("Booking added successfully!")
+            refreshData()
+            closeModal()
+          }
         }
       }
-
-      console.log("Form submitted successfully!")
-      closeModal()
-      refreshData()
-    } catch (error) {
+    } catch (error: any) {
       console.error("Unexpected error:", error)
+      alert(`An error occurred: ${error.message}`)
     }
   }
 
@@ -251,8 +285,6 @@ const UserSchedulePage: React.FC = () => {
 
   return (
     <Box sx={{ position: "relative" }}>
-     
-
       <Box sx={{ padding: 3, color: "black", display: "flex" }}>
         <Box sx={{ width: "200px", borderRight: "1px solid #ccc" }}>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -284,7 +316,9 @@ const UserSchedulePage: React.FC = () => {
               {activeTab === 0 && userInfo && (
                 <Card>
                   <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>User Information</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      User Information
+                    </Typography>
                     <Table>
                       <TableHead>
                         <TableRow>
@@ -379,7 +413,7 @@ const UserSchedulePage: React.FC = () => {
                                     variant="contained"
                                     sx={{
                                       textTransform: "none",
-                                      backgroundColor: "#1F305E",
+                                      backgroundColor: "#36559c",
                                       color: "white",
                                       "&:hover": { backgroundColor: "#172647" },
                                       width: "100px",
@@ -448,7 +482,7 @@ const UserSchedulePage: React.FC = () => {
                                     variant="contained"
                                     sx={{
                                       textTransform: "none",
-                                      backgroundColor: "#1F305E",
+                                      backgroundColor: "#36559c",
                                       color: "white",
                                       "&:hover": { backgroundColor: "#172647" },
                                       width: "100px",
@@ -494,9 +528,7 @@ const UserSchedulePage: React.FC = () => {
         closeStatusModal={() => setStatusModalOpen(false)}
         selectedEvent={selectedEvent}
         FormData={async () => {
-         
           useSupabaseQueries(selectedUser)
-        
         }}
       />
 
@@ -507,14 +539,14 @@ const UserSchedulePage: React.FC = () => {
         scheduleData={scheduleData.filter((event) => event.user_name === selectedUser)}
       />
 
-      <Button
+      <Fab
         variant="contained"
         color="primary"
         onClick={handlePrint}
-        sx={{ position: "fixed", bottom: "20px", right: "20px" }}
+        sx={{ position: "fixed", bottom: "20px", right: "20px", fontSize: "200%" }}
       >
-        Print Schedule
-      </Button>
+        🖶
+      </Fab>
     </Box>
   )
 }
