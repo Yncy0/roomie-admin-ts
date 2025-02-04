@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react"
-import { Box, Typography, TextField, MenuItem, Autocomplete, CircularProgress } from "@mui/material"
+import type React from "react"
+import { useEffect, useState } from "react"
+import { Box, Typography, TextField, Autocomplete, CircularProgress } from "@mui/material"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import listPlugin from "@fullcalendar/list"
 import { fetchBookedRooms } from "@/hooks/queries/booking/useFetchBookedRooms"
 import { fetchSchedule } from "@/hooks/queries/schedule/useFetchSchedule"
+import { fetchRooms } from "@/hooks/queries/rooms/useFetchRooms"
 import CustomEventCard from "./customEventCard"
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
@@ -75,7 +77,6 @@ const weekdayToDates = (weekday: string | string[]): Date[] => {
   }
 
   if (targetDayIndices.length === 0) {
-    console.warn(`Invalid weekday provided: ${weekday}`)
     return []
   }
 
@@ -131,24 +132,22 @@ const transformScheduleData = (data: any[]): ScheduleItem[] => {
         time_in: item.time_in || "Unknown",
         time_out: item.time_out || "Unknown",
         subject_code: item.subject?.subject_code || "Unknown",
-        subject_name: item.subject?.subject_name || "Unknown",
+        subject_name: item.subject?.subject_name,
       }
     })
   })
 }
 
 const getColorBasedOnStatus = (status: string): string => {
-  switch (status) {
-    case "Incoming":
-      return "#cae9ff"
-    case "In Progress":
-      return "#a3cef1"
-    case "Complete":
-      return "#8ebee6"
-    case "Cancelled":
-      return "#84a9d9"
+  switch (status?.toUpperCase()) {
+    case "INCOMING":
+      return "#aec2f0" // Blue
+    case "ONGOING":
+      return "#F6F7C4" // Yellow
+    case "DONE":
+      return "#daeec9" // Green
     default:
-      return "#fff"
+      return "#FFFFFF" // White
   }
 }
 
@@ -156,92 +155,81 @@ const SchedulePage: React.FC = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleItem[]>([])
   const [filteredData, setFilteredData] = useState<ScheduleItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [filterType, setFilterType] = useState<string>("All")
-  const [selectedFilterValue, setSelectedFilterValue] = useState<string>("")
-  const [roomOptions, setRoomOptions] = useState<string[]>([])
-  const [userOptions, setUserOptions] = useState<string[]>([])
-  const [sectionOptions, setSectionOptions] = useState<string[]>([])
-  const [statusOptions] = useState<string[]>(["Incoming", "In Progress", "Complete", "Cancelled"])
+  const [selectedRoom, setSelectedRoom] = useState<string | null>("All Rooms")
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [allRooms, setAllRooms] = useState<string[]>([])
 
   const { data: bookedRoomsData, error: bookedRoomsError } = fetchBookedRooms()
   const { data: scheduleDataFromAPI, error: scheduleDataError } = fetchSchedule()
+  const { data: roomsData, error: roomsError } = fetchRooms()
 
   useEffect(() => {
-    if (bookedRoomsError || scheduleDataError) {
-      console.error("Error fetching data:", bookedRoomsError || scheduleDataError)
+    if (bookedRoomsError || scheduleDataError || roomsError) {
+      console.error("Error fetching data:", bookedRoomsError || scheduleDataError || roomsError)
       setIsLoading(false)
       return
     }
 
-    if (bookedRoomsData && scheduleDataFromAPI) {
+    if (bookedRoomsData && scheduleDataFromAPI && roomsData) {
+      // Transform booking and schedule data
       const transformedBookingData = transformBookingData(bookedRoomsData)
       const transformedScheduleData = transformScheduleData(scheduleDataFromAPI)
 
-      const combinedData = [...transformedBookingData, ...transformedScheduleData]
-      setScheduleData(combinedData)
-      setFilteredData(combinedData)
+      // Filter for valid statuses
+      const validStatuses = [
+        "INCOMING",
+        "ONGOING",
+        "DONE",
+      ]
+      const validData = [...transformedBookingData, ...transformedScheduleData].filter(
+        (item) => item.status && validStatuses.includes(item.status.toUpperCase()),
+      )
 
-      const rooms = Array.from(new Set(combinedData.map((item) => item.room_name || "Unknown")))
-      const users = Array.from(new Set(combinedData.map((item) => item.user_name || "Unknown")))
-      const sections = Array.from(new Set(combinedData.map((item) => item.section || "Unknown")))
+      // Set schedule data
+      setScheduleData(validData)
+      setFilteredData(validData)
 
-      setRoomOptions(rooms)
-      setUserOptions(users)
-      setSectionOptions(sections)
+      // Set all rooms from rooms database
+      const roomNames = roomsData.map((room) => room.room_name)
+      setAllRooms(roomNames)
+
       setIsLoading(false)
     }
-  }, [bookedRoomsData, scheduleDataFromAPI, bookedRoomsError, scheduleDataError])
+  }, [bookedRoomsData, scheduleDataFromAPI, roomsData, bookedRoomsError, scheduleDataError, roomsError])
 
-  const handleFilterTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterType(event.target.value)
-    setSelectedFilterValue("")
-    if (event.target.value === "All") {
-      setFilteredData(scheduleData)
-    }
+  const handleRoomChange = (event: React.SyntheticEvent<Element, Event>, newValue: string | null) => {
+    setSelectedRoom(newValue)
+    applyFilters(newValue, searchQuery)
   }
 
-  const handleFilterValueChange = (event: React.SyntheticEvent<Element, Event>, newValue: string | null) => {
-    const value = newValue || ""
-    setSelectedFilterValue(value)
-    applyFilter(filterType, value)
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setSearchQuery(value)
+    applyFilters(selectedRoom, value)
   }
 
-  const applyFilter = (filterCriteria: string, value: string) => {
-    if (filterCriteria === "All") {
-      setFilteredData(scheduleData)
-    } else {
-      const filtered = scheduleData.filter((event) => {
-        let result = false
-        switch (filterCriteria) {
-          case "User":
-            result = event.user_name.toLowerCase().includes(value.toLowerCase())
-            break
-          case "Room":
-            result = event.room_name.toLowerCase().includes(value.toLowerCase())
-            break
-          case "Section":
-            result = event.section.toLowerCase().includes(value.toLowerCase())
-            break
-          case "Status":
-            result = event.status.toLowerCase() === value.toLowerCase()
-            break
-          default:
-            result = true
-        }
-        return result
-      })
-      console.log(`Filtered data for ${filterCriteria}:`, filtered)
-      setFilteredData(filtered)
+  const applyFilters = (room: string | null, search: string) => {
+    let filtered = scheduleData
+
+    if (room && room !== "All Rooms") {
+      filtered = filtered.filter((event) => event.room_name === room)
     }
+
+    if (search) {
+      const searchLower = search.toLowerCase()
+      filtered = filtered.filter((event) =>
+        Object.values(event).some((value) => typeof value === "string" && value.toLowerCase().includes(searchLower)),
+      )
+    }
+
+    setFilteredData(filtered)
   }
 
   useEffect(() => {
-    if (filterType !== "All" && selectedFilterValue) {
-      applyFilter(filterType, selectedFilterValue)
-    } else {
-      setFilteredData(scheduleData)
-    }
-  }, [scheduleData, filterType, selectedFilterValue])
+    applyFilters(selectedRoom, searchQuery)
+  }, [selectedRoom, searchQuery, applyFilters])
+
+  // Removed useEffect that was setting the default room
 
   if (isLoading) {
     return (
@@ -257,31 +245,15 @@ const SchedulePage: React.FC = () => {
         Schedule
       </Typography>
       <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-        <TextField select label="Filter By" value={filterType} onChange={handleFilterTypeChange} sx={{ minWidth: 200 }}>
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="User">Professor</MenuItem>
-          <MenuItem value="Room">Room</MenuItem>
-          <MenuItem value="Section">Section</MenuItem>
-          <MenuItem value="Status">Status</MenuItem>
-        </TextField>
-
-        {filterType !== "All" && (
-          <Autocomplete
-            value={selectedFilterValue}
-            onChange={handleFilterValueChange}
-            options={
-              filterType === "User"
-                ? userOptions
-                : filterType === "Room"
-                ? roomOptions
-                : filterType === "Section"
-                ? sectionOptions
-                : statusOptions
-            }
-            renderInput={(params) => <TextField {...params} label={`Filter by ${filterType}`} />}
-            sx={{ minWidth: 300 }}
-          />
-        )}
+        <Autocomplete
+          value={selectedRoom}
+          onChange={handleRoomChange}
+          options={["All Rooms", ...allRooms]}
+          renderInput={(params) => <TextField {...params} label="Filter by Room" />}
+          sx={{ minWidth: 300 }}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+        <TextField label="Search" value={searchQuery} onChange={handleSearchChange} sx={{ minWidth: 300 }} />
       </Box>
 
       <Box sx={{ height: "calc(100vh - 200px)", minHeight: "600px" }}>
@@ -305,3 +277,4 @@ const SchedulePage: React.FC = () => {
 }
 
 export default SchedulePage
+
