@@ -1,3 +1,4 @@
+import Input from "@/components/Input";
 import BuildingSelect from "@/components/selector/BuildingSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
@@ -96,6 +97,7 @@ function RouteComponent() {
       </div>
 
       {/* Image File Input */}
+
       <div
         className="inputGroup"
         style={{
@@ -143,135 +145,38 @@ function RouteComponent() {
       </div>
 
       {/* Room Name */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <input
-          id="roomName"
-          value={room_name}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomName(e.target.value)}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="roomName"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Name
-        </label>
-      </div>
+      <Input
+        id="roomName"
+        htmlFor="roomName"
+        placeholder=""
+        value={room_name}
+        onChange={(e) => setRoomName(e.target.value)}
+        label="Room Name"
+        type={"text"}
+      />
 
       {/* Room Description */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <input
-          id="roomDescription"
-          value={room_type}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomType(e.target.value)}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="roomDescription"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "14px",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Description
-        </label>
-      </div>
+      <Input
+        id="roomDescription"
+        htmlFor="roomDescription"
+        placeholder=""
+        value={room_type}
+        onChange={(e) => setRoomType(e.target.value)}
+        label="Room Description"
+        type={"text"}
+      />
 
       {/* Room Capacity */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <input
-          id="roomCapacity"
-          value={room_capacity}
-          type="number"
-          placeholder=" "
-          onChange={(e) => setRoomCapacity(Number(e.target.value))}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="roomCapacity"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Capacity
-        </label>
-      </div>
+      <Input
+        id="roomCapacity"
+        htmlFor="roomCapacity"
+        placeholder=""
+        value={room_capacity}
+        onChange={(e) => setRoomCapacity(e.target.value)}
+        label="Room Capacity"
+        type={"text"}
+      />
 
-      {/*TODO: Dropdown */}
       {/* Room Location */}
       <div
         className="inputGroup"
