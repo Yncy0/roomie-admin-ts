@@ -1,5 +1,6 @@
 import Input from "@/components/Input";
 import BuildingSelect from "@/components/selector/BuildingSelect";
+import RoomDescriptionSelect from "@/components/selector/RoomDescriptionSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
 import supabase from "@/utils/supabase";
@@ -25,6 +26,17 @@ function RouteComponent() {
       console.log("Room Location (Building ID) Updated:", room_location);
     }
   }, [room_location]);
+
+  const handleRoomCapacityChange = (e: any) => {
+    const value = e.target.value;
+    const numberValue = parseInt(value, 10);
+    // Check if the input is a number and within the range
+    if (!isNaN(numberValue) && numberValue <= 100) {
+      setRoomCapacity(numberValue);
+    } else if (value === "") {
+      // alert("The maximum room capacity is 100."); // Clear the state if the input is empty
+    }
+  };
 
   const onHandleInsert = async () => {
     // Check if room_name already exists
@@ -139,54 +151,22 @@ function RouteComponent() {
         type={"text"}
       />
 
-      {/* Room Description */}
-      <Input
-        id="roomDescription"
-        htmlFor="roomDescription"
-        placeholder=""
-        value={room_type}
-        onChange={(e) => setRoomType(e.target.value)}
-        label="Room Description"
-        type={"text"}
-      />
-
       {/* Room Capacity */}
       <Input
         id="roomCapacity"
         htmlFor="roomCapacity"
         placeholder=""
         value={room_capacity}
-        onChange={(e) => setRoomCapacity(e.target.value)}
+        onChange={handleRoomCapacityChange}
         label="Room Capacity"
         type={"text"}
       />
 
+      {/* Room Description */}
+      <RoomDescriptionSelect setDescription={setRoomType} />
+
       {/* Room Location */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <label
-          htmlFor="roomLocation"
-          style={{
-            fontSize: "100%",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Location/Building
-        </label>
-        <Select.Root>
-          <BuildingSelect setBuilding={setRoomLocation} />
-        </Select.Root>
-      </div>
+      <BuildingSelect setBuilding={setRoomLocation} />
 
       {/* Buttons */}
       <div
