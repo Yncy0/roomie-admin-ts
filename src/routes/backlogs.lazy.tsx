@@ -32,8 +32,12 @@ function Backlogs() {
   const handlePagination = (action: string) => {
     if (action === "first") setCurrentPage(0);
     else if (action === "prev") setCurrentPage((prev) => Math.max(prev - 1, 0));
-    else if (action === "next") setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(data.length / rowsPerPage) - 1));
-    else if (action === "last") setCurrentPage(Math.ceil(data.length / rowsPerPage) - 1);
+    else if (action === "next")
+      setCurrentPage((prev) =>
+        Math.min(prev + 1, Math.ceil(data.length / rowsPerPage) - 1)
+      );
+    else if (action === "last")
+      setCurrentPage(Math.ceil(data.length / rowsPerPage) - 1);
   };
 
   // Paginate the data
@@ -46,14 +50,22 @@ function Backlogs() {
 
   return (
     <div className="backlogs-container">
-      <h1 className="title">Backlogs</h1>
+      <h1 className="title">Activity Logs</h1>
       <Table.Root className="table">
         <Table.Header className="table-header">
           <Table.Row>
-            <Table.ColumnHeaderCell className="table-column-header">Action</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header">Event</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header">Date</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header">Time</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header">
+              Action
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header">
+              Event
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header">
+              Date
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header">
+              Time
+            </Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body className="table-body">
