@@ -29,7 +29,6 @@ const navItems: NavItem[] = [
   { icon: faUserGroup, label: "Users", href: "/users" },
   { icon: faLayerGroup, label: "Rooms", href: "/rooms" },
   { icon: faCalendar, label: "Schedule", href: "/schedule" },
-  { icon: faCalendarPlus, label: "User Schedule", href: "/user_schedule" },
   { icon: faObjectUngroup, label: "Backlogs", href: "/backlogs" },
   { icon: faBoxArchive, label: "Archive", href: "/archive" },
 ];
