@@ -1,3 +1,4 @@
+import Input from "@/components/Input";
 import BuildingSelect from "@/components/selector/BuildingSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { fetchRoomsWithId } from "@/hooks/queries/rooms/useFetchRooms";
@@ -37,16 +38,16 @@ function RouteComponent() {
     }
   }, [data]);
 
-  const handleImageChange = (event: any) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setRoomImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleImageChange = (event: any) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setRoomImage(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const onHandleUpdate = async () => {
     await updateRooms(
@@ -67,7 +68,7 @@ function RouteComponent() {
   //FIXME: USE GAP INSTEAD OF MARGIN, AND USE TAILWIND CSS FOR MORE CONVENIENCE
 
   return (
-    <div className="p-10 bg-white flex flex-col gap-6">
+    <div className="p-10 bg-white flex flex-col gap-7">
       <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
 
       {/* Image Preview */}
@@ -84,7 +85,6 @@ function RouteComponent() {
         className="inputGroup"
         style={{
           fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.7em 0",
           position: "relative",
         }}
       >
@@ -127,61 +127,37 @@ function RouteComponent() {
       </div>
 
       {/* Room Name */}
-      <div className="inputGroup font-sans  relative">
-        <input
-          id="roomName"
-          value={roomName}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomName(e.target.value)}
-          required
-          className="w-full text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
-        />
-        <label
-          htmlFor="roomName"
-          className="text-base absolute left-0 p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
-        >
-          Room Name
-        </label>
-      </div>
+      <Input
+        id="roomName"
+        htmlFor="roomName"
+        placeholder=""
+        value={roomName}
+        onChange={(e) => setRoomName(e.target.value)}
+        label="Room Name"
+        type={"text"}
+      />
 
       {/* Room Description */}
-      <div className="inputGroup font-sans  relative">
-        <input
-          id="roomDescription"
-          value={roomType}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomType(e.target.value)}
-          required
-          className="w-full text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
-        />
-        <label
-          htmlFor="roomDescription"
-          className="text-base absolute left-0 p-3.5 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
-        >
-          Room Description
-        </label>
-      </div>
+      <Input
+        id="roomDescription"
+        htmlFor="roomDescription"
+        placeholder=""
+        value={roomType}
+        onChange={(e) => setRoomType(e.target.value)}
+        label="Room Description"
+        type={"text"}
+      />
 
       {/* Room Capacity */}
-      <div className="inputGroup font-sans  relative">
-        <input
-          id="roomCapacity"
-          value={roomCapacity}
-          type="number"
-          placeholder=" "
-          onChange={(e) => setRoomCapacity(Number(e.target.value))}
-          required
-          className="w-full text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-2xl"
-        />
-        <label
-          htmlFor="roomCapacity"
-          className="text-base absolute left-0 p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
-        >
-          Room Capacity
-        </label>
-      </div>
+      <Input
+        id="roomCapacity"
+        htmlFor="roomCapacity"
+        placeholder=""
+        value={roomCapacity}
+        onChange={(e) => setRoomCapacity(e.target.value)}
+        label="Room Capacity"
+        type={"text"}
+      />
 
       {/* Room Location */}
       <div className="inputGroup font-sans relative">

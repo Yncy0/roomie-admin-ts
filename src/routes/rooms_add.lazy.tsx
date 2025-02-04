@@ -67,23 +67,8 @@ function RouteComponent() {
   };
 
   return (
-    <div
-      style={{
-        padding: "2.5rem 2rem",
-        backgroundColor: "#fff",
-        gap: "1.25rem",
-      }}
-    >
-      <h1
-        style={{
-          textAlign: "center",
-          fontWeight: "bold",
-          fontSize: "1.25rem",
-          paddingBottom: "30px",
-        }}
-      >
-        Create New Room
-      </h1>
+    <div className="p-10 bg-white flex flex-col gap-7">
+      <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
 
       {/* Image Preview */}
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -102,7 +87,6 @@ function RouteComponent() {
         className="inputGroup"
         style={{
           fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.7em 0",
           position: "relative",
         }}
       >

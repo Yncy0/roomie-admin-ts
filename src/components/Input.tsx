@@ -20,7 +20,7 @@ const Input = ({
   accept,
 }: Props) => {
   return (
-    <div className="inputGroup font-sans flex items-center relative my-7">
+    <div className="inputGroup font-sans flex items-center relative ">
       <input
         id={id}
         type={type}
