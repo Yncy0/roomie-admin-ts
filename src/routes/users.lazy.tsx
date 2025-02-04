@@ -1,11 +1,16 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { Table, Dialog } from "@radix-ui/themes";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { Table, Dialog, IconButton } from "@radix-ui/themes";
 import { fetchProfiles } from "@/hooks/queries/profiles/useFetchProfiles";
 import ProfileEditDialog from "@/components/dialogs/ProfileEditDialog";
 import ProfileDeleteDialog from "@/components/dialogs/ProfileDeleteDialog";
 import * as Avatar from "@radix-ui/react-avatar";
 import PaginationControls from "@/components/PaginationControls";
-import { MagnifyingGlassIcon, PersonIcon, HomeIcon } from "@radix-ui/react-icons";
+import {
+  MagnifyingGlassIcon,
+  PersonIcon,
+  HomeIcon,
+  EyeOpenIcon,
+} from "@radix-ui/react-icons";
 import { useState, useMemo } from "react";
 import Loader from "@/components/loader/Loader"; // Import the loader component
 import "../styles/user.css";
@@ -22,19 +27,27 @@ function Users() {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const pageSize = 5;
 
+  const navigate = useNavigate();
+
   if (error) return <div className="error-message">Error: {error.message}</div>;
 
   const filteredData = useMemo(() => {
     return (data || []).filter((item) => {
       const matchesSearch = searchQuery
         ? Object.values(item).some((value) =>
-            value?.toString().toLowerCase().startsWith(searchQuery.toLowerCase())
+            value
+              ?.toString()
+              .toLowerCase()
+              .startsWith(searchQuery.toLowerCase())
           )
         : true;
 
-      const matchesRole = selectedRole ? item.user_role?.toLowerCase() === selectedRole.toLowerCase() : true;
+      const matchesRole = selectedRole
+        ? item.user_role?.toLowerCase() === selectedRole.toLowerCase()
+        : true;
       const matchesDepartment = selectedDepartment
-        ? item.user_department?.toLowerCase() === selectedDepartment.toLowerCase()
+        ? item.user_department?.toLowerCase() ===
+          selectedDepartment.toLowerCase()
         : true;
 
       return matchesSearch && matchesRole && matchesDepartment;
@@ -42,12 +55,16 @@ function Users() {
   }, [data, searchQuery, selectedRole, selectedDepartment]);
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
-  const paginatedData = filteredData.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+  const paginatedData = filteredData.slice(
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
+  );
 
   const handlePagination = (action: string) => {
     if (action === "first") setCurrentPage(0);
     if (action === "prev" && currentPage > 0) setCurrentPage(currentPage - 1);
-    if (action === "next" && currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
+    if (action === "next" && currentPage < totalPages - 1)
+      setCurrentPage(currentPage + 1);
     if (action === "last") setCurrentPage(totalPages - 1);
   };
 
@@ -85,7 +102,6 @@ function Users() {
             >
               <option value="">Role</option>
               <option value="Admin">Admin</option>
-              <option value="Student">Student</option>
               <option value="Professor">Professor</option>
             </select>
           </div>
@@ -107,23 +123,40 @@ function Users() {
         </div>
 
         {/* "Add User" Button */}
-        <button className="add-user-button">
-          Add User
-        </button>
+        <button className="add-user-button">Add User</button>
       </div>
 
       {/* Table */}
       <Table.Root className="table">
         <Table.Header className="table-header">
           <Table.Row>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Avatar</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Username</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Mobile Number</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Email</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Role</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Department/Faculty</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Edit</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">Delete</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Avatar
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Username
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Mobile Number
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Email
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Role
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Department/Faculty
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Edit
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              Delete
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">
+              View
+            </Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -142,10 +175,14 @@ function Users() {
                 </Avatar.Root>
               </Table.Cell>
               <Table.Cell className="table-cell">{item.username}</Table.Cell>
-              <Table.Cell className="table-cell">{item.mobile_number}</Table.Cell>
+              <Table.Cell className="table-cell">
+                {item.mobile_number}
+              </Table.Cell>
               <Table.Cell className="table-cell">{item.email}</Table.Cell>
               <Table.Cell className="table-cell">{item.user_role}</Table.Cell>
-              <Table.Cell className="table-cell">{item.user_department}</Table.Cell>
+              <Table.Cell className="table-cell">
+                {item.user_department}
+              </Table.Cell>
               <Table.Cell className="table-cell">
                 <Dialog.Root>
                   <ProfileEditDialog items={item} />
@@ -156,13 +193,31 @@ function Users() {
                   <ProfileDeleteDialog />
                 </Dialog.Root>
               </Table.Cell>
+              <Table.Cell className="table-cell">
+                <IconButton>
+                  <EyeOpenIcon
+                    width={18}
+                    height={18}
+                    onClick={() =>
+                      navigate({
+                        to: "/profile_view/$id",
+                        params: { id: item.id },
+                      })
+                    }
+                  />
+                </IconButton>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table.Root>
 
       {/* Pagination Controls */}
-      <PaginationControls currentPage={currentPage} totalPages={totalPages} handlePagination={handlePagination} />
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePagination={handlePagination}
+      />
     </div>
   );
 }

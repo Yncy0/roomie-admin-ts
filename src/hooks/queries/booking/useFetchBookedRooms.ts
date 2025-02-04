@@ -21,3 +21,22 @@ export const fetchBookedRooms = () => {
         },
     });
 };
+
+export const fetchBookedRoomsWithUserId = (id: any) => {
+    return useQuery({
+        queryKey: ["booked_rooms", id],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("booked_rooms")
+                .select(`*, profiles(*), rooms(*)`)
+                .eq("profile_id", id);
+
+            if (error) {
+                console.log(error);
+                throw error;
+            }
+
+            return data;
+        },
+    });
+};
