@@ -7,6 +7,7 @@ type Props = {
   onChange: (v: any) => void;
   label: string;
   accept?: any;
+  max?: any;
 };
 
 const Input = ({
@@ -18,6 +19,7 @@ const Input = ({
   onChange,
   label,
   accept,
+  max,
 }: Props) => {
   return (
     <div className="inputGroup font-sans flex items-center relative ">
@@ -30,6 +32,7 @@ const Input = ({
         accept={accept}
         required
         className="text-base p-3 outline-none border-2 border-[#35487a] bg-transparent rounded-[20px] w-full"
+        max={max}
       ></input>
       <label
         htmlFor={htmlFor}

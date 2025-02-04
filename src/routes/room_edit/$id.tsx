@@ -28,6 +28,17 @@ function RouteComponent() {
   const [roomType, setRoomType] = React.useState("");
   const [roomImage, setRoomImage] = React.useState("");
 
+  const handleRoomCapacityChange = (e: any) => {
+    const value = e.target.value;
+    const numberValue = parseInt(value, 10);
+    // Check if the input is a number and within the range
+    if (!isNaN(numberValue) && numberValue <= 100) {
+      setRoomCapacity(numberValue);
+    } else if (value === "") {
+      // alert("The maximum room capacity is 100."); // Clear the state if the input is empty
+    }
+  };
+
   React.useEffect(() => {
     if (data) {
       setRoomName(data.room_name || "");
@@ -154,7 +165,7 @@ function RouteComponent() {
         htmlFor="roomCapacity"
         placeholder=""
         value={roomCapacity}
-        onChange={(e) => setRoomCapacity(e.target.value)}
+        onChange={handleRoomCapacityChange}
         label="Room Capacity"
         type={"text"}
       />
