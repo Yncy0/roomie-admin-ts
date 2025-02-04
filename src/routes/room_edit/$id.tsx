@@ -1,5 +1,6 @@
 import Input from "@/components/Input";
 import BuildingSelect from "@/components/selector/BuildingSelect";
+import RoomDescriptionSelect from "@/components/selector/RoomDescriptionSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { fetchRoomsWithId } from "@/hooks/queries/rooms/useFetchRooms";
 import { updateRooms } from "@/hooks/queries/rooms/useUpdateRooms";
@@ -148,17 +149,6 @@ function RouteComponent() {
         type={"text"}
       />
 
-      {/* Room Description */}
-      <Input
-        id="roomDescription"
-        htmlFor="roomDescription"
-        placeholder=""
-        value={roomType}
-        onChange={(e) => setRoomType(e.target.value)}
-        label="Room Description"
-        type={"text"}
-      />
-
       {/* Room Capacity */}
       <Input
         id="roomCapacity"
@@ -170,8 +160,10 @@ function RouteComponent() {
         type={"text"}
       />
 
-      {/* Room Location */}
+      {/* Room Description */}
+      <RoomDescriptionSelect setDescription={setRoomType} />
 
+      {/* Room Location */}
       <BuildingSelect setBuilding={setRoomLocation} />
 
       {/* Buttons */}
