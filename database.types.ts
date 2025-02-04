@@ -84,6 +84,24 @@ export type Database = {
           },
         ]
       }
+      building: {
+        Row: {
+          building_name: string | null
+          created_at: string
+          id: string
+        }
+        Insert: {
+          building_name?: string | null
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          building_name?: string | null
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       course: {
         Row: {
           course_name: string | null
@@ -135,7 +153,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           email: string | null
-          "expo-push-token": string | null
+          expo_push_token: string | null
           full_name: string | null
           id: string
           is_archived: boolean | null
@@ -149,7 +167,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           email?: string | null
-          "expo-push-token"?: string | null
+          expo_push_token?: string | null
           full_name?: string | null
           id: string
           is_archived?: boolean | null
@@ -163,7 +181,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           email?: string | null
-          "expo-push-token"?: string | null
+          expo_push_token?: string | null
           full_name?: string | null
           id?: string
           is_archived?: boolean | null
@@ -186,6 +204,7 @@ export type Database = {
           room_image: string | null
           room_name: string | null
           room_type: string | null
+          status: string | null
         }
         Insert: {
           created_at?: string
@@ -196,6 +215,7 @@ export type Database = {
           room_image?: string | null
           room_name?: string | null
           room_type?: string | null
+          status?: string | null
         }
         Update: {
           created_at?: string
@@ -206,6 +226,7 @@ export type Database = {
           room_image?: string | null
           room_name?: string | null
           room_type?: string | null
+          status?: string | null
         }
         Relationships: []
       }
@@ -213,6 +234,7 @@ export type Database = {
         Row: {
           course_id: string | null
           created_at: string
+          date: string | null
           days: string | null
           id: string
           profile_id: string | null
@@ -227,6 +249,7 @@ export type Database = {
         Insert: {
           course_id?: string | null
           created_at?: string
+          date?: string | null
           days?: string | null
           id?: string
           profile_id?: string | null
@@ -241,6 +264,7 @@ export type Database = {
         Update: {
           course_id?: string | null
           created_at?: string
+          date?: string | null
           days?: string | null
           id?: string
           profile_id?: string | null
