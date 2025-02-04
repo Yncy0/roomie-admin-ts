@@ -221,7 +221,13 @@ const SchedulePage: React.FC = () => {
         transformScheduleData(scheduleDataFromAPI);
 
       // Filter for valid statuses
-      const validStatuses = ["INCOMING", "ONGOING", "DONE"];
+      const validStatuses = [
+        "INCOMING",
+        "ON GOING",
+        "DONE",
+        "PENDING CLASS",
+        "PENDING RESERVE",
+      ];
       const validData = [
         ...transformedBookingData,
         ...transformedScheduleData,
