@@ -18,3 +18,22 @@ export const fetchProfiles = () => {
         },
     });
 };
+
+export const fetchProfilesWithId = (id: any) => {
+    return useQuery({
+        queryKey: ["profiles", id],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", id);
+
+            if (error) {
+                console.log(error);
+                throw error;
+            }
+
+            return data;
+        },
+    });
+};

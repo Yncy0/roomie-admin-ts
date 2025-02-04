@@ -30,10 +30,10 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isBetween from "dayjs/plugin/isBetween";
 import isoWeek from "dayjs/plugin/isoWeek";
-import EventModal from "../components/u_schedule/EventModal";
-import StatusModal from "../components/u_schedule/StatusModal";
-import PrintablePage from "../components/u_schedule/PrintablePage";
-import { useSupabaseQueries } from "../hooks/useUserSchedule";
+import { useSupabaseQueries } from "@/hooks/useUserSchedule";
+import EventModal from "./EventModal";
+import PrintablePage from "./PrintablePage";
+import StatusModal from "./StatusModal";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -75,14 +75,6 @@ interface ScheduleData {
   time_out: string;
   status: string;
   user_name: string;
-}
-
-export const Route = createLazyFileRoute("/user_schedule")({
-  component: RouteComponent,
-});
-
-function RouteComponent() {
-  return <UserSchedulePage />;
 }
 
 const UserSchedulePage: React.FC = () => {
