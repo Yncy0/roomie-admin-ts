@@ -3,6 +3,7 @@ import BuildingSelect from "@/components/selector/BuildingSelect";
 import RoomDescriptionSelect from "@/components/selector/RoomDescriptionSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
+import { isRoomNameExists } from "@/utils/isRoomExist";
 import supabase from "@/utils/supabase";
 import { Select } from "@radix-ui/themes";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
@@ -39,28 +40,16 @@ function RouteComponent() {
   };
 
   const onHandleInsert = async () => {
-    // Check if room_name already exists
-    //TODO: Put in seperate file later
     try {
-      // Check if room_name already exists
-      const { data, error } = await supabase
-        .from("rooms")
-        .select("room_name")
-        .eq("room_name", room_name)
-        .single();
+      // Validate if the room name already exists
+      const roomExists = await isRoomNameExists(room_name);
 
-      if (error && error.code !== "PGRST116") {
-        // Ignore the "No rows found" error
-        console.error("Error checking room name:", error.message);
-        return;
-      }
-
-      if (data) {
+      if (roomExists) {
         alert("Room name already exists. Please choose a different name.");
         return;
       }
 
-      // Insert new room if room_name doesn't exist
+      // Insert new room if the room name doesn't exist
       await insertRooms(
         room_name,
         room_image,
@@ -69,12 +58,15 @@ function RouteComponent() {
         room_location
       );
 
+      // Log the insertion in the backlogs
       await insertBacklogs("INSERT", `The new ${room_name} has been added`);
 
+      // Notify the user and navigate to the rooms page
       alert("Data saved successfully");
       navigate({ to: "/rooms" });
     } catch (err) {
       console.error("Unexpected error:", err);
+      alert("An error occurred. Please try again.");
     }
   };
 
