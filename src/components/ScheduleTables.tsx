@@ -32,20 +32,34 @@ export function WeeklySchedule({
   intervalMinutes = 60,
 }: WeeklyScheduleProps) {
   const timeSlots = generateTimeSlots(startTime, endTime, intervalMinutes);
-  console.log("Generated time slots:", timeSlots);
+
+  if (schedules.length === 0) {
+    return (
+      <p className="text-center mt-4">
+        No schedules found for the selected room.
+      </p>
+    );
+  }
 
   const getScheduleForSlot = (day: string, time: string) => {
     const schedule = schedules.find((schedule) => {
-      const scheduleDay = schedule.days;
+      const scheduleDay = schedule.days?.toLowerCase();
       const scheduleTimeIn = schedule.timef_in;
       const scheduleTimeOut = schedule.timef_out;
-      const dayMatches = scheduleDay === day;
-      const timeInRange =
-        scheduleTimeIn &&
-        scheduleTimeOut &&
-        scheduleTimeIn <= time &&
-        scheduleTimeOut > time;
 
+      // Match the day (case insensitive)
+      const dayMatches = scheduleDay === day.toLowerCase();
+
+      // Convert times to minutes for comparison
+      const timeInMinutes = getMinutesFromTime(scheduleTimeIn as string);
+      const timeOutMinutes = getMinutesFromTime(scheduleTimeOut as string);
+      const slotMinutes = getMinutesFromTime(time);
+
+      // Check if the current slot time is within the schedule's time range
+      const timeInRange =
+        timeInMinutes <= slotMinutes && timeOutMinutes > slotMinutes;
+
+      // Log the details for debugging
       console.log({
         scheduleDay,
         dayMatches,
@@ -57,8 +71,10 @@ export function WeeklySchedule({
 
       return dayMatches && timeInRange;
     });
+
     return schedule;
   };
+
   const getMinutesFromTime = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + (minutes || 0);
@@ -68,7 +84,44 @@ export function WeeklySchedule({
     if (!schedule.timef_in || !schedule.timef_out) return 1;
     const startMinutes = getMinutesFromTime(schedule.timef_in);
     const endMinutes = getMinutesFromTime(schedule.timef_out);
-    return Math.ceil((endMinutes - startMinutes) / intervalMinutes);
+    return Math.max(
+      1,
+      Math.ceil((endMinutes - startMinutes) / intervalMinutes)
+    );
+  };
+
+  const renderScheduleCell = (
+    day: string,
+    slot: string,
+    schedule: Schedule
+  ) => {
+    const rowSpan = getRowSpan(schedule);
+    console.log(`Rendering schedule for ${day} at ${slot}:`, {
+      course: schedule.course?.course_name,
+      timeIn: schedule.timef_in,
+      timeOut: schedule.timef_out,
+      rowSpan,
+    });
+
+    return (
+      <td
+        key={`${day}-${slot}`}
+        className="p-2 border bg-blue-100"
+        rowSpan={rowSpan}
+      >
+        <div className="h-full flex flex-col justify-center">
+          <p className="font-bold text-center text-sm">
+            {schedule.course?.course_name ?? "N/A"}
+          </p>
+          <p className="text-center text-xs">
+            {schedule.subject?.subject_code ?? "N/A"}
+          </p>
+          <p className="text-center text-xs">
+            {schedule.profiles?.username ?? "N/A"}
+          </p>
+        </div>
+      </td>
+    );
   };
 
   return (
@@ -96,30 +149,10 @@ export function WeeklySchedule({
               {weekdays.map((day) => {
                 const schedule = getScheduleForSlot(day, slot);
                 if (schedule) {
-                  const rowSpan = getRowSpan(schedule);
-                  const isFirstSlot = schedule.timef_in === slot;
-                  if (isFirstSlot) {
-                    return (
-                      <td
-                        key={`${day}-${slot}`}
-                        className="p-2 border bg-blue-100"
-                        rowSpan={rowSpan}
-                      >
-                        <div className="h-full flex flex-col justify-center">
-                          <p className="font-bold text-center text-sm">
-                            {schedule.course?.course_name ?? "N/A"}
-                          </p>
-                          <p className="text-center text-xs">
-                            {schedule.subject?.subject_code ?? "N/A"}
-                          </p>
-                          <p className="text-center text-xs">
-                            {schedule.profiles?.username ?? "N/A"}
-                          </p>
-                        </div>
-                      </td>
-                    );
+                  if (schedule.timef_in === slot) {
+                    return renderScheduleCell(day, slot, schedule);
                   }
-                  return null;
+                  return null; // This slot is covered by a previous rowSpan
                 }
                 return <td key={`${day}-${slot}`} className="p-2 border"></td>;
               })}

@@ -2,7 +2,7 @@ import { ScheduleSearchBar } from "@/components/ScheduleSearchBar";
 import { WeeklySchedule } from "@/components/ScheduleTables";
 import { fetchSchedule } from "@/hooks/queries/schedule/useFetchSchedule";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Database, Tables } from "database.types";
+import { Database } from "database.types";
 import React from "react";
 
 export const Route = createLazyFileRoute("/schedule")({
@@ -15,35 +15,64 @@ type Schedule = Database["public"]["Tables"]["schedule"]["Row"] & {
   subject: Database["public"]["Tables"]["subject"]["Row"] | null;
   rooms: Database["public"]["Tables"]["rooms"]["Row"] | null;
 };
+
 function ScheduleComponent() {
-  const [selectedRoom, setSelectedRoom] = React.useState("");
-  const { data: schedules, isLoading, error } = fetchSchedule();
+  const [selectedRoomId, setSelectedRoomId] = React.useState("");
+  const {
+    data: schedules,
+    isLoading: isLoadingSchedules,
+    error: scheduleError,
+  } = fetchSchedule();
 
-  const filteredSchedules =
-    schedules?.filter((schedule: Schedule) =>
-      schedule.rooms?.room_name
-        ?.toLowerCase()
-        .includes(selectedRoom.toLowerCase())
-    ) || [];
+  // Extract unique rooms from schedules
+  const uniqueRooms = React.useMemo(() => {
+    if (!schedules) return [];
+    const roomsMap = new Map<string, { room_id: string; room_name: string }>();
+    schedules.forEach((schedule) => {
+      if (schedule.rooms) {
+        roomsMap.set(schedule.rooms.id, {
+          room_id: schedule.rooms.id,
+          room_name: schedule.rooms.room_name as string,
+        });
+      }
+    });
+    return Array.from(roomsMap.values());
+  }, [schedules]);
 
-  const handleSearch = (query: string) => {
-    setSelectedRoom(query);
+  // Filter schedules based on selected room ID
+  const filteredSchedules = React.useMemo(
+    () =>
+      schedules?.filter(
+        (schedule: Schedule) => schedule.room_id === selectedRoomId
+      ) || [],
+    [schedules, selectedRoomId]
+  );
+
+  const handleSearch = (roomId: string) => {
+    setSelectedRoomId(roomId);
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoadingSchedules) return <div>Loading...</div>;
+  if (scheduleError)
+    return <div>Error loading schedules: {scheduleError.message}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Weekly Schedule</h1>
       <div className="max-w-7xl mx-auto px-4">
-        <ScheduleSearchBar onSearch={handleSearch} />
-        <WeeklySchedule
-          schedules={filteredSchedules}
-          startTime="06:00"
-          endTime="20:00"
-          intervalMinutes={60}
-        />
+        <ScheduleSearchBar rooms={uniqueRooms} onSearch={handleSearch} />
+        {selectedRoomId ? (
+          <WeeklySchedule
+            schedules={filteredSchedules}
+            startTime="06:00"
+            endTime="20:00"
+            intervalMinutes={60}
+          />
+        ) : (
+          <p className="text-center mt-4">
+            Please select a room to view its schedule.
+          </p>
+        )}
       </div>
     </div>
   );
