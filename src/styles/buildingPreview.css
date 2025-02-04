@@ -1,0 +1,94 @@
+/* BuildingPreview.css */
+
+/* Overlay (darkens the background) */
+.dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 999; /* Make sure it appears above the content */
+  }
+  
+  /* Content box (modal) */
+  .dialog-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the modal */
+    z-index: 1000; /* Make sure it appears above the overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  /* Modal box */
+  .dialog-box {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 30rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    width: 100%;
+  }
+  
+  /* Title styling */
+  .dialog-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #35487a;
+    margin-bottom: 1rem;
+  }
+  
+  /* Image styling */
+  .dialog-image {
+    width: 100%;
+    height: 16rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin-top: 1rem;
+  }
+  
+  /* Details styling */
+  .dialog-details {
+    font-size: 1rem;
+    color: #4b5563;
+    margin-top: 0.5rem;
+  }
+  
+  /* Button container for positioning both buttons */
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+  }
+  
+  /* Button styling */
+  .dialog-button {
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dialog-edit-button {
+    background-color: #f0ad4e;
+    color: white;
+    margin-right: 1rem;
+  }
+  
+  .dialog-close-button {
+    background-color: #35487a;
+    color: white;
+  }
+  
+  .dialog-edit-button:hover {
+    background-color: #ec971f;
+  }
+  
+  .dialog-close-button:hover {
+    background-color: #2c3e6c;
+  }
+  

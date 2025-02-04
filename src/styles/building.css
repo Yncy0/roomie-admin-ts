@@ -1,0 +1,104 @@
+/* 1️⃣ General Container (Page Layout) */
+.buildings-container {
+  width: 95%;  /* Change this to 100% to make it full width, or adjust for different widths */
+  margin: 20px auto;  /* Centers the content horizontally with 20px space on top/bottom */
+  padding: 32px;  /* Space around the content, can reduce this to 16px for less padding */
+  position: relative;  /* Keeps the layout relative to the parent container */
+}
+
+/* 2️⃣ Header Section (Title + Add Building Button) */
+.buildings-header {
+  display: flex;  /* Aligns the header elements (title and button) in a row */
+  justify-content: space-between;  /* Distributes space between title and button */
+  align-items: center;  /* Centers the elements vertically */
+  margin-bottom: 16px;  /* Adds space below the header */
+  position: relative;
+}
+
+/* 3️⃣ "Add Building" Button */
+.buildings-add-button {
+  border: 2px solid #35487a;  /* Button border, change color here if you want a different border */
+  color: #35487a;  /* Text color */
+  background: transparent;  /* Transparent background */
+  padding: 8px 16px;  /* Adjust padding for button size */
+  border-radius: 8px;  /* Rounds the corners of the button */
+  font-weight: 500;  /* Adjust text weight for the button */
+  transition: background 0.3s, color 0.3s;  /* Smooth transition on hover */
+  position: relative;  /* Allows absolute positioning inside if needed */
+}
+
+/* Button hover effect */
+.buildings-add-button:hover {
+  background: #35487a;  /* Changes background color on hover */
+  color: white;  /* Changes text color on hover */
+}
+
+/* 4️⃣ Building Card Styling */
+.building-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.building-card img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.building-card .building-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.building-card .building-details {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Hover effect for building cards */
+.building-card:hover {
+  transform: translateY(-10px);
+}
+
+/* 5️⃣ Grid Layout for Buildings */
+.buildings-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* 3 buildings per row */
+  gap: 20px;
+}
+
+/* Responsive: Adjust for smaller screens */
+@media (max-width: 1024px) {
+  .buildings-row {
+      grid-template-columns: repeat(2, 1fr);  /* 2 buildings per row on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .buildings-row {
+      grid-template-columns: repeat(1, 1fr);  /* 1 building per row on small screens */
+  }
+}
+
+/* 6️⃣ Loader and Error Message Styling */
+.buildings-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.buildings-error {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}

@@ -1,0 +1,31 @@
+/* Navigation Link Container */
+.nav-link {
+    position: relative; /* Keeps the tooltip inside the navbar */
+  }
+  
+  /* Tooltip Styling */
+  .nav-tooltip {
+    position: absolute; /* Positions tooltip outside the navbar */
+    left: 100%; /* Moves it to the right of the icon */
+    top: 50%; /* Centers it vertically */
+    transform: translateY(-50%); /* Ensures proper centering */
+    background-color: white; /* White background */
+    color: #1d4ed8; /* Blue text */
+    padding: 6px 10px; /* Adds spacing for readability */
+    border-radius: 4px; /* Soft rounded edges */
+    font-size: 12px; /* Small, readable text */
+    white-space: nowrap; /* Prevents text from breaking */
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Prevents interaction when hidden */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth fade-in effect */
+    font-weight: 500; /* Makes the text slightly bold */
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    margin-left: 10px; /* Adds spacing between icon and tooltip */
+  }
+  
+  /* Show Tooltip on Hover */
+  .nav-link:hover .nav-tooltip {
+    opacity: 1; /* Makes tooltip visible */
+    visibility: visible; /* Allows interaction */
+  }
+  

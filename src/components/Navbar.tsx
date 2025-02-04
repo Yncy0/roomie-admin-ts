@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   faLayerGroup,
@@ -9,11 +7,13 @@ import {
   faUserGroup,
   faCalendar,
   faBook,
-} from "@fortawesome/free-solid-svg-icons";
+  faBuilding, // Import the building icon
+} from "@fortawesome/free-solid-svg-icons"; // Import faBuilding here
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "../lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles/navbar.css";
 
 interface NavItem {
   icon: typeof faLayerGroup;
@@ -25,6 +25,7 @@ const navItems: NavItem[] = [
   { icon: faObjectGroup, label: "Index", href: "/" },
   { icon: faBook, label: "Booked Rooms", href: "/booked_rooms" },
   { icon: faUserGroup, label: "Users", href: "/users" },
+  { icon: faBuilding, label: "Buildings", href: "/building" }, // Use faBuilding here
   { icon: faLayerGroup, label: "Rooms", href: "/rooms" },
   { icon: faCalendar, label: "Schedule", href: "/schedule" },
   { icon: faObjectUngroup, label: "Backlogs", href: "/backlogs" },
@@ -66,14 +67,15 @@ export default function NavBar() {
             key={item.href}
             to={item.href}
             className={cn(
-              "flex flex-row items-center py-2 px-6 hover:bg-[rgba(226,240,253,0.4)] hover:text-blue-500 hover:shadow-lg  transition-colors gap-3 rounded-sm",
+              "nav-link flex flex-row items-center py-2 px-6 hover:bg-[rgba(226,240,253,0.4)] hover:text-blue-500 hover:shadow-lg transition-colors gap-3 rounded-sm",
               !isClose && "justify-center"
             )}
           >
-            <FontAwesomeIcon icon={item.icon} className="w-6 h-6 " />
+            <FontAwesomeIcon icon={item.icon} className="w-6 h-6" />
             {isClose && (
               <span className="ml-4 text-sm font-medium">{item.label}</span>
             )}
+            {!isClose && <span className="nav-tooltip">{item.label}</span>}
           </Link>
         ))}
       </div>
