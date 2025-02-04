@@ -5,6 +5,7 @@ import { Table, Tabs } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Tables } from "database.types";
+import dayjs from "dayjs";
 import React from "react";
 
 export const Route = createFileRoute("/profile_view/$id")({
@@ -46,14 +47,6 @@ const ProfileInfo = ({ userId }: { userId: string }) => {
   const { data } = fetchProfilesWithId(userId);
 
   return (
-    // <div>
-    //   {data?.map((user) => (
-    //     <div key={user.id}>
-    //       <p>Name: {user.username}</p>
-    //       <p>Email: {user.email}</p>
-    //     </div>
-    //   ))}
-    // </div>
     <Table.Root>
       <Table.Header>
         <Table.Row>
@@ -98,24 +91,40 @@ const ProfileInfo = ({ userId }: { userId: string }) => {
 
 //README: components for booked_rooms table
 const BookingInfo = ({ userId }: { userId: string }) => {
-  const {
-    data: bookingInfo,
-    isLoading,
-    error,
-  } = fetchBookedRoomsWithUserId(userId);
+  const { data, isLoading, error } = fetchBookedRoomsWithUserId(userId);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      {bookingInfo?.map((booking) => (
-        <div key={booking.id}>
-          <p>Room: {booking.rooms?.room_name}</p>
-          <p>Date: {booking.date}</p>
-        </div>
-      ))}
-    </div>
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          <Table.ColumnHeaderCell>Room Name</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Subject Code</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Section</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Time</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+        </Table.Row>
+      </Table.Header>
+
+      <Table.Body>
+        {data?.map((items, index) => (
+          <Table.Row key={index}>
+            <Table.Cell>{items.rooms?.room_name}</Table.Cell>
+            <Table.Cell>{items.subject_code}</Table.Cell>
+            <Table.Cell>{items.course_and_section}</Table.Cell>
+            <Table.Cell>{items.date}</Table.Cell>
+            <Table.Cell>
+              {dayjs(items.time_in).format("hh:mm a")} -{" "}
+              {dayjs(items.time_out).format("hh:mm a")}
+            </Table.Cell>
+            <Table.Cell>{items.status}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
   );
 };
 
