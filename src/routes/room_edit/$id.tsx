@@ -171,17 +171,8 @@ function RouteComponent() {
       />
 
       {/* Room Location */}
-      <div className="inputGroup font-sans relative">
-        <label
-          htmlFor="roomLocation"
-          className="text-base p-3 ml-2 pointer-events-none transition-all duration-300 ease-in-out text-[#35487a]"
-        >
-          Room Location/Building
-        </label>
-        <Select.Root>
-          <BuildingSelect setBuilding={setRoomLocation} />
-        </Select.Root>
-      </div>
+
+      <BuildingSelect setBuilding={setRoomLocation} />
 
       {/* Buttons */}
       <div className="flex justify-center gap-8 w-full">
