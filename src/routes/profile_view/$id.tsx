@@ -133,13 +133,29 @@ const ScheduleInfo = ({ userId }: { userId: string }) => {
   const { data } = fetchScheduleWithUserId(userId);
 
   return (
-    <div>
-      {data?.map((schedule) => (
-        <div key={schedule.id}>
-          <p>Subject Code: {schedule.subject?.subject_code}</p>
-          <p>Date: {schedule.date}</p>
-        </div>
-      ))}
-    </div>
+    <Table.Root>
+      <Table.Header>
+        <Table.ColumnHeaderCell>Room Name</Table.ColumnHeaderCell>
+        <Table.ColumnHeaderCell>Subject Code</Table.ColumnHeaderCell>
+        <Table.ColumnHeaderCell>Section</Table.ColumnHeaderCell>
+        <Table.ColumnHeaderCell>Weekday</Table.ColumnHeaderCell>
+        <Table.ColumnHeaderCell>Time</Table.ColumnHeaderCell>
+        <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+      </Table.Header>
+      <Table.Body>
+        {data?.map((items, index) => (
+          <Table.Row key={index}>
+            <Table.Cell>{items.rooms?.room_name}</Table.Cell>
+            <Table.Cell>{items.subject?.subject_code}</Table.Cell>
+            <Table.Cell>{items.course?.course_name}</Table.Cell>
+            <Table.Cell>{items.days}</Table.Cell>
+            <Table.Cell>
+              {items.timef_in} - {items.timef_out}
+            </Table.Cell>
+            <Table.Cell>{items.status}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
   );
 };

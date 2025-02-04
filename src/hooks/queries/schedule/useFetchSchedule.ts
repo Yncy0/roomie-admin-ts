@@ -44,7 +44,7 @@ export const fetchScheduleWithUserId = (id: any) => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("schedule")
-                .select("*, subject(*), course(*), profiles(*)")
+                .select("*, subject(*), course(*), profiles(*), rooms(*)")
                 .eq("profile_id", id);
 
             if (error) {
