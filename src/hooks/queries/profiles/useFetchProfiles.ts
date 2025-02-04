@@ -26,7 +26,8 @@ export const fetchProfilesWithId = (id: any) => {
             const { data, error } = await supabase
                 .from("profiles")
                 .select("*")
-                .eq("id", id);
+                .eq("id", id)
+                .single();
 
             if (error) {
                 console.log(error);

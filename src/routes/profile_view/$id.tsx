@@ -1,7 +1,7 @@
 import { fetchBookedRoomsWithUserId } from "@/hooks/queries/booking/useFetchBookedRooms";
 import { fetchProfilesWithId } from "@/hooks/queries/profiles/useFetchProfiles";
 import { fetchScheduleWithUserId } from "@/hooks/queries/schedule/useFetchSchedule";
-import { Tabs } from "@radix-ui/themes";
+import { Table, Tabs } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Tables } from "database.types";
@@ -46,14 +46,53 @@ const ProfileInfo = ({ userId }: { userId: string }) => {
   const { data } = fetchProfilesWithId(userId);
 
   return (
-    <div>
-      {data?.map((user) => (
-        <div key={user.id}>
-          <p>Name: {user.username}</p>
-          <p>Email: {user.email}</p>
-        </div>
-      ))}
-    </div>
+    // <div>
+    //   {data?.map((user) => (
+    //     <div key={user.id}>
+    //       <p>Name: {user.username}</p>
+    //       <p>Email: {user.email}</p>
+    //     </div>
+    //   ))}
+    // </div>
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          <Table.ColumnHeaderCell>Field</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
+        </Table.Row>
+      </Table.Header>
+
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>ID:</Table.Cell>
+          <Table.Cell>{data?.id}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Username:</Table.Cell>
+          <Table.Cell>{data?.username}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Full name:</Table.Cell>
+          <Table.Cell>{data?.full_name}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Email:</Table.Cell>
+          <Table.Cell>{data?.email}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Mobile Number:</Table.Cell>
+          <Table.Cell>{data?.mobile_number}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Department</Table.Cell>
+          <Table.Cell>{data?.user_department}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>User Role:</Table.Cell>
+          <Table.Cell>{data?.user_role}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table.Root>
   );
 };
 
