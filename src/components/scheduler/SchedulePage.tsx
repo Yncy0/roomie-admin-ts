@@ -195,9 +195,10 @@ const SchedulePage: React.FC = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleItem[]>([]);
   const [filteredData, setFilteredData] = useState<ScheduleItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>("All Rooms");
+  const [selectedRoom, setSelectedRoom] = useState<string | null>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [allRooms, setAllRooms] = useState<string[]>([]);
+  const [defaultRoom, setDefaultRoom] = useState<string | null>(null);
 
   const { data: bookedRoomsData, error: bookedRoomsError } = fetchBookedRooms();
   const { data: scheduleDataFromAPI, error: scheduleDataError } =
@@ -223,7 +224,7 @@ const SchedulePage: React.FC = () => {
       // Filter for valid statuses
       const validStatuses = [
         "INCOMING",
-        "ON GOING",
+        "ONGOING",
         "DONE",
         "PENDING CLASS",
         "PENDING RESERVE",
@@ -244,6 +245,9 @@ const SchedulePage: React.FC = () => {
       const roomNames = roomsData.map((room) => room.room_name);
       setAllRooms(roomNames);
 
+      // Select a default room
+      selectDefaultRoom(roomNames);
+
       setIsLoading(false);
     }
   }, [
@@ -254,7 +258,15 @@ const SchedulePage: React.FC = () => {
     scheduleDataError,
     roomsError,
   ]);
-
+  const selectDefaultRoom = (rooms: string[]) => {
+    if (rooms.length > 0) {
+      // Select the first room as the default
+      const firstRoom = rooms[0];
+      setDefaultRoom(firstRoom);
+      setSelectedRoom(firstRoom);
+      applyFilters(firstRoom, searchQuery);
+    }
+  };
   const handleRoomChange = (
     event: React.SyntheticEvent<Element, Event>,
     newValue: string | null
@@ -272,7 +284,7 @@ const SchedulePage: React.FC = () => {
   const applyFilters = (room: string | null, search: string) => {
     let filtered = scheduleData;
 
-    if (room && room !== "All Rooms") {
+    if (room && room !== "") {
       filtered = filtered.filter((event) => event.room_name === room);
     }
 
@@ -320,7 +332,7 @@ const SchedulePage: React.FC = () => {
         <Autocomplete
           value={selectedRoom}
           onChange={handleRoomChange}
-          options={["All Rooms", ...allRooms]}
+          options={["", ...allRooms]}
           renderInput={(params) => (
             <TextField {...params} label="Filter by Room" />
           )}
