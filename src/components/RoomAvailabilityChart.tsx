@@ -1,11 +1,12 @@
 import { Bar } from "react-chartjs-2"
 import { fetchAvailableBookedRooms } from "@/hooks/queries/booking/fetchAvailableBookedRooms"
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js"
+import "@/styles/RoomAvailabilityChart.css"
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-const RoomAvailabilityChart = () => {
+const RoomAvailabilityChart: React.FC = () => {
   // Fetch room availability data
   const { data, isLoading, isError } = fetchAvailableBookedRooms()
 
@@ -57,15 +58,15 @@ const RoomAvailabilityChart = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="room-availability-chart">
       {/* Bar Chart */}
-      <div className="h-[300px]">
+      <div className="chart-container">
         <Bar data={chartData} options={options} />
       </div>
 
       {/* Available Rooms Section */}
-      <div className="mt-4 p-4 border rounded-lg shadow-sm bg-white">
-        <h3 className="text-lg font-semibold mb-2">📌 Currently Available Rooms</h3>
+      <div className="available-rooms-section">
+        <h3 className="text-lg font-semibold mb-2">📌 (NO TITLE YET)</h3>
         {availableRoomsList.length > 0 ? (
           <ul className="list-disc pl-5">
             {availableRoomsList.map((room) => (
@@ -75,7 +76,7 @@ const RoomAvailabilityChart = () => {
             ))}
           </ul>
         ) : (
-          <p className="text-red-500">❌ No rooms available at the moment.</p>
+          <p className="no-available-rooms">❌ No rooms available at the moment.</p>
         )}
       </div>
     </div>

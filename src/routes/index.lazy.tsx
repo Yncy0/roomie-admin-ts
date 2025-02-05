@@ -29,7 +29,7 @@ function Index() {
           <h2 className="dashboard-title">Overview</h2>
           <div className="charts-section">
             <div className="chart-box">
-              <h3 className="chart-title">Room Availability</h3>
+              <h3 className="chart-title">Available Rooms</h3>
               <RoomAvailabilityChart />
             </div>
 
@@ -40,7 +40,7 @@ function Index() {
           </div>
 
           <div className="activity-section">
-            <DashboardTable /> {/* No need to pass searchQuery, it's handled internally */}
+            <DashboardTable />
           </div>
         </>
       )}

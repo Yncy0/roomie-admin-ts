@@ -87,18 +87,3 @@
       grid-template-columns: repeat(1, 1fr);  /* 1 building per row on small screens */
   }
 }
-
-/* 6️⃣ Loader and Error Message Styling */
-.buildings-loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-}
-
-.buildings-error {
-  text-align: center;
-  color: red;
-  font-weight: bold;
-  margin-top: 20px;
-}

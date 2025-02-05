@@ -16,38 +16,17 @@ function RouteComponent() {
   const [numOfRooms, setNumOfRooms] = React.useState(0);
   const [numOfFloors, setNumOfFloors] = React.useState(0);
 
-  // React.useEffect(() => {
-  //   if (room_location) {
-  //     // Handle any updates or side effects here
-  //     console.log("Room Location (Building ID) Updated:", room_location);
-  //   }
-  // }, [room_location]);
-
-  const handleNumOfRoomsChange = (e: any) => {
-    const value = e.target.value;
-    const numberValue = parseInt(value, 10);
-    // Check if the input is a number and within the range
-    if (!isNaN(numberValue) && numberValue <= 100) {
-      setNumOfRooms(numberValue);
-    } else if (value === "") {
-      // alert("The maximum room capacity is 100."); // Clear the state if the input is empty
-    }
+  const handleNumOfRoomsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNumOfRooms(Number(e.target.value));
   };
 
-  const handleNumOfFloorsChange = (e: any) => {
-    const value = e.target.value;
-    const numberValue = parseInt(value, 10);
-    // Check if the input is a number and within the range
-    if (!isNaN(numberValue) && numberValue <= 100) {
-      setNumOfFloors(numberValue);
-    } else if (value === "") {
-      // alert("The maximum room capacity is 100."); // Clear the state if the input is empty
-    }
+  const handleNumOfFloorsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNumOfFloors(Number(e.target.value));
   };
 
   const onHandleInsert = async () => {
     try {
-      // Validate if the room name already exists
+      // Validate if the building name already exists
       const buildingExists = await isBuildingNameExists(buildingName);
 
       if (buildingExists) {
@@ -55,17 +34,12 @@ function RouteComponent() {
         return;
       }
 
-      // Insert new room if the room name doesn't exist
-      await insertBuilding(
-        buildingName,
-        buildingImage,
-        numOfRooms,
-        numOfFloors
-      );
+      // Insert new building if the building name doesn't exist
+      await insertBuilding(buildingName, buildingImage, numOfRooms, numOfFloors);
       // Log the insertion in the backlogs
       await insertBacklogs("INSERT", `The new ${buildingName} has been added`);
 
-      // Notify the user and navigate to the rooms page
+      // Notify the user and navigate to the buildings page
       alert("Data saved successfully");
       navigate({ to: "/building" });
     } catch (err) {
@@ -76,41 +50,26 @@ function RouteComponent() {
 
   return (
     <div className="p-10 bg-white flex flex-col gap-7">
-      <h1 className="text-center font-bold text-xl pb-8">
-        Create New Building
-      </h1>
+      <h1 className="text-center font-bold text-xl pb-8">Create New Building</h1>
 
       {/* Image Preview */}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <img
-          src={
-            buildingImage
-              ? buildingImage
-              : "src/assets/dummy/image-placeholder.png"
-          }
+          src={buildingImage ? buildingImage : "src/assets/dummy/image-placeholder.png"}
           alt="Room Preview"
-          style={{ objectFit: "cover", width: "16rem" }} // 64px equivalent
+          style={{ objectFit: "cover", width: "16rem" }}
         />
       </div>
 
       {/* Image File Input */}
-
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          position: "relative",
-        }}
-      >
+      <div className="inputGroup" style={{ fontFamily: "'Segoe UI', sans-serif", position: "relative" }}>
         <input
           id="imageInput"
           type="file"
           accept="image/*"
           onChange={(e) =>
             setBuildingImage(
-              e.target.files && e.target.files[0]
-                ? URL.createObjectURL(e.target.files[0])
-                : ""
+              e.target.files && e.target.files[0] ? URL.createObjectURL(e.target.files[0]) : ""
             )
           }
           style={{
@@ -150,35 +109,56 @@ function RouteComponent() {
         type={"text"}
       />
 
-      <Input
-        id="numOfRooms"
-        htmlFor="numOfRooms"
-        placeholder=""
-        value={numOfRooms}
-        onChange={handleNumOfRoomsChange}
-        label="Number of Rooms"
-        type={"text"}
-      />
+      <div className="flex gap-6">
+        {/* Number of Rooms Dropdown */}
+        <div className="inputGroup flex-1">
+          <label htmlFor="numOfRooms">Number of Rooms</label>
+          <select
+            id="numOfRooms"
+            value={numOfRooms}
+            onChange={handleNumOfRoomsChange}
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "10px",
+              border: "1px solid #35487a",
+              width: "100%",
+            }}
+          >
+            {[...Array(50)].map((_, index) => (
+              <option key={index + 1} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <Input
-        id="numOfFloors"
-        htmlFor="numOfFloors"
-        placeholder=""
-        value={numOfFloors}
-        onChange={handleNumOfFloorsChange}
-        label="Number of Floors"
-        type={"text"}
-      />
+        {/* Number of Floors Dropdown */}
+        <div className="inputGroup flex-1">
+          <label htmlFor="numOfFloors">Number of Floors</label>
+          <select
+            id="numOfFloors"
+            value={numOfFloors}
+            onChange={handleNumOfFloorsChange}
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "10px",
+              border: "1px solid #35487a",
+              width: "100%",
+            }}
+          >
+            {[...Array(50)].map((_, index) => (
+              <option key={index + 1} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {/* Buttons */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "2rem",
-          width: "100%",
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "center", gap: "2rem", width: "100%" }}>
         <button
           onClick={() => navigate({ to: "/building" })}
           style={{
@@ -191,12 +171,10 @@ function RouteComponent() {
             fontWeight: 500,
             color: "#333",
             transition: "background-color 0.2s ease-in-out",
-            width: "100%", // Full width
-            maxWidth: "100%", // Ensure it doesn't exceed the screen width
-            textAlign: "center", // Center text inside the button
+            width: "100%",
+            maxWidth: "100%",
+            textAlign: "center",
           }}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = "#e1e1e1")}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = "#f1f1f1")}
         >
           Cancel
         </button>
@@ -212,34 +190,22 @@ function RouteComponent() {
             fontWeight: 600,
             color: "#fff",
             transition: "background-color 0.2s ease-in-out",
-            width: "100%", // Full width
-            maxWidth: "100%", // Ensure it doesn't exceed the screen width
-            textAlign: "center", // Center text inside the button
+            width: "100%",
+            maxWidth: "100%",
+            textAlign: "center",
           }}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = "#35487a")}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = "#6b92e5")}
         >
           Create
         </button>
       </div>
 
-      {/* Style for animation in Add Room Forms */}
       <style>
         {`
-    .inputGroup input:focus ~ label,
-    .inputGroup input:valid ~ label {
-      transform: translateY(-50%) scale(0.9); /* Raised higher */
-      margin-left: 1.3em;
-      padding: 0.4em;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 5) 0%, rgba(255,255, 255, 3) 70%, transparent 100%);
-      border-radius: 20px; /* Rounded corners */
-    }
-
-    .inputGroup input:focus,
-    .inputGroup input:valid {
-      border-color: rgb(150, 150, 200);
-    }
-  `}
+          .inputGroup select:focus {
+            border-color: rgb(150, 150, 200);
+            outline: none;
+          }
+        `}
       </style>
     </div>
   );
