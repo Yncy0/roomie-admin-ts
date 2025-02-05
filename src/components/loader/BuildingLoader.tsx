@@ -9,8 +9,8 @@ const BuildingLoader = () => {
           <div className="image-skeleton"></div>
           {/* Building Details Skeleton */}
           <div className="details-skeleton">
-            <div className="text-skeleton"></div> {/* Building Name */}
-            <div className="text-skeleton short"></div> {/* Location */}
+            <div className="text-skeleton"></div>
+            <div className="text-skeleton short"></div>
           </div>
           {/* Button Skeleton */}
           <div className="button-skeleton"></div>

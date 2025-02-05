@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
   { icon: faObjectGroup, label: "Index", href: "/" },
   { icon: faBook, label: "Booked Rooms", href: "/booked_rooms" },
   { icon: faUserGroup, label: "Users", href: "/users" },
-  { icon: faBuilding, label: "Buildings", href: "/building" }, // Use faBuilding here
+  { icon: faBuilding, label: "Buildings", href: "/building" },
   { icon: faLayerGroup, label: "Rooms", href: "/rooms" },
   { icon: faCalendar, label: "Schedule", href: "/schedule" },
   { icon: faObjectUngroup, label: "Backlogs", href: "/backlogs" },
