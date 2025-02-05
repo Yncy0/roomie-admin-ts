@@ -1,20 +1,30 @@
 import Input from "@/components/Input";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
+import { fetchBuildingsWithId } from "@/hooks/queries/buildings/useFetchBuildings";
 import { insertBuilding } from "@/hooks/queries/buildings/useInsertBuilding";
+import { updateBuilding } from "@/hooks/queries/buildings/useUpdateBuilding";
 import { isBuildingNameExists } from "@/utils/isBuildingExist";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import React from "react";
 
-export const Route = createLazyFileRoute("/building_add")({
+export const Route = createFileRoute("/building_edit/$id")({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    return {
+      id: params.id,
+    };
+  },
 });
 
 function RouteComponent() {
+  const { id } = Route.useLoaderData();
   const navigate = useNavigate();
   const [buildingName, setBuildingName] = React.useState("");
   const [buildingImage, setBuildingImage] = React.useState("");
   const [numOfRooms, setNumOfRooms] = React.useState(0);
   const [numOfFloors, setNumOfFloors] = React.useState(0);
+
+  const { data } = fetchBuildingsWithId(id);
 
   // React.useEffect(() => {
   //   if (room_location) {
@@ -45,39 +55,34 @@ function RouteComponent() {
     }
   };
 
-  const onHandleInsert = async () => {
-    try {
-      // Validate if the room name already exists
-      const buildingExists = await isBuildingNameExists(buildingName);
-
-      if (buildingExists) {
-        alert("Building name already exists. Please choose a different name.");
-        return;
-      }
-
-      // Insert new room if the room name doesn't exist
-      await insertBuilding(
-        buildingName,
-        buildingImage,
-        numOfRooms,
-        numOfFloors
-      );
-      // Log the insertion in the backlogs
-      await insertBacklogs("INSERT", `The new ${buildingName} has been added`);
-
-      // Notify the user and navigate to the rooms page
-      alert("Data saved successfully");
-      navigate({ to: "/building" });
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      alert("An error occurred. Please try again.");
+  React.useEffect(() => {
+    if (data) {
+      setBuildingName(data.building_name || "");
+      setBuildingImage(data.building_image || "");
+      setNumOfFloors(data.num_of_floors || 0);
+      setNumOfRooms(data.num_of_rooms || 0);
     }
+  }, [data]);
+
+  const onHandleUpdate = async () => {
+    await updateBuilding(
+      id,
+      buildingName,
+      buildingImage,
+      numOfRooms,
+      numOfFloors
+    );
+    console.log(updateBuilding);
+    alert("Data saved successfully");
+
+    await insertBacklogs("UPDATE", `The room ${buildingName} has been edited`);
+    navigate({ to: "/building" });
   };
 
   return (
     <div className="p-10 bg-white flex flex-col gap-7">
       <h1 className="text-center font-bold text-xl pb-8">
-        Create New Building
+        Editing {buildingName}
       </h1>
 
       {/* Image Preview */}
@@ -201,7 +206,7 @@ function RouteComponent() {
           Cancel
         </button>
         <button
-          onClick={onHandleInsert}
+          onClick={onHandleUpdate}
           style={{
             border: "2px solid #35487a",
             backgroundColor: "#6b92e5",

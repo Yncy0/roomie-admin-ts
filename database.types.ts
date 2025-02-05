@@ -86,19 +86,28 @@ export type Database = {
       }
       building: {
         Row: {
+          building_image: string | null
           building_name: string | null
           created_at: string
           id: string
+          num_of_floors: number | null
+          num_of_rooms: number | null
         }
         Insert: {
+          building_image?: string | null
           building_name?: string | null
           created_at?: string
           id?: string
+          num_of_floors?: number | null
+          num_of_rooms?: number | null
         }
         Update: {
+          building_image?: string | null
           building_name?: string | null
           created_at?: string
           id?: string
+          num_of_floors?: number | null
+          num_of_rooms?: number | null
         }
         Relationships: []
       }

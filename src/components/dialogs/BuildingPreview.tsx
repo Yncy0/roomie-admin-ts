@@ -5,20 +5,26 @@ import "@/styles/BuildingPreview.css"; // Import the CSS file
 
 type BuildingPreviewProps = {
   buildingName: string;
+  buildingImage: string;
+  numOfRooms: number;
+  numOfFloors: number;
   onClose: () => void;
   onEdit?: () => void; // Add a new prop for the edit action
 };
 
 const BuildingPreview: React.FC<BuildingPreviewProps> = ({
   buildingName,
+  buildingImage,
+  numOfRooms,
+  numOfFloors,
   onClose,
   onEdit, // Destructure the new prop
 }) => {
   const buildingDetails = {
     building_name: buildingName,
-    num_of_rooms: 100,
-    num_of_floors: 10,
-    building_image: "/assets/dummy/image-placeholder.png",
+    num_of_rooms: numOfRooms,
+    num_of_floors: numOfFloors,
+    building_image: buildingImage,
   };
 
   return (

@@ -53,3 +53,20 @@ export const fetchBuildings = () => {
     },
   });
 };
+
+export const fetchBuildingsWithId = (id: any) => {
+  return useQuery({
+    queryKey: ["building", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("building")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    },
+  });
+};

@@ -81,7 +81,7 @@ function RouteComponent() {
 
   return (
     <div className="p-10 bg-white flex flex-col gap-7">
-      <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
+      <h1 className="text-center font-bold text-xl pb-8">Editing {roomName}</h1>
 
       {/* Image Preview */}
       <div className="flex justify-center">
@@ -169,7 +169,7 @@ function RouteComponent() {
       {/* Buttons */}
       <div className="flex justify-center gap-8 w-full">
         <button
-          onClick={() => navigate({ to: "/rooms" })}
+          onClick={() => navigate({ to: "/building" })}
           className="w-full max-w-full text-center border-2 border-[#d1d1d1] bg-[#f1f1f1] rounded-xl cursor-pointer py-3 px-5 text-base font-medium text-[#333] transition-colors duration-200 ease-in-out hover:bg-[#e1e1e1]"
         >
           Cancel

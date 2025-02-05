@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import BuildingPreview from "@/components/dialogs/BuildingPreview"; // Correct import
+import { useNavigate } from "@tanstack/react-router";
 
 type BuildingCardProps = {
   id: string;
@@ -10,7 +11,7 @@ type BuildingCardProps = {
 };
 
 const BuildingCard: React.FC<BuildingCardProps> = ({
-  //id,
+  id,
   building_name,
   num_of_rooms,
   num_of_floors,
@@ -18,12 +19,18 @@ const BuildingCard: React.FC<BuildingCardProps> = ({
 }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // State to manage modal visibility
 
+  const nav = useNavigate();
+
   const handleViewDetails = () => {
     setIsPreviewOpen(true); // Open the modal when the button is clicked
   };
 
   const handleClosePreview = () => {
     setIsPreviewOpen(false); // Close the modal
+  };
+
+  const clickEdit = () => {
+    nav({ to: "/building_edit/$id", params: { id: id } });
   };
 
   return (
@@ -58,7 +65,11 @@ const BuildingCard: React.FC<BuildingCardProps> = ({
       {isPreviewOpen && (
         <BuildingPreview
           buildingName={building_name}
+          buildingImage="/assets/dummy/image-placeholder.png"
+          numOfFloors={num_of_floors}
+          numOfRooms={num_of_rooms}
           onClose={handleClosePreview}
+          onEdit={clickEdit}
         />
       )}
     </div>
