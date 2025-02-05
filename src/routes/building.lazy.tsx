@@ -1,5 +1,5 @@
 import React from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   flexRender,
   getCoreRowModel,
@@ -26,6 +26,8 @@ function Buildings() {
   // Using the fetchBuildings hook to fetch building data (now using dummy data)
   const { data = [], isLoading, error } = fetchBuildings();
   const buildingsPerRow = 3;
+
+  const nav = useNavigate();
 
   const columns = React.useMemo(
     () => [
@@ -96,7 +98,12 @@ function Buildings() {
         <>
           <div className="buildings-header">
             <Heading size="4">Buildings</Heading>
-            <Button className="buildings-add-button">Add Building</Button>
+            <Button
+              onClick={() => nav({ to: "/building_add" })}
+              className="buildings-add-button"
+            >
+              Add Building
+            </Button>
           </div>
 
           {showBuildingsLoader ? (
