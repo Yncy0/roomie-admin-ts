@@ -1,3 +1,4 @@
+import supabase from "@/utils/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 const dummyBuildingsData = [
@@ -40,10 +41,15 @@ const dummyBuildingsData = [
 
 export const fetchBuildings = () => {
   return useQuery({
-    queryKey: ["buildings"],
+    queryKey: ["building"],
     queryFn: async () => {
-      // Return dummy data instead of fetching from the database
-      return dummyBuildingsData;
+      const { data, error } = await supabase
+        .from("building")
+        .select("*");
+
+      if (error) throw error;
+
+      return data;
     },
   });
 };

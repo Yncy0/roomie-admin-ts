@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import BuildingPreview from '@/components/dialogs/BuildingPreview'; // Correct import
-
+import React, { useState } from "react";
+import BuildingPreview from "@/components/dialogs/BuildingPreview"; // Correct import
 
 type BuildingCardProps = {
   id: string;
@@ -32,7 +31,7 @@ const BuildingCard: React.FC<BuildingCardProps> = ({
       {/* Image */}
       <div className="relative h-40 overflow-hidden rounded-xl bg-gray-200">
         <img
-          src={building_image || '/assets/dummy/image-placeholder.png'}
+          src={building_image || "/assets/dummy/image-placeholder.png"}
           alt={building_name}
           className="w-full h-full object-cover rounded-xl"
         />
@@ -40,23 +39,27 @@ const BuildingCard: React.FC<BuildingCardProps> = ({
 
       {/* Building Details */}
       <div>
-        <h3 className="mb-2 text-xl font-semibold text-[#35487a]">{building_name}</h3>
-        <p className="text-sm text-gray-600">{num_of_rooms} rooms | {num_of_floors} floors</p>
+        <h3 className="mb-2 text-xl font-semibold text-[#35487a]">
+          {building_name}
+        </h3>
+        <p className="text-sm text-gray-600">
+          {num_of_rooms} rooms | {num_of_floors} floors
+        </p>
       </div>
 
       {/* View More Details Button */}
       <div className="pt-4">
-        <button
-          className="view-details-button"
-          onClick={handleViewDetails}
-        >
+        <button className="view-details-button" onClick={handleViewDetails}>
           View Details
         </button>
       </div>
 
       {/* Modal */}
       {isPreviewOpen && (
-        <BuildingPreview buildingName={building_name} onClose={handleClosePreview} />
+        <BuildingPreview
+          buildingName={building_name}
+          onClose={handleClosePreview}
+        />
       )}
     </div>
   );
