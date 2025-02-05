@@ -158,7 +158,7 @@ const transformBookingData = (data: any[]): BookingData[] => {
     date: item.date || "N/A",
     book_timeIn: item.time_in || "N/A",
     book_timeOut: item.time_out || "N/A",
-    status: item.status || "Pending",
+    status: item.status || "PENDING",
     user_name: item.profiles?.username || "Unknown",
   }))
 }
@@ -172,8 +172,7 @@ const transformScheduleData = (data: any[]): ScheduleData[] => {
     days: item.days || "N/A",
     time_in: item.time_in || "N/A",
     time_out: item.time_out || "N/A",
-    status: item.status || "Pending",
+    status: item.status || "PENDING",
     user_name: item.profiles?.username || "Unknown",
   }))
 }
-

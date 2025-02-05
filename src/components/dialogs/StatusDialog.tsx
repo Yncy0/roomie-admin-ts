@@ -20,28 +20,42 @@ const StatusDialog = ({ item }: Props) => {
 
   console.log(value);
 
-  const onHandleClick = async () => {
-    // Use the latest value from the ref
-    const latestValue = latestValueRef.current;
-    console.log("Latest value:", latestValue); // Debugging: Check the latest value
-
-    // Call the update function with the latest value
-    const update = updateBookedRoomsStatus(item.id, latestValue);
+  const handleAccpet = async () => {
+    const update = updateBookedRoomsStatus(item.id, "INCOMING");
     if (update) await update;
 
     // Use the latest value for notifications
     insertNotification(
       item.profiles.id,
-      `Your booking status is set to ${latestValue}`
+      `Your booking reacquest has been ACCEPTED`
     );
 
     insertBacklogs(
       "UPDATE",
-      `The booking request of ${item.profiles?.username} has granted status ${latestValue}`
+      `The booking request of ${item.profiles?.username} has been ACCEPT`
     );
 
-    await deleteBookedRoomsCancel();
+    alert("The statatus has been ACCEPTED");
   };
+
+  const handleDecline = async () => {
+    const update = updateBookedRoomsStatus(item.id, "CANCELLED");
+    if (update) await update;
+
+    // Use the latest value for notifications
+    insertNotification(
+      item.profiles.id,
+      `Your booking reacquest has been DECLINED`
+    );
+
+    insertBacklogs(
+      "UPDATE",
+      `The booking request of ${item.profiles?.username} has been DECLINE`
+    );
+
+    alert("The statatus has been ACCEPTED");
+  };
+
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -52,19 +66,8 @@ const StatusDialog = ({ item }: Props) => {
       <Dialog.Content maxWidth="450px">
         <Dialog.Title>Grant Status</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Select the type of approval in this booked room
+          Would you like to accept this booking reservation?
         </Dialog.Description>
-        <Select.Root onValueChange={setValue} defaultValue={value}>
-          <Select.Trigger />
-          <Select.Content>
-            <Select.Group>
-              <Select.Label>Status</Select.Label>
-              <Select.Item value="ON GOING">ON GOING</Select.Item>
-              <Select.Item value="PENDING RESERVE">PENDING RESERVE</Select.Item>
-              <Select.Item value="CANCEL REQUEST">CANCEL REQUEST</Select.Item>
-            </Select.Group>
-          </Select.Content>
-        </Select.Root>
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
             <Button variant="soft" color="gray">
@@ -72,7 +75,12 @@ const StatusDialog = ({ item }: Props) => {
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button onClick={onHandleClick}>Save</Button>
+            <Button color="red" onClick={handleDecline}>
+              Decline
+            </Button>
+          </Dialog.Close>
+          <Dialog.Close>
+            <Button onClick={handleAccpet}>Accept</Button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>

@@ -38,3 +38,23 @@ export const fetchRoomsWithId = (id: any) => {
         },
     });
 };
+
+// export const fetchRoomsWithUserId = (id: any) => {
+//     return useQuery({
+//         queryKey: ["rooms", id],
+//         queryFn: async () => {
+//             const { data, error } = await supabase
+//                 .from("rooms")
+//                 .select("*")
+//                 .eq("profile_id", id)
+//                 .single();
+
+//             if (error) {
+//                 console.log(error);
+//                 throw error;
+//             }
+
+//             return data;
+//         },
+//     });
+// };
