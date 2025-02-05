@@ -1,90 +1,85 @@
-import { Bar } from "react-chartjs-2";
-//import { useQuery } from "@tanstack/react-query";
-import { fetchAvailableRooms } from "@/hooks/queries/rooms/fetchAvailableRooms"; // Updated import
-import { fetchAvailableBookedRooms } from "@/hooks/queries/booking/fetchAvailableBookedRooms"; // Updated import
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Bar } from "react-chartjs-2"
+import { fetchAvailableBookedRooms } from "@/hooks/queries/booking/fetchAvailableBookedRooms"
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js"
 
-// Register the required components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const RoomAvailabilityChart = () => {
-  // Fetch data
-  const { data: rooms } = fetchAvailableRooms(); // Updated hook
-  const { data: bookedRooms } = fetchAvailableBookedRooms(); // Updated hook
+  // Fetch room availability data
+  const { data, isLoading, isError } = fetchAvailableBookedRooms()
 
-  // Process data to calculate the total rooms inputted each day
-  const roomsAvailable = rooms?.map((room) => {
-    const bookedForRoom = bookedRooms?.filter(
-      (bookedRoom) => bookedRoom.room_id === room.id
-    ).length;
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error fetching room data.</p>
 
-    return bookedForRoom ? 0 : 1; // Consider availability as 0 or 1 (booked or available)
-  });
+  const { totalRooms, availableRooms, bookedRooms, allRooms } = data || {
+    totalRooms: 0,
+    availableRooms: 0,
+    bookedRooms: [],
+    allRooms: [],
+  }
 
-  // Removing Sunday from labels and adjusting the data
-  const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  // Get the list of available rooms
+  const bookedRoomIds = new Set(bookedRooms.map((room) => Number(room.room_id))) // Ensure room_id is treated as a number
+  const availableRoomsList = allRooms.filter((room) => !bookedRoomIds.has(room.id))
 
+  // Chart data
   const chartData = {
-    labels: labels,
+    labels: ["Total Rooms", "Available Rooms", "Booked Rooms"],
     datasets: [
       {
-        label: "Rooms Available",
-        data: roomsAvailable?.slice(0, -1), // Remove Sunday (last element)
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgb(75, 192, 192)",
+        label: "Room Status",
+        data: [totalRooms, availableRooms, bookedRooms.length],
+        backgroundColor: [
+          "rgba(54, 162, 235, 0.6)", // Total Rooms
+          "rgba(75, 192, 192, 0.6)", // Available Rooms
+          "rgba(255, 99, 132, 0.6)", // Booked Rooms
+        ],
+        borderColor: [
+          "rgb(54, 162, 235)", // Total Rooms
+          "rgb(75, 192, 192)", // Available Rooms
+          "rgb(255, 99, 132)", // Booked Rooms
+        ],
         borderWidth: 1,
       },
     ],
-  };
+  }
 
   const options = {
     responsive: true,
     plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      tooltip: {
-        mode: "index" as const,
-        intersect: false,
-      },
+      legend: { position: "top" as const },
+      tooltip: { mode: "index" as const, intersect: false },
     },
     scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Day",
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Rooms Available",
-        },
-        beginAtZero: true,
-      },
+      y: { beginAtZero: true, title: { display: true, text: "Count" } },
     },
-  };
+  }
 
   return (
-    <div className="w-full h-[300px]">
-      <Bar data={chartData} options={options} />
-    </div>
-  );
-};
+    <div className="w-full">
+      {/* Bar Chart */}
+      <div className="h-[300px]">
+        <Bar data={chartData} options={options} />
+      </div>
 
-export default RoomAvailabilityChart;
+      {/* Available Rooms Section */}
+      <div className="mt-4 p-4 border rounded-lg shadow-sm bg-white">
+        <h3 className="text-lg font-semibold mb-2">📌 Currently Available Rooms</h3>
+        {availableRoomsList.length > 0 ? (
+          <ul className="list-disc pl-5">
+            {availableRoomsList.map((room) => (
+              <li key={room.id} className="text-gray-700">
+                🔹 <strong>{room.room_name}</strong>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-red-500">❌ No rooms available at the moment.</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default RoomAvailabilityChart

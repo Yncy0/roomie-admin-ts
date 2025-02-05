@@ -1,26 +1,15 @@
-import { Line } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  ArcElement,
   Tooltip,
   Legend,
 } from "chart.js";
 import { fetchBookingsPerMonth } from "@/hooks/queries/booking/fetchBookingsPerMonth ";
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// Register Chart.js components for Pie Chart
+ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend);
 
 const BookingTrendsChart = () => {
   // Fetch bookings per month using the custom hook
@@ -35,14 +24,19 @@ const BookingTrendsChart = () => {
   const bookings = Object.values(bookingsPerMonth || {});  // Extract the booking counts
 
   const chartData = {
-    labels: months,  // Set the months on the x-axis
+    labels: months,  // Set the months as labels
     datasets: [
       {
         label: "Bookings",
         data: bookings,  // The number of bookings for each month
-        fill: false,
-        borderColor: "rgb(75, 192, 192)",
-        tension: 0.1,
+        backgroundColor: [
+          "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40",
+          "#8BC34A", "#D84315", "#00ACC1", "#C2185B", "#7B1FA2", "#2E7D32",
+        ],
+        hoverBackgroundColor: [
+          "#FF4265", "#1592E8", "#FFD834", "#3AAFA9", "#784BFF", "#FF7F24",
+          "#7CB342", "#BF360C", "#00838F", "#AD1457", "#6A1B9A", "#1B5E20",
+        ],
       },
     ],
   };
@@ -51,33 +45,22 @@ const BookingTrendsChart = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,  // Ensure the position is one of the valid values
+        position: "top" as const,  // Position legend at the top
       },
       tooltip: {
-        mode: "index" as const,
-        intersect: false,
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Month",
+        callbacks: {
+          label: (tooltipItem: any) => {
+            const value = tooltipItem.raw;
+            return ` ${value} bookings`;
+          },
         },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Number of Bookings",
-        },
-        beginAtZero: true,
       },
     },
   };
 
   return (
-    <div className="w-full h-[300px]">
-      <Line data={chartData} options={options} />
+    <div className="w-full h-[300px] flex justify-center items-center">
+      <Pie data={chartData} options={options} />
     </div>
   );
 };

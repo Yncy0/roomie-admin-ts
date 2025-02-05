@@ -1,0 +1,62 @@
+.building-loader {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .loader-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    border-radius: 0.75rem;
+    background-color: white;
+    padding: 1.5rem;
+    gap: 1rem;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  
+  .image-skeleton {
+    height: 10rem;
+    background-color: #d1d5db;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .details-skeleton {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .text-skeleton {
+    height: 1rem;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .text-skeleton.short {
+    width: 75%;
+  }
+  
+  .button-skeleton {
+    height: 3rem;
+    background-color: #d1d5db;
+    border-radius: 0.5rem;
+    width: 10rem;
+    margin-top: 1rem;
+  }
+  
+  /* Pulse Animation */
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
