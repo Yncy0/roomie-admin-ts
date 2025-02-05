@@ -81,7 +81,7 @@ function RouteComponent() {
 
   return (
     <div className="p-10 bg-white flex flex-col gap-7">
-      <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
+      <h1 className="text-center font-bold text-xl pb-8">Editing {roomName}</h1>
 
       {/* Image Preview */}
       <div className="flex justify-center">

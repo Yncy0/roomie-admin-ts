@@ -1,5 +1,5 @@
 import React from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   flexRender,
   getCoreRowModel,
@@ -27,11 +27,13 @@ function Buildings() {
   const { data = [], isLoading, error } = fetchBuildings();
   const buildingsPerRow = 3;
 
+  const nav = useNavigate();
+
   const columns = React.useMemo(
     () => [
       {
         header: "Buildings",
-        accessorKey: "buildings",
+        accessorKey: "building",
         cell: ({ row }: any) => (
           <div className="buildings-row">
             {row.original.buildings.map((item: any) => (
@@ -40,8 +42,8 @@ function Buildings() {
                 id={item.id}
                 building_image={item.building_image}
                 building_name={item.building_name}
-                num_of_floors={item.number_of_floors}
-                num_of_rooms={item.number_of_rooms}
+                num_of_floors={item.num_of_floors}
+                num_of_rooms={item.num_of_rooms}
               />
             ))}
           </div>
@@ -73,8 +75,7 @@ function Buildings() {
       if (action === "first") table.setPageIndex(0);
       else if (action === "prev") table.previousPage();
       else if (action === "next") table.nextPage();
-      else if (action === "last")
-        table.setPageIndex(table.getPageCount() - 1);
+      else if (action === "last") table.setPageIndex(table.getPageCount() - 1);
       setShowBuildingsLoader(false);
     }, 1000);
   };
@@ -97,7 +98,12 @@ function Buildings() {
         <>
           <div className="buildings-header">
             <Heading size="4">Buildings</Heading>
-            <Button className="buildings-add-button">Add Building</Button>
+            <Button
+              onClick={() => nav({ to: "/building_add" })}
+              className="buildings-add-button"
+            >
+              Add Building
+            </Button>
           </div>
 
           {showBuildingsLoader ? (

@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as RoomeditIdImport } from './routes/room_edit/$id'
 import { Route as ProfileviewIdImport } from './routes/profile_view/$id'
+import { Route as BuildingeditIdImport } from './routes/building_edit/$id'
 
 // Create Virtual Routes
 
@@ -22,6 +23,7 @@ const UsersLazyImport = createFileRoute('/users')()
 const ScheduleLazyImport = createFileRoute('/schedule')()
 const RoomsaddLazyImport = createFileRoute('/rooms_add')()
 const RoomsLazyImport = createFileRoute('/rooms')()
+const BuildingaddLazyImport = createFileRoute('/building_add')()
 const BuildingLazyImport = createFileRoute('/building')()
 const BookedroomsLazyImport = createFileRoute('/booked_rooms')()
 const BacklogsLazyImport = createFileRoute('/backlogs')()
@@ -53,6 +55,12 @@ const RoomsLazyRoute = RoomsLazyImport.update({
   path: '/rooms',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/rooms.lazy').then((d) => d.Route))
+
+const BuildingaddLazyRoute = BuildingaddLazyImport.update({
+  id: '/building_add',
+  path: '/building_add',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/building_add.lazy').then((d) => d.Route))
 
 const BuildingLazyRoute = BuildingLazyImport.update({
   id: '/building',
@@ -96,6 +104,12 @@ const ProfileviewIdRoute = ProfileviewIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const BuildingeditIdRoute = BuildingeditIdImport.update({
+  id: '/building_edit/$id',
+  path: '/building_edit/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -135,6 +149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuildingLazyImport
       parentRoute: typeof rootRoute
     }
+    '/building_add': {
+      id: '/building_add'
+      path: '/building_add'
+      fullPath: '/building_add'
+      preLoaderRoute: typeof BuildingaddLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/rooms': {
       id: '/rooms'
       path: '/rooms'
@@ -163,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersLazyImport
       parentRoute: typeof rootRoute
     }
+    '/building_edit/$id': {
+      id: '/building_edit/$id'
+      path: '/building_edit/$id'
+      fullPath: '/building_edit/$id'
+      preLoaderRoute: typeof BuildingeditIdImport
+      parentRoute: typeof rootRoute
+    }
     '/profile_view/$id': {
       id: '/profile_view/$id'
       path: '/profile_view/$id'
@@ -188,10 +216,12 @@ export interface FileRoutesByFullPath {
   '/backlogs': typeof BacklogsLazyRoute
   '/booked_rooms': typeof BookedroomsLazyRoute
   '/building': typeof BuildingLazyRoute
+  '/building_add': typeof BuildingaddLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/rooms_add': typeof RoomsaddLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
+  '/building_edit/$id': typeof BuildingeditIdRoute
   '/profile_view/$id': typeof ProfileviewIdRoute
   '/room_edit/$id': typeof RoomeditIdRoute
 }
@@ -202,10 +232,12 @@ export interface FileRoutesByTo {
   '/backlogs': typeof BacklogsLazyRoute
   '/booked_rooms': typeof BookedroomsLazyRoute
   '/building': typeof BuildingLazyRoute
+  '/building_add': typeof BuildingaddLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/rooms_add': typeof RoomsaddLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
+  '/building_edit/$id': typeof BuildingeditIdRoute
   '/profile_view/$id': typeof ProfileviewIdRoute
   '/room_edit/$id': typeof RoomeditIdRoute
 }
@@ -217,10 +249,12 @@ export interface FileRoutesById {
   '/backlogs': typeof BacklogsLazyRoute
   '/booked_rooms': typeof BookedroomsLazyRoute
   '/building': typeof BuildingLazyRoute
+  '/building_add': typeof BuildingaddLazyRoute
   '/rooms': typeof RoomsLazyRoute
   '/rooms_add': typeof RoomsaddLazyRoute
   '/schedule': typeof ScheduleLazyRoute
   '/users': typeof UsersLazyRoute
+  '/building_edit/$id': typeof BuildingeditIdRoute
   '/profile_view/$id': typeof ProfileviewIdRoute
   '/room_edit/$id': typeof RoomeditIdRoute
 }
@@ -233,10 +267,12 @@ export interface FileRouteTypes {
     | '/backlogs'
     | '/booked_rooms'
     | '/building'
+    | '/building_add'
     | '/rooms'
     | '/rooms_add'
     | '/schedule'
     | '/users'
+    | '/building_edit/$id'
     | '/profile_view/$id'
     | '/room_edit/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -246,10 +282,12 @@ export interface FileRouteTypes {
     | '/backlogs'
     | '/booked_rooms'
     | '/building'
+    | '/building_add'
     | '/rooms'
     | '/rooms_add'
     | '/schedule'
     | '/users'
+    | '/building_edit/$id'
     | '/profile_view/$id'
     | '/room_edit/$id'
   id:
@@ -259,10 +297,12 @@ export interface FileRouteTypes {
     | '/backlogs'
     | '/booked_rooms'
     | '/building'
+    | '/building_add'
     | '/rooms'
     | '/rooms_add'
     | '/schedule'
     | '/users'
+    | '/building_edit/$id'
     | '/profile_view/$id'
     | '/room_edit/$id'
   fileRoutesById: FileRoutesById
@@ -274,10 +314,12 @@ export interface RootRouteChildren {
   BacklogsLazyRoute: typeof BacklogsLazyRoute
   BookedroomsLazyRoute: typeof BookedroomsLazyRoute
   BuildingLazyRoute: typeof BuildingLazyRoute
+  BuildingaddLazyRoute: typeof BuildingaddLazyRoute
   RoomsLazyRoute: typeof RoomsLazyRoute
   RoomsaddLazyRoute: typeof RoomsaddLazyRoute
   ScheduleLazyRoute: typeof ScheduleLazyRoute
   UsersLazyRoute: typeof UsersLazyRoute
+  BuildingeditIdRoute: typeof BuildingeditIdRoute
   ProfileviewIdRoute: typeof ProfileviewIdRoute
   RoomeditIdRoute: typeof RoomeditIdRoute
 }
@@ -288,10 +330,12 @@ const rootRouteChildren: RootRouteChildren = {
   BacklogsLazyRoute: BacklogsLazyRoute,
   BookedroomsLazyRoute: BookedroomsLazyRoute,
   BuildingLazyRoute: BuildingLazyRoute,
+  BuildingaddLazyRoute: BuildingaddLazyRoute,
   RoomsLazyRoute: RoomsLazyRoute,
   RoomsaddLazyRoute: RoomsaddLazyRoute,
   ScheduleLazyRoute: ScheduleLazyRoute,
   UsersLazyRoute: UsersLazyRoute,
+  BuildingeditIdRoute: BuildingeditIdRoute,
   ProfileviewIdRoute: ProfileviewIdRoute,
   RoomeditIdRoute: RoomeditIdRoute,
 }
@@ -311,10 +355,12 @@ export const routeTree = rootRoute
         "/backlogs",
         "/booked_rooms",
         "/building",
+        "/building_add",
         "/rooms",
         "/rooms_add",
         "/schedule",
         "/users",
+        "/building_edit/$id",
         "/profile_view/$id",
         "/room_edit/$id"
       ]
@@ -334,6 +380,9 @@ export const routeTree = rootRoute
     "/building": {
       "filePath": "building.lazy.tsx"
     },
+    "/building_add": {
+      "filePath": "building_add.lazy.tsx"
+    },
     "/rooms": {
       "filePath": "rooms.lazy.tsx"
     },
@@ -345,6 +394,9 @@ export const routeTree = rootRoute
     },
     "/users": {
       "filePath": "users.lazy.tsx"
+    },
+    "/building_edit/$id": {
+      "filePath": "building_edit/$id.tsx"
     },
     "/profile_view/$id": {
       "filePath": "profile_view/$id.tsx"
