@@ -6,7 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import listPlugin from "@fullcalendar/list"
 import { fetchBookedRooms } from "@/hooks/queries/booking/useFetchBookedRooms"
-import { fetchSchedule } from "@/hooks/queries/schedule/useFetchSchedule"
+import { fetchAllSchedule } from "@/hooks/queries/schedule/useFetchSchedule"
 import { fetchRooms } from "@/hooks/queries/rooms/useFetchRooms"
 import CustomEventCard from "./customEventCard"
 import dayjs from "dayjs"
@@ -155,12 +155,13 @@ const SchedulePage: React.FC = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleItem[]>([])
   const [filteredData, setFilteredData] = useState<ScheduleItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [selectedRoom, setSelectedRoom] = useState<string | null>("All Rooms")
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [allRooms, setAllRooms] = useState<string[]>([])
+  const [defaultRoom, setDefaultRoom] = useState<string | null>(null)
 
   const { data: bookedRoomsData, error: bookedRoomsError } = fetchBookedRooms()
-  const { data: scheduleDataFromAPI, error: scheduleDataError } = fetchSchedule()
+  const { data: scheduleDataFromAPI, error: scheduleDataError } = fetchAllSchedule()
   const { data: roomsData, error: roomsError } = fetchRooms()
 
   useEffect(() => {
@@ -176,26 +177,34 @@ const SchedulePage: React.FC = () => {
       const transformedScheduleData = transformScheduleData(scheduleDataFromAPI)
 
       // Filter for valid statuses
-      const validStatuses = [
-        "INCOMING",
-        "ONGOING",
-        "DONE",
-      ]
+      const validStatuses = ["INCOMING", "ONGOING", "DONE", "PENDING CLASS", "PENDING RESERVE"]
       const validData = [...transformedBookingData, ...transformedScheduleData].filter(
         (item) => item.status && validStatuses.includes(item.status.toUpperCase()),
       )
 
       // Set schedule data
       setScheduleData(validData)
-      setFilteredData(validData)
 
       // Set all rooms from rooms database
       const roomNames = roomsData.map((room) => room.room_name)
       setAllRooms(roomNames)
 
+      // Select a default room
+      selectDefaultRoom(roomNames)
+
       setIsLoading(false)
     }
   }, [bookedRoomsData, scheduleDataFromAPI, roomsData, bookedRoomsError, scheduleDataError, roomsError])
+
+  const selectDefaultRoom = (rooms: string[]) => {
+    if (rooms.length > 0) {
+      // Select the first room as the default
+      const firstRoom = rooms[0]
+      setDefaultRoom(firstRoom)
+      setSelectedRoom(firstRoom)
+      applyFilters(firstRoom, searchQuery)
+    }
+  }
 
   const handleRoomChange = (event: React.SyntheticEvent<Element, Event>, newValue: string | null) => {
     setSelectedRoom(newValue)
@@ -211,7 +220,7 @@ const SchedulePage: React.FC = () => {
   const applyFilters = (room: string | null, search: string) => {
     let filtered = scheduleData
 
-    if (room && room !== "All Rooms") {
+    if (room) {
       filtered = filtered.filter((event) => event.room_name === room)
     }
 
@@ -228,8 +237,6 @@ const SchedulePage: React.FC = () => {
   useEffect(() => {
     applyFilters(selectedRoom, searchQuery)
   }, [selectedRoom, searchQuery, applyFilters])
-
-  // Removed useEffect that was setting the default room
 
   if (isLoading) {
     return (
@@ -248,10 +255,13 @@ const SchedulePage: React.FC = () => {
         <Autocomplete
           value={selectedRoom}
           onChange={handleRoomChange}
-          options={["All Rooms", ...allRooms]}
+          options={allRooms}
           renderInput={(params) => <TextField {...params} label="Filter by Room" />}
           sx={{ minWidth: 300 }}
           isOptionEqualToValue={(option, value) => option === value}
+          clearOnBlur={false}
+          clearOnEscape={false}
+          clearIcon={<span style={{ cursor: "pointer" }}>✕</span>}
         />
         <TextField label="Search" value={searchQuery} onChange={handleSearchChange} sx={{ minWidth: 300 }} />
       </Box>

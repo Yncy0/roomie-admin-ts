@@ -37,3 +37,21 @@ export const fetchScheduleWithId = (id: any) => {
         },
     });
 };
+
+export const fetchAllSchedule = (id: any) => {
+    return useQuery({
+        queryKey: ["schedule", id],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("schedule")
+                .select("*, subject(*), course(*), profiles(*), rooms(*)");
+
+            if (error) {
+                console.log(error);
+                throw error;
+            }
+
+            return data;
+        },
+    });
+};

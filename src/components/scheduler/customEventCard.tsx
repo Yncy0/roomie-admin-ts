@@ -22,8 +22,6 @@ interface CustomEventCardProps {
 const CustomEventCard: React.FC<CustomEventCardProps> = ({ event }) => {
   const { extendedProps } = event.event
 
- 
-
   return (
     <Tooltip
       title={
@@ -102,7 +100,7 @@ const CustomEventCard: React.FC<CustomEventCardProps> = ({ event }) => {
               fontStyle: "italic",
             }}
           >
-            
+            {extendedProps.user_name}
           </Typography>
         </CardContent>
       </Card>
