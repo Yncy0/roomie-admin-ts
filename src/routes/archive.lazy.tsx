@@ -1,146 +1,134 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import React, { useEffect, useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import supabase from "@/utils/supabase";
+import { useState, useEffect } from "react";
+import { Table } from "@radix-ui/themes";
+import PaginationControls from "@/components/PaginationControls";
+import { fetchProfiles } from "@/hooks/queries/profiles/useArchiveProfiles";
+import { fetchArchivedRooms } from "@/hooks/queries/rooms/useArchiveRooms";
+import { fetchArchivedSchedule } from "@/hooks/queries/schedule/useArchiveSchedule";
+import Loader from "@/components/loader/Loader";
+import "@/styles/archive.css";
 
 export const Route = createLazyFileRoute("/archive")({
   component: Archive,
 });
 
 function Archive() {
-  const [archivedUsers, setArchivedUsers] = useState([]);
-  const [archivedRooms, setArchivedRooms] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const [currentPageUsers, setCurrentPageUsers] = useState(1);
-  const [currentPageRooms, setCurrentPageRooms] = useState(1);
+  const [currentPageUsers, setCurrentPageUsers] = useState(0);
+  const [currentPageRooms, setCurrentPageRooms] = useState(0);
+  const [currentPageSchedules, setCurrentPageSchedules] = useState(0);
   const itemsPerPage = 5;
 
-  const paginateData = (data: any, page: any) => {
-    const startIndex = (page - 1) * itemsPerPage;
+  const { data: archivedUsers, isLoading: isLoadingUsers, error: usersError } = fetchProfiles();
+  const { data: archivedRooms, isLoading: isLoadingRooms, error: roomsError } = fetchArchivedRooms();
+  const { data: archivedSchedule, isLoading: isLoadingSchedule, error: scheduleError } = fetchArchivedSchedule();
+
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Simulate a 4-second loader display
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowLoader(false); // Hide the loader after 4 seconds
+    }, 4000); // 4000 ms = 4 seconds
+
+    // Cleanup the timeout if the component unmounts
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const paginateData = (data: any[], page: number) => {
+    const startIndex = page * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return data.slice(startIndex, endIndex);
+    return data?.slice(startIndex, endIndex) || [];
   };
 
-  const handleFirstPage = (setPage: any) => setPage(1);
-  const handleLastPage = (data: any, setPage: any) =>
-    setPage(Math.ceil(data.length / itemsPerPage));
-  const handleNextPage = (data: any, setPage: any) =>
-    setPage((prev: any) =>
-      prev < Math.ceil(data.length / itemsPerPage) ? prev + 1 : prev
-    );
-  const handlePreviousPage = (setPage: any) =>
-    setPage((prev: any) => (prev > 1 ? prev - 1 : prev));
+  const handlePaginationUsers = (action: string) => {
+    switch (action) {
+      case "first":
+        setCurrentPageUsers(0);
+        break;
+      case "prev":
+        setCurrentPageUsers((prev) => Math.max(0, prev - 1));
+        break;
+      case "next":
+        setCurrentPageUsers((prev) => Math.min(Math.ceil((archivedUsers?.length || 0) / itemsPerPage) - 1, prev + 1));
+        break;
+      case "last":
+        setCurrentPageUsers(Math.ceil((archivedUsers?.length || 0) / itemsPerPage) - 1);
+        break;
+    }
+  };
 
-  if (loading) {
-    return (
-      <div className="dot-spinner">
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-        <div className="dot-spinner__dot"></div>
-      </div>
-    );
+  const handlePaginationRooms = (action: string) => {
+    switch (action) {
+      case "first":
+        setCurrentPageRooms(0);
+        break;
+      case "prev":
+        setCurrentPageRooms((prev) => Math.max(0, prev - 1));
+        break;
+      case "next":
+        setCurrentPageRooms((prev) => Math.min(Math.ceil((archivedRooms?.length || 0) / itemsPerPage) - 1, prev + 1));
+        break;
+      case "last":
+        setCurrentPageRooms(Math.ceil((archivedRooms?.length || 0) / itemsPerPage) - 1);
+        break;
+    }
+  };
+
+  const handlePaginationSchedules = (action: string) => {
+    switch (action) {
+      case "first":
+        setCurrentPageSchedules(0);
+        break;
+      case "prev":
+        setCurrentPageSchedules((prev) => Math.max(0, prev - 1));
+        break;
+      case "next":
+        setCurrentPageSchedules((prev) => Math.min(Math.ceil((archivedSchedule?.length || 0) / itemsPerPage) - 1, prev + 1));
+        break;
+      case "last":
+        setCurrentPageSchedules(Math.ceil((archivedSchedule?.length || 0) / itemsPerPage) - 1);
+        break;
+    }
+  };
+
+  if (showLoader || isLoadingUsers || isLoadingRooms || isLoadingSchedule) {
+    return <Loader />; // Display loader while data is loading or until 4 seconds pass
   }
 
-  // Check if there's data to display, for conditionally rendering pagination
-  const hasArchivedUsers = archivedUsers.length > 0;
-  const hasArchivedRooms = archivedRooms.length > 0;
-
   return (
-    <div className="flex flex-col mx-4 sm:mx-6 md:mx-20 mt-6 gap-8 text-[#102b53]">
-      <h1 className="text-2xl font-bold">Archives</h1>
+    <div className="archive-page-container">
+      <h1 className="archive-page-title">Archives</h1>
 
       {/* Archived Users */}
-      <div className="relative border-2 text-e7eae5 font-nunito p-[1.5em] flex justify-center items-start flex-col gap-[1em] rounded-[20px] bg-gradient-to-br from-white to-[#f8f8ff]">
-        <h2 className="text-xl font-bold mb-4">Archived Users</h2>
-        {error ? (
-          <p className="text-red-500">Error: {error}</p>
-        ) : archivedUsers.length > 0 ? (
+      <div className="archive-section">
+        <h2 className="archive-section-header">Archived Users</h2>
+        {usersError ? (
+          <p className="archive-error-message">Error: {usersError.message}</p>
+        ) : archivedUsers && archivedUsers.length > 0 ? (
           <>
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="border-b">
-                  <th className="px-4 py-2 text-left">Name</th>
-                  <th className="px-4 py-2 text-left">Email</th>
-                  <th className="px-4 py-2 text-left">Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginateData(archivedUsers, currentPageUsers).map(
-                  (user: any, index: any) => (
-                    <tr
-                      key={user.id}
-                      className={
-                        index < archivedUsers.length - 1 ? "border-b" : ""
-                      }
-                    >
-                      <td className="px-4 py-2 text-gray-500">
-                        {user.full_name}
-                      </td>
-                      <td className="px-4 py-2 text-gray-500">{user.email}</td>
-                      <td className="px-4 py-2 text-gray-500">
-                        {user.user_role}
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-            <div className="flex justify-end items-center mt-4 gap-2">
-              <button
-                onClick={() => handleFirstPage(setCurrentPageUsers)}
-                className="p-2 bg-blue-500 text-white rounded-lg "
-                disabled={currentPageUsers === 1}
-              >
-                <ChevronsLeft size={18} />
-              </button>
-              <button
-                onClick={() => handlePreviousPage(setCurrentPageUsers)}
-                className="p-2 bg-blue-500 text-white rounded-lg "
-                disabled={currentPageUsers === 1}
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <p className="mx-2">
-                Page {currentPageUsers} of{" "}
-                {Math.ceil(archivedUsers.length / itemsPerPage)}
-              </p>
-              <button
-                onClick={() =>
-                  handleNextPage(archivedUsers, setCurrentPageUsers)
-                }
-                className="p-2 bg-blue-500 text-white rounded-lg "
-                disabled={
-                  currentPageUsers ===
-                  Math.ceil(archivedUsers.length / itemsPerPage)
-                }
-              >
-                <ChevronRight size={18} />
-              </button>
-              <button
-                onClick={() =>
-                  handleLastPage(archivedUsers, setCurrentPageUsers)
-                }
-                className="p-2 bg-blue-500 text-white rounded-lg "
-                disabled={
-                  currentPageUsers ===
-                  Math.ceil(archivedUsers.length / itemsPerPage)
-                }
-              >
-                <ChevronsRight size={18} />
-              </button>
-            </div>
+            <Table.Root className="archive-table-root">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Email</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Role</Table.ColumnHeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {paginateData(archivedUsers, currentPageUsers).map((user) => (
+                  <Table.Row key={user.id}>
+                    <Table.Cell>{user.full_name}</Table.Cell>
+                    <Table.Cell>{user.email}</Table.Cell>
+                    <Table.Cell>{user.user_role}</Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+            <PaginationControls
+              currentPage={currentPageUsers}
+              totalPages={Math.ceil((archivedUsers?.length || 0) / itemsPerPage)}
+              handlePagination={handlePaginationUsers}
+            />
           </>
         ) : (
           <p>No archived users found.</p>
@@ -148,95 +136,78 @@ function Archive() {
       </div>
 
       {/* Archived Rooms */}
-      <div className="relative border-2 text-e7eae5 font-nunito p-[1.5em] flex justify-center items-start flex-col gap-[1em] rounded-[20px] bg-gradient-to-br from-white to-[#f8f8ff]">
-        <h2 className="text-xl font-bold mb-4">Archived Rooms</h2>
-        {archivedRooms.length > 0 ? (
+      <div className="archive-section">
+        <h2 className="archive-section-header">Archived Rooms</h2>
+        {roomsError ? (
+          <p className="archive-error-message">Error: {roomsError.message}</p>
+        ) : archivedRooms && archivedRooms.length > 0 ? (
           <>
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="border-b">
-                  <th className="px-4 py-2 text-left">Room Name</th>
-                  <th className="px-4 py-2 text-left">Room Type</th>
-                  <th className="px-4 py-2 text-left">Capacity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginateData(archivedRooms, currentPageRooms).map(
-                  (room: any, index: any) => (
-                    <tr
-                      key={room.id}
-                      className={
-                        index < archivedRooms.length - 1 ? "border-b" : ""
-                      }
-                    >
-                      <td className="px-4 py-2 text-gray-500">
-                        {room.room_name}
-                      </td>
-                      <td className="px-4 py-2 text-gray-500">
-                        {room.room_type}
-                      </td>
-                      <td className="px-4 py-2 text-gray-500">
-                        {room.room_capacity}
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-            {/* Pagination Controls for Archived Rooms */}
-            <div className="flex justify-start items-center mt-4 gap-2">
-              {hasArchivedRooms && (
-                <>
-                  <button
-                    onClick={() => handleFirstPage(setCurrentPageRooms)}
-                    className="p-2 bg-blue-500 text-white rounded-lg "
-                    disabled={currentPageRooms === 1}
-                  >
-                    <ChevronsLeft size={18} />
-                  </button>
-                  <button
-                    onClick={() => handlePreviousPage(setCurrentPageRooms)}
-                    className="p-2 bg-blue-500 text-white rounded-lg "
-                    disabled={currentPageRooms === 1}
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <p className="mx-2">
-                    Page {currentPageRooms} of{" "}
-                    {Math.ceil(archivedRooms.length / itemsPerPage)}
-                  </p>
-                  <button
-                    onClick={() =>
-                      handleNextPage(archivedRooms, setCurrentPageRooms)
-                    }
-                    className="p-2 bg-blue-500 text-white rounded-lg "
-                    disabled={
-                      currentPageRooms ===
-                      Math.ceil(archivedRooms.length / itemsPerPage)
-                    }
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleLastPage(archivedRooms, setCurrentPageRooms)
-                    }
-                    className="p-2 bg-blue-500 text-white rounded-lg"
-                    disabled={
-                      currentPageRooms ===
-                      Math.ceil(archivedRooms.length / itemsPerPage)
-                    }
-                  >
-                    <ChevronsRight size={18} />
-                  </button>
-                </>
-              )}
-            </div>
+            <Table.Root className="archive-table-root">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell>Room Name</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Capacity</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Location</Table.ColumnHeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {paginateData(archivedRooms, currentPageRooms).map((room) => (
+                  <Table.Row key={room.id}>
+                    <Table.Cell>{room.room_name}</Table.Cell>
+                    <Table.Cell>{room.capacity}</Table.Cell>
+                    <Table.Cell>{room.location}</Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+            <PaginationControls
+              currentPage={currentPageRooms}
+              totalPages={Math.ceil((archivedRooms?.length || 0) / itemsPerPage)}
+              handlePagination={handlePaginationRooms}
+            />
           </>
         ) : (
           <p>No archived rooms found.</p>
         )}
       </div>
+
+      {/* Archived Schedule */}
+      <div className="archive-section">
+        <h2 className="archive-section-header">Archived Schedule</h2>
+        {scheduleError ? (
+          <p className="archive-error-message">Error: {scheduleError.message}</p>
+        ) : archivedSchedule && archivedSchedule.length > 0 ? (
+          <>
+            <Table.Root className="archive-table-root">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell>Course</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Days</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Time</Table.ColumnHeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {paginateData(archivedSchedule, currentPageSchedules).map((schedule) => (
+                  <Table.Row key={schedule.id}>
+                    <Table.Cell>{schedule.course_id}</Table.Cell>
+                    <Table.Cell>{schedule.days}</Table.Cell>
+                    <Table.Cell>{`${schedule.time_in} - ${schedule.time_out}`}</Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+            <PaginationControls
+              currentPage={currentPageSchedules}
+              totalPages={Math.ceil((archivedSchedule?.length || 0) / itemsPerPage)}
+              handlePagination={handlePaginationSchedules}
+            />
+          </>
+        ) : (
+          <p>No archived schedules found.</p>
+        )}
+      </div>
     </div>
   );
 }
+
+export default Archive;

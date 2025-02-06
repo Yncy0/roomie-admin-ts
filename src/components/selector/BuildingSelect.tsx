@@ -11,11 +11,11 @@ const BuildingSelect = ({ setBuilding }: Props) => {
   };
 
   return (
-    <Select.Root defaultValue="Buildings" onValueChange={handleChange}>
+    <Select.Root defaultValue="Mother Rita" onValueChange={handleChange}>
       <Select.Trigger />
       <Select.Content>
         <Select.Group>
-          <Select.Label>Choose Rooms</Select.Label>
+          <Select.Label>Choose Building Location</Select.Label>
           <Select.Item value="Mother Rita">Mother Rita</Select.Item>
           <Select.Item value="Saint Agustine">Saint Agustine</Select.Item>
           <Select.Item value="Padre Pio">Padre Pio</Select.Item>

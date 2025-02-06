@@ -103,6 +103,8 @@ const CustomEventCard: React.FC<CustomEventCardProps> = ({ event }) => {
             {extendedProps.user_name}
           </Typography>
         </CardContent>
+        
+        
       </Card>
     </Tooltip>
   )

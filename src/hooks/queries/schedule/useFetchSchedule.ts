@@ -7,7 +7,7 @@ export const fetchSchedule = () => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("schedule")
-                .select("*, profiles(*), rooms(*), subject(*), course(*)");
+                .select("*, subject(*), course(*), profiles(*), rooms(*)");
 
             if (error) {
                 console.log(error);
@@ -25,7 +25,7 @@ export const fetchScheduleWithId = (id: any) => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("schedule")
-                .select("*, profiles(*), rooms(*), subject(*), course(*)")
+                .select("*, subject(*), course(*), profiles(*)")
                 .eq("room_id", id);
 
             if (error) {
@@ -37,14 +37,14 @@ export const fetchScheduleWithId = (id: any) => {
         },
     });
 };
-
-export const fetchAllSchedule = (id: any) => {
+export const fetchScheduleWithUserId = (id: any) => {
     return useQuery({
         queryKey: ["schedule", id],
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("schedule")
-                .select("*, subject(*), course(*), profiles(*), rooms(*)");
+                .select("*, subject(*), course(*), profiles(*), rooms(*)")
+                .eq("profile_id", id);
 
             if (error) {
                 console.log(error);

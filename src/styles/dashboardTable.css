@@ -1,0 +1,70 @@
+/* dashboardTable.css */
+
+/* Title */
+.title {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+  
+  /* Table styles */
+  .table {
+    width: 100%; /* Table width */
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 2rem;
+    outline: none;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow below the table */
+    overflow: hidden; /* Ensure corners stay rounded */
+  }
+  
+  /* Table header */
+  .table-header {
+    background-color: white;
+  }
+  
+  /* Table column header cells */
+  .table-column-header {
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    color: #718EBF;
+  }
+  
+  /* Table rows */
+  .table-row {
+    border-bottom: 1px solid #E6EFF5;
+  }
+  
+  /* Remove bottom border from the last row */
+  .table-row:last-child {
+    border-bottom: none;
+  }
+  
+  /* Table cells */
+  .table-cell {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.875rem;
+    background-color: white;
+  }
+  
+  /* Hover effect */
+  .table-row:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .table-column-header,
+    .table-cell {
+      font-size: 0.9rem;
+    }
+  
+    .table {
+      margin: 10px;
+    }
+  }
+  

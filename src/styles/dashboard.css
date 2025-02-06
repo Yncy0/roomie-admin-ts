@@ -1,0 +1,54 @@
+/* Main Container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  gap: 24px;
+}
+
+/* Title */
+.dashboard-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Charts Section (Row Layout) */
+.charts-section {
+  display: flex;
+  flex-direction: row;  /* Ensures charts are in a row */
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Individual Chart Box */
+.chart-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Chart Titles */
+.chart-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Recent Activity */
+.activity-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.activity-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}

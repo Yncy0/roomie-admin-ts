@@ -1,14 +1,8 @@
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
+import { deleteBookedRoomsCancel } from "@/hooks/queries/booking/useDeleteBookedRooms";
 import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms";
 import { insertNotification } from "@/hooks/queries/useNotifications";
-import {
-  Button,
-  Dialog,
-  Flex,
-  TextField,
-  Text,
-  Select,
-} from "@radix-ui/themes";
+import { Button, Dialog, Flex, Select } from "@radix-ui/themes";
 import { Pencil } from "lucide-react";
 import React from "react";
 
@@ -18,21 +12,48 @@ type Props = {
 
 const StatusDialog = ({ item }: Props) => {
   const [value, setValue] = React.useState(item.status);
+  const latestValueRef = React.useRef(value);
 
-  const update = updateBookedRoomsStatus(item.id, value);
+  React.useEffect(() => {
+    latestValueRef.current = value;
+  }, [value]);
 
-  const onHandleClick = async () => {
+  console.log(value);
+
+  const handleAccpet = async () => {
+    const update = updateBookedRoomsStatus(item.id, "INCOMING");
     if (update) await update;
 
-    await insertNotification(
+    // Use the latest value for notifications
+    insertNotification(
       item.profiles.id,
-      `Your booking status is set to ${item.status}`
+      `Your booking reacquest has been ACCEPTED`
     );
 
-    await insertBacklogs(
+    insertBacklogs(
       "UPDATE",
-      `The booking request of ${item.profiles?.username} has granted status ${item.status}`
+      `The booking request of ${item.profiles?.username} has been ACCEPT`
     );
+
+    alert("The statatus has been ACCEPTED");
+  };
+
+  const handleDecline = async () => {
+    const update = updateBookedRoomsStatus(item.id, "CANCELLED");
+    if (update) await update;
+
+    // Use the latest value for notifications
+    insertNotification(
+      item.profiles.id,
+      `Your booking reacquest has been DECLINED`
+    );
+
+    insertBacklogs(
+      "UPDATE",
+      `The booking request of ${item.profiles?.username} has been DECLINE`
+    );
+
+    alert("The statatus has been ACCEPTED");
   };
 
   return (
@@ -45,19 +66,8 @@ const StatusDialog = ({ item }: Props) => {
       <Dialog.Content maxWidth="450px">
         <Dialog.Title>Grant Status</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Select the type of approval in this booked room
+          Would you like to accept this booking reservation?
         </Dialog.Description>
-        <Select.Root onValueChange={setValue} defaultValue={value}>
-          <Select.Trigger />
-          <Select.Content>
-            <Select.Group>
-              <Select.Label>Status</Select.Label>
-              <Select.Item value="ON GOING">ON GOING</Select.Item>
-              <Select.Item value="PENDING RESERVE">PENDING RESERVE</Select.Item>
-              <Select.Item value="CANCEL RESERVE">CANCEL RESERVE</Select.Item>
-            </Select.Group>
-          </Select.Content>
-        </Select.Root>
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
             <Button variant="soft" color="gray">
@@ -65,7 +75,12 @@ const StatusDialog = ({ item }: Props) => {
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button onClick={onHandleClick}>Save</Button>
+            <Button color="red" onClick={handleDecline}>
+              Decline
+            </Button>
+          </Dialog.Close>
+          <Dialog.Close>
+            <Button onClick={handleAccpet}>Accept</Button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>

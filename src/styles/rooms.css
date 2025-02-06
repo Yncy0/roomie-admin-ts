@@ -1,0 +1,74 @@
+/* 1️⃣ General Container (Page Layout) */
+.rooms-container {
+    width: 95%;  /* Change this to 100% to make it full width, or adjust for different widths */
+    margin: 20px auto;  /* Centers the content horizontally with 20px space on top/bottom */
+    padding: 32px;  /* Space around the content, can reduce this to 16px for less padding */
+    position: relative;  /* Keeps the layout relative to the parent container */
+}
+
+/* 2️⃣ Header Section (Title + Add Room Button) */
+.rooms-header {
+    display: flex;  /* Aligns the header elements (title and button) in a row */
+    justify-content: space-between;  /* Distributes space between title and button */
+    align-items: center;  /* Centers the elements vertically */
+    margin-bottom: 16px;  /* Adds space below the header */
+    position: relative;
+}
+
+/* 3️⃣ "Add Room" Button */
+.rooms-add-button {
+    border: 2px solid #35487a;  /* Button border, change color here if you want a different border */
+    color: #35487a;  /* Text color */
+    background: transparent;  /* Transparent background */
+    padding: 8px 16px;  /* Adjust padding for button size */
+    border-radius: 8px;  /* Rounds the corners of the button */
+    font-weight: 500;  /* Adjust text weight for the button */
+    transition: background 0.3s, color 0.3s;  /* Smooth transition on hover */
+    position: relative;  /* Allows absolute positioning inside if needed */
+}
+
+/* Button hover effect */
+.rooms-add-button:hover {
+    background: #35487a;  /* Changes background color on hover */
+    color: white;  /* Changes text color on hover */
+}
+
+/* 4️⃣ Table Styling (To remove border and background) */
+.rooms-table {
+    border: none;  /* Removes table border */
+    background-color: transparent;  /* Ensures table has no background color */
+    box-shadow: none;  /* Removes any table shadow */
+}
+
+/* 5️⃣ Table Row Styling (Keep transparent background and no border) */
+.rooms-table-row {
+    border: none;  /* Removes row border */
+    background-color: transparent;  /* Ensures no background for rows */
+}
+
+/* 6️⃣ Keep Rooms in Rows (Grid Layout) */
+.rooms-row {
+    display: grid;  /* Uses grid layout */
+    grid-template-columns: repeat(3, 1fr);  /* 3 rooms per row, adjust to 2 or 1 for smaller screens */
+    gap: 1rem;  /* Adds space between each room */
+}
+
+/* Responsive: Adjust for smaller screens */
+@media (max-width: 1024px) {
+    .rooms-row {
+        grid-template-columns: repeat(2, 1fr);  /* 2 rooms per row on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .rooms-row {
+        grid-template-columns: repeat(1, 1fr);  /* 1 room per row on small screens */
+    }
+}
+
+/* 7️⃣ Error Message Styling */
+.rooms-error {
+    text-align: center;  /* Centers the error message */
+    color: red;  /* Makes the error text red */
+    font-weight: bold;  /* Bold font for visibility */
+}

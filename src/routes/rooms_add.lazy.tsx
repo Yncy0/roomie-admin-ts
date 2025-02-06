@@ -1,6 +1,10 @@
+import Input from "@/components/Input";
 import BuildingSelect from "@/components/selector/BuildingSelect";
+import RoomDescriptionSelect from "@/components/selector/RoomDescriptionSelect";
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
+import { isRoomNameExists } from "@/utils/isRoomExist";
+import supabase from "@/utils/supabase";
 import { Select } from "@radix-ui/themes";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import React from "react";
@@ -24,39 +28,51 @@ function RouteComponent() {
     }
   }, [room_location]);
 
+  const handleRoomCapacityChange = (e: any) => {
+    const value = e.target.value;
+    const numberValue = parseInt(value, 10);
+    // Check if the input is a number and within the range
+    if (!isNaN(numberValue) && numberValue <= 100) {
+      setRoomCapacity(numberValue);
+    } else if (value === "") {
+      // alert("The maximum room capacity is 100."); // Clear the state if the input is empty
+    }
+  };
+
   const onHandleInsert = async () => {
-    await insertRooms(
-      room_name,
-      room_image,
-      room_type,
-      room_capacity,
-      room_location
-    );
+    try {
+      // Validate if the room name already exists
+      const roomExists = await isRoomNameExists(room_name);
 
-    await insertBacklogs("INSERT", `The new ${room_name} has been added`);
+      if (roomExists) {
+        alert("Room name already exists. Please choose a different name.");
+        return;
+      }
 
-    alert("Data saved successfully");
-    navigate({ to: "/rooms" });
+      // Insert new room if the room name doesn't exist
+      await insertRooms(
+        room_name,
+        room_image,
+        room_type,
+        room_capacity,
+        room_location
+      );
+
+      // Log the insertion in the backlogs
+      await insertBacklogs("INSERT", `The new ${room_name} has been added`);
+
+      // Notify the user and navigate to the rooms page
+      alert("Data saved successfully");
+      navigate({ to: "/rooms" });
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("An error occurred. Please try again.");
+    }
   };
 
   return (
-    <div
-      style={{
-        padding: "2.5rem 2rem",
-        backgroundColor: "#fff",
-        gap: "1.25rem",
-      }}
-    >
-      <h1
-        style={{
-          textAlign: "center",
-          fontWeight: "bold",
-          fontSize: "1.25rem",
-          paddingBottom: "30px",
-        }}
-      >
-        Create New Room
-      </h1>
+    <div className="p-10 bg-white flex flex-col gap-7">
+      <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
 
       {/* Image Preview */}
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -70,11 +86,11 @@ function RouteComponent() {
       </div>
 
       {/* Image File Input */}
+
       <div
         className="inputGroup"
         style={{
           fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.7em 0",
           position: "relative",
         }}
       >
@@ -117,161 +133,32 @@ function RouteComponent() {
       </div>
 
       {/* Room Name */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <input
-          id="roomName"
-          value={room_name}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomName(e.target.value)}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="roomName"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Name
-        </label>
-      </div>
-
-      {/* Room Description */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <input
-          id="roomDescription"
-          value={room_type}
-          type="text"
-          placeholder=" "
-          onChange={(e) => setRoomType(e.target.value)}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="roomDescription"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "14px",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Description
-        </label>
-      </div>
+      <Input
+        id="roomName"
+        htmlFor="roomName"
+        placeholder=""
+        value={room_name}
+        onChange={(e) => setRoomName(e.target.value)}
+        label="Room Name"
+        type={"text"}
+      />
 
       {/* Room Capacity */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <input
-          id="roomCapacity"
-          value={room_capacity}
-          type="number"
-          placeholder=" "
-          onChange={(e) => setRoomCapacity(Number(e.target.value))}
-          required
-          style={{
-            fontSize: "100%",
-            padding: "12px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="roomCapacity"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Capacity
-        </label>
-      </div>
+      <Input
+        id="roomCapacity"
+        htmlFor="roomCapacity"
+        placeholder=""
+        value={room_capacity}
+        onChange={handleRoomCapacityChange}
+        label="Room Capacity"
+        type={"text"}
+      />
 
-      {/*TODO: Dropdown */}
+      {/* Room Description */}
+      <RoomDescriptionSelect setDescription={setRoomType} />
+
       {/* Room Location */}
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          margin: "1.8em 0",
-          position: "relative",
-        }}
-      >
-        <label
-          htmlFor="roomLocation"
-          style={{
-            fontSize: "100%",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Room Location/Building
-        </label>
-        <Select.Root>
-          <BuildingSelect setBuilding={setRoomLocation} />
-        </Select.Root>
-      </div>
+      <BuildingSelect setBuilding={setRoomLocation} />
 
       {/* Buttons */}
       <div

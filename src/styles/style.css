@@ -1,0 +1,18 @@
+{/*__root.tsx*/}
+.root_theme {
+    background-color: #6b92e5;
+    color: #333;
+  }
+  .body-container {
+      background-color: #eff7fe; /* Light background for the body */
+      border-radius: 40px; /* Increased border-radius for a more rounded effect */
+      flex: 1; /* Ensures the body takes available space in the flex container */
+      margin: 10px; /* Adjusted margin for spacing */
+      padding-top: 0; /* Removed padding-top to remove gap */
+    }
+    
+    .body-container .content {
+      background-color: #e7eae5; /* White background for inner content */
+      border-radius: 40px; /* Increased border-radius for inner content */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Light shadow for inner content */
+    }

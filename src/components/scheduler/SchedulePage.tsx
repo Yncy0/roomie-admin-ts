@@ -6,7 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import listPlugin from "@fullcalendar/list"
 import { fetchBookedRooms } from "@/hooks/queries/booking/useFetchBookedRooms"
-import { fetchAllSchedule } from "@/hooks/queries/schedule/useFetchSchedule"
+import { fetchSchedule } from "@/hooks/queries/schedule/useFetchSchedule"
 import { fetchRooms } from "@/hooks/queries/rooms/useFetchRooms"
 import CustomEventCard from "./customEventCard"
 import dayjs from "dayjs"
@@ -62,6 +62,7 @@ const transformBookingData = (data: any[]): ScheduleItem[] =>
       subject_code: item.subject_code || "Unknown",
       formattedTime: `${formattedStart} - ${formattedEnd}`,
       formattedInfo: `Room: ${item.rooms?.room_name || "Unknown Room"}\nSubject: ${item.subject_code || "Unknown Subject"}\nTime: ${formattedStart} - ${formattedEnd}\nProfessor: ${item.profiles?.full_name ? "Prof. " + item.profiles?.full_name : "Unknown Professor"}`,
+      source: "booking", // Set source as booking for booking data
     }
   })
 
@@ -133,6 +134,7 @@ const transformScheduleData = (data: any[]): ScheduleItem[] => {
         time_out: item.time_out || "Unknown",
         subject_code: item.subject?.subject_code || "Unknown",
         subject_name: item.subject?.subject_name,
+        source: "schedule", // Set source as schedule for schedule data
       }
     })
   })
@@ -155,13 +157,12 @@ const SchedulePage: React.FC = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleItem[]>([])
   const [filteredData, setFilteredData] = useState<ScheduleItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState<string | null>("SA 301") // Replace "Room 101" with your desired default room
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [allRooms, setAllRooms] = useState<string[]>([])
-  const [defaultRoom, setDefaultRoom] = useState<string | null>(null)
 
   const { data: bookedRoomsData, error: bookedRoomsError } = fetchBookedRooms()
-  const { data: scheduleDataFromAPI, error: scheduleDataError } = fetchAllSchedule()
+  const { data: scheduleDataFromAPI, error: scheduleDataError } = fetchSchedule()
   const { data: roomsData, error: roomsError } = fetchRooms()
 
   useEffect(() => {
@@ -177,34 +178,22 @@ const SchedulePage: React.FC = () => {
       const transformedScheduleData = transformScheduleData(scheduleDataFromAPI)
 
       // Filter for valid statuses
-      const validStatuses = ["INCOMING", "ONGOING", "DONE", "PENDING CLASS", "PENDING RESERVE"]
+      const validStatuses = ["INCOMING", "ON GOING", "DONE", "PENDING CLASS", "PENDING RESERVE"]
       const validData = [...transformedBookingData, ...transformedScheduleData].filter(
         (item) => item.status && validStatuses.includes(item.status.toUpperCase()),
       )
 
       // Set schedule data
       setScheduleData(validData)
+      setFilteredData(validData)
 
       // Set all rooms from rooms database
       const roomNames = roomsData.map((room) => room.room_name)
       setAllRooms(roomNames)
 
-      // Select a default room
-      selectDefaultRoom(roomNames)
-
       setIsLoading(false)
     }
   }, [bookedRoomsData, scheduleDataFromAPI, roomsData, bookedRoomsError, scheduleDataError, roomsError])
-
-  const selectDefaultRoom = (rooms: string[]) => {
-    if (rooms.length > 0) {
-      // Select the first room as the default
-      const firstRoom = rooms[0]
-      setDefaultRoom(firstRoom)
-      setSelectedRoom(firstRoom)
-      applyFilters(firstRoom, searchQuery)
-    }
-  }
 
   const handleRoomChange = (event: React.SyntheticEvent<Element, Event>, newValue: string | null) => {
     setSelectedRoom(newValue)
@@ -218,9 +207,14 @@ const SchedulePage: React.FC = () => {
   }
 
   const applyFilters = (room: string | null, search: string) => {
+    if (!search && (!room || room === " ")) {
+      setFilteredData([])
+      return
+    }
+
     let filtered = scheduleData
 
-    if (room) {
+    if (room && room !== " ") {
       filtered = filtered.filter((event) => event.room_name === room)
     }
 
@@ -236,11 +230,20 @@ const SchedulePage: React.FC = () => {
 
   useEffect(() => {
     applyFilters(selectedRoom, searchQuery)
-  }, [selectedRoom, searchQuery, applyFilters])
+  }, [scheduleData, selectedRoom, searchQuery])
+
+  // Removed useEffect that was setting the default room
 
   if (isLoading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     )
@@ -255,13 +258,11 @@ const SchedulePage: React.FC = () => {
         <Autocomplete
           value={selectedRoom}
           onChange={handleRoomChange}
-          options={allRooms}
+          options={[" ", ...allRooms]}
           renderInput={(params) => <TextField {...params} label="Filter by Room" />}
           sx={{ minWidth: 300 }}
           isOptionEqualToValue={(option, value) => option === value}
-          clearOnBlur={false}
-          clearOnEscape={false}
-          clearIcon={<span style={{ cursor: "pointer" }}>✕</span>}
+          defaultValue="SA 301" // Replace "Room 101" with your desired default room
         />
         <TextField label="Search" value={searchQuery} onChange={handleSearchChange} sx={{ minWidth: 300 }} />
       </Box>
@@ -278,7 +279,7 @@ const SchedulePage: React.FC = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
           }}
           height="100%"
-          slotMinTime="06:00:00"
+          slotMinTime="6:00:00"
           slotMaxTime="22:00:00"
         />
       </Box>

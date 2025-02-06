@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react"
-import { Modal, Box, Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material"
-import { SelectChangeEvent } from "@mui/material"
-import { useSupabaseQueries } from "../../hooks/useUserSchedule"
-import supabase from "@/utils/supabase"  // Ensure supabase is properly imported
+import React, { useState, useEffect } from "react";
+import { Modal, Box, Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
+import { useSupabaseQueries } from "../../hooks/useUserSchedule";
+import supabase from "@/utils/supabase"; // Ensure supabase is properly imported
 
 interface StatusModalProps {
-  statusModalOpen: boolean
-  closeStatusModal: () => void
-  selectedEvent: any
+  statusModalOpen: boolean;
+  closeStatusModal: () => void;
+  selectedEvent: any;
 }
 
 const StatusModal: React.FC<StatusModalProps> = ({
@@ -15,148 +15,113 @@ const StatusModal: React.FC<StatusModalProps> = ({
   closeStatusModal,
   selectedEvent,
 }) => {
-  const [newStatus, setNewStatus] = useState("")
-  const { refreshData } = useSupabaseQueries(null)  // Access the hook and its `refreshData` method
-  const [subscription, setSubscription] = useState<any>(null)
+  const [newStatus, setNewStatus] = useState("");
+  const { refreshData } = useSupabaseQueries(null); // Access the hook and its `refreshData` method
+  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
-    if (selectedEvent) {
-      setNewStatus(selectedEvent.status || "")
-    }
+    if (!selectedEvent) return;
 
-    // Real-time subscription setup
-    const setupSubscription = async () => {
-      let table = ""
-      if (selectedEvent.schedule_id) {
-        table = "schedule"
-      } else if (selectedEvent.booking_id) {
-        table = "booked_rooms"
-      } else if (selectedEvent.id) {
-        const { data: scheduleEvent } = await supabase
-          .from("schedule")
-          .select("*")
-          .eq("id", selectedEvent.id)
-          .single()
+    setNewStatus(selectedEvent.status || "");
 
-        if (scheduleEvent) {
-          table = "schedule"
+    // 🔹 Real-time subscription setup using new real-time API
+    const table = selectedEvent.schedule_id ? "schedule" : "booked_rooms";
+    const channel = supabase
+      .channel(`${table}:${selectedEvent.id}`) // Set up a real-time channel for the event
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: table, filter: `id=eq.${selectedEvent.id}` }, (payload) => {
+        console.log("Real-time status update received:", payload);
+
+        // 🔹 **Trigger refetch when a status is updated**
+        if (table === "schedule") {
+          refreshData("schedule"); // Trigger the refetch for schedule
         } else {
-          const { data: bookedRoomEvent } = await supabase
-            .from("booked_rooms")
-            .select("*")
-            .eq("id", selectedEvent.id)
-            .single()
-
-          if (bookedRoomEvent) {
-            table = "booked_rooms"
-          }
+          refreshData("booked_rooms"); // Trigger the refetch for booked rooms
         }
-      }
+      })
+      .subscribe();
 
-      if (table) {
-        const newSubscription = supabase
-          .from(`${table}:id=eq.${selectedEvent.id}`)
-          .on("UPDATE", (payload) => {
-            console.log("Real-time status update received:", payload)
-            refreshData()  // Trigger refreshData to fetch latest data
-          })
-          .subscribe()
-
-        setSubscription(newSubscription)
-      }
-    }
-
-    setupSubscription()
-
-    // Cleanup the subscription when the component is unmounted
+    // Cleanup the subscription on component unmount
     return () => {
-      if (subscription) {
-        supabase.removeSubscription(subscription)
-      }
-    }
-  }, [selectedEvent, refreshData, subscription])
+      supabase.removeChannel(channel); // Unsubscribe from the channel
+    };
+  }, [selectedEvent, refreshData]);
 
   const handleStatusUpdate = async () => {
-    const confirmUpdate = window.confirm("Are you sure you want to update this status?")
-    if (!confirmUpdate) return
-
-    let table = ""
-    let eventId = ""
-    let primaryKey = ""
-
+    const confirmUpdate = window.confirm("Are you sure you want to update this status?");
+    if (!confirmUpdate) return;
+  
+    let table = "";
+    let eventId = "";
+    let primaryKey = "";
+  
     if (selectedEvent.schedule_id) {
-      table = "schedule"
-      eventId = selectedEvent.schedule_id
-      primaryKey = "schedule_id"
+      table = "schedule";
+      eventId = selectedEvent.schedule_id;
+      primaryKey = "schedule_id";
     } else if (selectedEvent.booking_id) {
-      table = "booked_rooms"
-      eventId = selectedEvent.booking_id
-      primaryKey = "booking_id"
+      table = "booked_rooms";
+      eventId = selectedEvent.booking_id;
+      primaryKey = "booking_id";
     } else if (selectedEvent.id) {
       const { data: scheduleEvent } = await supabase
         .from("schedule")
         .select("*")
         .eq("id", selectedEvent.id)
-        .single()
-
+        .single();
+  
       if (scheduleEvent) {
-        table = "schedule"
-        eventId = selectedEvent.id
-        primaryKey = "id"
+        table = "schedule";
+        eventId = selectedEvent.id;
+        primaryKey = "id";
       } else {
         const { data: bookedRoomEvent } = await supabase
           .from("booked_rooms")
           .select("*")
           .eq("id", selectedEvent.id)
-          .single()
-
+          .single();
+  
         if (bookedRoomEvent) {
-          table = "booked_rooms"
-          eventId = selectedEvent.id
-          primaryKey = "id"
+          table = "booked_rooms";
+          eventId = selectedEvent.id;
+          primaryKey = "id";
         } else {
-          console.error("Error: No matching event found with ID:", selectedEvent.id)
-          alert("Error: Event not found in either table.")
-          return
+          alert("Error: Event not found in either table.");
+          return;
         }
       }
     } else {
-      console.error("Error: Event ID is not defined.")
-      alert("Error: Unable to determine event ID.")
-      return
+      alert("Error: Unable to determine event ID.");
+      return;
     }
-
-    console.log("Updating status for:", { table, eventId, newStatus, selectedEvent })
-
+  
     try {
       const { data, error } = await supabase
         .from(table)
         .update({ status: newStatus })
         .eq(primaryKey, eventId)
-        .select()
-
-      if (error) {
-        throw error
-      }
-
-      console.log("Update result:", data)
-
+        .select();
+  
+      if (error) throw error;
+  
       if (data && data.length > 0) {
-        alert("Status updated successfully!")
-        refreshData()  // Refresh the data
-        closeStatusModal()
+        alert("Status updated successfully!");
+        refreshData(); // Ensure data is refreshed
+        closeStatusModal(); // Close modal after update
+        window.location.reload(); // Force page reload to reflect changes
       } else {
-        alert(`No rows were updated. Please check the event ID: ${eventId}`)
+        alert(`No rows were updated. Please check the event ID: ${eventId}`);
       }
     } catch (error: any) {
-      console.error("Error updating status:", error)
-      alert(`Failed to update status: ${error.message}`)
+      console.error("Error updating status:", error);
+      alert(`Failed to update status: ${error.message}`);
     }
-  }
+  };
+  
+  
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
-    setNewStatus(event.target.value)
-  }
+    setNewStatus(event.target.value);
+  };
 
   return (
     <Modal open={statusModalOpen} onClose={closeStatusModal}>
@@ -191,7 +156,7 @@ const StatusModal: React.FC<StatusModalProps> = ({
         </Button>
       </Box>
     </Modal>
-  )
-}
+  );
+};
 
-export default StatusModal
+export default StatusModal;

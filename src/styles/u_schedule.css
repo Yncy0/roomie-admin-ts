@@ -1,0 +1,171 @@
+
+
+table{
+    background-color: white;
+    left: 20%;
+}
+
+table-header-group{
+    color: #35487a;
+    font-size: medium;
+}
+
+
+.tabs-name {
+  margin-top: 10px;
+  position: relative;
+  font-size: 16px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  overflow: visible;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* Shadow above the table */
+  border-radius: 5px 5px 0 0;
+  width: 17%;
+  padding: 10px;
+  background-color: transparent;
+}
+
+/* Inactive Tab */
+.tabs-name:not([data-state="active"]) {
+  background-color: #e6eefa; /* Inactive tab background */
+  color: #9ca1aa; /* Inactive tab text color */
+  font-weight: lighter; /* Bold text */
+}
+
+/* Active Tab */
+.tabs-name[data-state="active"] {
+  color: #1e40af;
+  font-weight: bolder; /* Bold text */
+}
+
+/* White underline for active tab */
+.tabs-name[data-state="active"]::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px; /* Thickness of the underline */
+  background-color: #ffffff; /* White underline */
+  border-radius: 2px; /* Optional: rounded corners for the underline */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+/* Hover Effect */
+.tabs-name:hover {
+  color: #ffffff; /* Change text color on hover */
+}
+
+
+
+.schedule-container {
+    height: max-content;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow below the table */
+    
+}
+
+
+  /* Button styling */
+  .button-container {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 1rem;
+    padding-left: 55%;
+
+
+}
+
+ 
+  
+  .bookButton {
+    border: 2px solid #35487a;  /* Button border, change color here if you want a different border */
+    color: #35487a;  /* Text color */
+    background: transparent;  /* Transparent background */
+    padding: 8px 16px;  /* Adjust padding for button size */
+    border-radius: 8px;  /* Rounds the corners of the button */
+    font-weight: 500;  /* Adjust text weight for the button */
+    transition: background 0.3s, color 0.3s;  /* Smooth transition on hover */
+    position: relative;  /* Allows absolute positioning inside if needed */
+   
+
+  
+    
+}
+.schedButton {
+    border: 2px solid #35487a;  /* Button border, change color here if you want a different border */
+    color: #35487a;  /* Text color */
+    background: transparent;  /* Transparent background */
+    padding: 8px 16px;  /* Adjust padding for button size */
+    border-radius: 8px;  /* Rounds the corners of the button */
+    font-weight: 500;  /* Adjust text weight for the button */
+    transition: background 0.3s, color 0.3s;  /* Smooth transition on hover */
+    position: relative;  /* Allows absolute positioning inside if needed */
+
+}
+
+
+/* Button hover effect */
+.schedButton:hover {
+    background: #35487a;  /* Changes background color on hover */
+    color: white;  /* Changes text color on hover */
+  }
+  /* Button hover effect */
+.bookButton:hover {
+    background: #35487a;  /* Changes background color on hover */
+    color: white;  /* Changes text color on hover */
+  }
+  
+  /* Status badges */
+  [data-radix-table-cell]:last-child {
+    padding: 0.5rem 1rem;
+  }
+  
+  [data-radix-table-cell]:last-child {
+    display: flex;
+    justify-content: center;
+  }
+  
+  [data-radix-table-cell] {
+    white-space: nowrap;
+  }
+  
+  /* Status pill styles */
+  [data-radix-table-cell]:last-child {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  [data-radix-table-cell]:last-child:has(span) {
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Add these classes for different status types */
+  .status-pill {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background-color: #1e40af;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+   
+    
+  }
+  
+  .status-incoming {
+    background-color: #1e40af;
+  }
+  
+  .status-cancelled {
+    background-color: #dc2626;
+  }
+  
+  .status-pending {
+    background-color: #2563eb;
+  }
+  
+  .status-ongoing {
+    background-color: #059669;
+  }
+  

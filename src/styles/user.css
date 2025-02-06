@@ -1,0 +1,225 @@
+/* Users container */
+.users-container {
+    width: 100%;
+    padding: 20px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  
+  /* Users title */
+  .users-title {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2947;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+  }
+  
+  /* Filters container */
+  .filters-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Filter items container */
+  .filter-items {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  /* Search input container */
+  .search-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 15px; /* Increased for more rounded corners */
+    padding: 8px;
+    width: 260px;
+    background-color: white;
+    outline: none;
+    margin-left: 32px;
+  }
+  
+  /* Search input */
+  .search-input {
+    padding-left: 32px;
+    padding-right: 8px;
+    border: none;
+    outline: none;
+    width: 100%;
+    border-radius: 20px; /* Ensure the input also has rounded corners */
+  }
+  
+  /* Search icon */
+  .search-icon {
+    width: 16px;
+    height: 16px;
+    color: #bbb;
+    position: absolute;
+    left: 8px;
+  }
+  /* Role selection container */
+  .role-select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #D4DDEC;
+    border-radius: 4px;
+    background-color: #D4DDEC;
+    padding: 8px;
+    outline: none;
+  }
+  
+  /* Role icon */
+  .role-icon {
+    width: 16px;
+    height: 16px;
+    color: #818FA7;
+    position: absolute;
+    left: 8px;
+  }
+  
+  /* Role select dropdown */
+  .role-select {
+    width: 100%;
+    padding-left: 30px;
+    border: none;
+    outline: none;
+    color: #818FA7;
+  }
+  
+  /* Department selection container */
+  .department-select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #D4DDEC;
+    border-radius: 4px;
+    background-color: #D4DDEC;
+    padding: 8px;
+    outline: none;
+  }
+  
+  /* Department icon */
+  .department-icon {
+    width: 16px;
+    height: 16px;
+    color: #818FA7;
+    position: absolute;
+    left: 8px;
+  }
+  
+  /* Department select dropdown */
+  .department-select {
+    width: 100%;
+    padding-left: 30px;
+    border: none;
+    outline: none;
+    color: #818FA7;
+  }
+  
+  /* Add User button */
+  .add-user-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin-right: 40px;
+  }
+  
+  /* Add User button hover */
+  .add-user-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Table styles */
+  .table {
+    width: 95%; /* Table width */
+    max-width: 1200px; /* Optional: Limit max width of the table */
+    margin: 0 auto; /* Center the table horizontally */
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    outline: none;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow below the table */
+    overflow: hidden; /* Ensure corners stay rounded */
+  }
+  
+  
+  /* Table header */
+  .table-header {
+    background-color: white;
+  }
+  
+  /* Table column header cells */
+  .table-column-header-cell {
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    color: #718EBF;
+  }
+  
+  /* Table rows */
+  .table-row {
+    border-bottom: 1px solid #E6EFF5;
+  }
+  
+  /* Remove bottom border from the last row */
+  .table-row:last-child {
+    border-bottom: none;
+  }
+  
+  /* Remove bottom border from the last column */
+  .table-row .table-cell:last-child {
+    border-bottom: none;
+  }
+  
+  /* Table cells */
+  .table-cell {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.875rem;
+    background-color: white;
+  }
+  
+  /* Avatar styles */
+  .avatar-cell {
+    text-align: center;
+    background-color: white;
+    display: flex; /* Use flexbox to center the content */
+    align-items: center; /* Vertically center the avatar */
+    justify-content: center; /* Horizontally center the avatar */
+    height: 100%; /* Ensure it fills the cell to help with centering */
+  }
+  
+  .avatar-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  .avatar-fallback {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    font-size: 14px; /* Optional: Adjust font size for initials */
+    font-weight: bold; /* Optional: Make initials bold */
+    color: #333; /* Optional: Adjust text color */
+  }
+  
+  /* Error message */
+  .error-message {
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+  }

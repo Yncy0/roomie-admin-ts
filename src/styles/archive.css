@@ -1,0 +1,66 @@
+/* General styles */
+.archive-page-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.archive-page-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #102b53;
+  margin-bottom: 2rem;
+}
+
+/* Section styling */
+.archive-section {
+  margin-bottom: 2rem;
+}
+
+.archive-section-header {
+  font-size: 1.5rem;
+  color: #1f2947;
+  margin-bottom: 1rem;
+}
+
+/* Error message */
+.archive-error-message {
+  color: red;
+  text-align: center;
+}
+
+/* Table styling */
+.archive-table-root {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 2rem;
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect */
+  overflow: hidden;
+  background-color: white;
+  /* Remove the border */
+}
+
+.archive-table-root th {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  background-color: white;
+  color: #718EBF;
+}
+
+.archive-table-root td {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #E6EFF5;
+  background-color: white;
+}
+
+.archive-table-root tr:hover {
+  background-color: #f9f9f9;
+  transition: background 0.3s ease-in-out;
+}
