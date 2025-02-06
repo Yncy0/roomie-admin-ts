@@ -1,0 +1,49 @@
+/* RoomAvailabilityChart Component Styles */
+.room-availability-chart {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .room-availability-chart .chart-container {
+    height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 10px;
+  }
+  
+  .room-availability-chart .available-rooms-section {
+    margin-top: 20px;
+    padding: 16px;
+    /* Removed border and background color */
+  }
+  
+  .room-availability-chart .available-rooms-section h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+  }
+  
+  .room-availability-chart .available-rooms-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .room-availability-chart .available-rooms-section li {
+    color: #4b5563;
+    font-size: 1rem;
+  }
+  
+  .room-availability-chart .available-rooms-section .no-available-rooms {
+    color: #f87171;
+    font-size: 1rem;
+  }
+  
+  .room-availability-chart .chart-loading,
+  .room-availability-chart .chart-error {
+    text-align: center;
+    font-size: 1rem;
+    color: #9ca3af;
+  }
+  

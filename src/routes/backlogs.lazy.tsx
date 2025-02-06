@@ -5,7 +5,8 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import PaginationControls from "@/components/PaginationControls";
 import Loader from "@/components/loader/Loader";
-import "../styles/backlogs.css";
+import Alert from "@/components/alert";
+import "@/styles/backlogs.css";
 
 export const Route = createLazyFileRoute("/backlogs")({
   component: Backlogs,
@@ -17,6 +18,8 @@ function Backlogs() {
 
   const [currentPage, setCurrentPage] = React.useState(0);
   const [showLoader, setShowLoader] = React.useState(true);
+  const [showAlert, setShowAlert] = React.useState(false);
+  const [prevDataLength, setPrevDataLength] = React.useState(data.length);
 
   // Simulate a 4-second loader display
   React.useEffect(() => {
@@ -24,9 +27,17 @@ function Backlogs() {
       setShowLoader(false); // Hide the loader after 4 seconds
     }, 4000); // 4000 ms = 4 seconds
 
-    // Cleanup the timeout if the component unmounts
     return () => clearTimeout(timeout);
   }, []);
+
+  // Check for new updates
+  React.useEffect(() => {
+    if (data.length > prevDataLength) {
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
+    }
+    setPrevDataLength(data.length);
+  }, [data.length, prevDataLength]);
 
   // Handle pagination logic
   const handlePagination = (action: string) => {
@@ -46,10 +57,11 @@ function Backlogs() {
     return data.slice(start, start + rowsPerPage);
   }, [data, currentPage, rowsPerPage]);
 
-  if (showLoader || !data.length) return <Loader />; // Show loader while fetching data or during the delay
+  if (showLoader || !data.length) return <Loader />;
 
   return (
     <div className="backlogs-container">
+      {showAlert && <Alert type="info" message="New updates have been added!" />}
       <h1 className="title">Activity Logs</h1>
       <Table.Root className="table">
         <Table.Header className="table-header">
@@ -87,7 +99,7 @@ function Backlogs() {
       {/* Pagination Controls */}
       <PaginationControls
         currentPage={currentPage}
-        totalPages={Math.ceil(data.length / rowsPerPage)} // Calculate total number of pages
+        totalPages={Math.ceil(data.length / rowsPerPage)}
         handlePagination={handlePagination}
       />
     </div>

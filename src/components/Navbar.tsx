@@ -22,7 +22,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { icon: faObjectGroup, label: "Index", href: "/" },
+  { icon: faObjectGroup, label: "Dashboard", href: "/" },
   { icon: faBook, label: "Booked Rooms", href: "/booked_rooms" },
   { icon: faUserGroup, label: "Users", href: "/users" },
   { icon: faBuilding, label: "Buildings", href: "/building" },
