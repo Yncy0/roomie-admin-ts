@@ -1,136 +1,104 @@
-import Input from "@/components/Input";
-import BuildingSelect from "@/components/selector/BuildingSelect";
-import RoomDescriptionSelect from "@/components/selector/RoomDescriptionSelect";
-import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
-import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms";
-import { isRoomNameExists } from "@/utils/isRoomExist";
-import supabase from "@/utils/supabase";
-import { Select } from "@radix-ui/themes";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import React from "react";
+"use client"
+
+import type React from "react"
+import { useState } from "react"
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router"
+import "@/styles/roomsAdd.css"
+import imagePlaceholder from "@/assets/dummy/image-placeholder.png"
+import Input from "@/components/Input"
+import BuildingSelect from "@/components/selector/BuildingSelect"
+import RoomDescriptionSelect from "@/components/selector/RoomDescriptionSelect"
+import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs"
+import { insertRooms } from "@/hooks/queries/rooms/useInsertRooms"
+import { isRoomNameExists } from "@/utils/isRoomExist"
+import Alert from "@/components/Alert"
 
 export const Route = createLazyFileRoute("/rooms_add")({
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-  const navigate = useNavigate();
-  const [room_name, setRoomName] = React.useState("");
-  const [room_type, setRoomType] = React.useState("");
-  const [room_capacity, setRoomCapacity] = React.useState(0);
-  const [room_location, setRoomLocation] = React.useState("");
-  const [room_image, setRoomImage] = React.useState("");
+  const navigate = useNavigate()
+  const [room_name, setRoomName] = useState("")
+  const [room_type, setRoomType] = useState("")
+  const [room_capacity, setRoomCapacity] = useState(0)
+  const [room_location, setRoomLocation] = useState("")
+  const [room_image, setRoomImage] = useState("")
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info")
 
-  React.useEffect(() => {
-    if (room_location) {
-      // Handle any updates or side effects here
-      console.log("Room Location (Building ID) Updated:", room_location);
-    }
-  }, [room_location]);
-
-  const handleRoomCapacityChange = (e: any) => {
-    const value = e.target.value;
-    const numberValue = parseInt(value, 10);
-    // Check if the input is a number and within the range
+  const handleRoomCapacityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    const numberValue = Number.parseInt(value, 10)
     if (!isNaN(numberValue) && numberValue <= 100) {
-      setRoomCapacity(numberValue);
+      setRoomCapacity(numberValue)
     } else if (value === "") {
-      // alert("The maximum room capacity is 100."); // Clear the state if the input is empty
+      setRoomCapacity(0)
     }
-  };
+  }
+  
+  
 
   const onHandleInsert = async () => {
     try {
-      // Validate if the room name already exists
-      const roomExists = await isRoomNameExists(room_name);
-
+      const roomExists = await isRoomNameExists(room_name)
       if (roomExists) {
-        alert("Room name already exists. Please choose a different name.");
-        return;
+        setAlertType("error")
+        setAlertMessage("Room name already exists. Please choose a different name.")
+        setShowAlert(true)
+        return
       }
 
-      // Insert new room if the room name doesn't exist
-      await insertRooms(
-        room_name,
-        room_image,
-        room_type,
-        room_capacity,
-        room_location
-      );
+      await insertRooms(room_name, room_image, room_type, room_capacity, room_location)
+      await insertBacklogs("INSERT", `The new ${room_name} has been added`)
 
-      // Log the insertion in the backlogs
-      await insertBacklogs("INSERT", `The new ${room_name} has been added`);
+      setAlertType("success")
+      setAlertMessage("Room created successfully")
+      setShowAlert(true)
 
-      // Notify the user and navigate to the rooms page
-      alert("Data saved successfully");
-      navigate({ to: "/rooms" });
+      setTimeout(() => {
+        navigate({ to: "/rooms" })
+      }, 3000)
     } catch (err) {
-      console.error("Unexpected error:", err);
-      alert("An error occurred. Please try again.");
+      console.error("Unexpected error:", err)
+      setAlertType("error")
+      setAlertMessage("An error occurred. Please try again.")
+      setShowAlert(true)
     }
-  };
+  }
 
   return (
-    <div className="p-10 bg-white flex flex-col gap-7">
-      <h1 className="text-center font-bold text-xl pb-8">Create New Room</h1>
+    <div className="rooms-add-container">
+      {showAlert && (
+        <Alert type={alertType} message={alertMessage} duration={3000} onClose={() => setShowAlert(false)} />
+      )}
+      <h1 className="rooms-add-title">Create New Room</h1>
 
       {/* Image Preview */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <img
-          src={
-            room_image ? room_image : "src/assets/dummy/image-placeholder.png"
-          }
-          alt="Room Preview"
-          style={{ objectFit: "cover", width: "16rem" }} // 64px equivalent
-        />
+      <div className="image-preview-container">
+      <img src={room_image || imagePlaceholder} alt="Room Preview" className="image-preview" />
       </div>
 
       {/* Image File Input */}
+    <div className="inputGroup">
+      <label htmlFor="imageInput" className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        Upload Image
+      </label>
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+        if (file) {
+          setRoomImage(URL.createObjectURL(file))
+        }
+      }}
+      />
+    </div>
 
-      <div
-        className="inputGroup"
-        style={{
-          fontFamily: "'Segoe UI', sans-serif",
-          position: "relative",
-        }}
-      >
-        <input
-          id="imageInput"
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            setRoomImage(
-              e.target.files && e.target.files[0]
-                ? URL.createObjectURL(e.target.files[0])
-                : ""
-            )
-          }
-          style={{
-            fontSize: "100%",
-            padding: "30px",
-            outline: "none",
-            border: "2px solid #35487a",
-            backgroundColor: "transparent",
-            borderRadius: "20px",
-            width: "100%",
-          }}
-        />
-        <label
-          htmlFor="imageInput"
-          style={{
-            fontSize: "100%",
-            position: "absolute",
-            left: "0",
-            padding: "0.8em",
-            marginLeft: "0.5em",
-            pointerEvents: "none",
-            transition: "all 0.3s ease",
-            color: "#35487a",
-          }}
-        >
-          Upload Image
-        </label>
-      </div>
 
       {/* Room Name */}
       <Input
@@ -140,97 +108,55 @@ function RouteComponent() {
         value={room_name}
         onChange={(e) => setRoomName(e.target.value)}
         label="Room Name"
-        type={"text"}
+        type="text"
       />
 
       {/* Room Capacity */}
-      <Input
-        id="roomCapacity"
-        htmlFor="roomCapacity"
-        placeholder=""
-        value={room_capacity}
-        onChange={handleRoomCapacityChange}
-        label="Room Capacity"
-        type={"text"}
-      />
+      <div className="inputGroup">
+        <label htmlFor="roomCapacity">Room Capacity</label>
+        <select
+          id="roomCapacity"
+          value={room_capacity}
+          onChange={handleRoomCapacityChange}
+        >
+          {[...Array(100).keys()].map((_, index) => {
+            const value = index + 1
+            return (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            )
+          })}
+        </select>
+      </div>
 
+      {/* Room Details Row */}
+      <div className="inputRow">
       {/* Room Description */}
-      <RoomDescriptionSelect setDescription={setRoomType} />
+        <div className="inputGroup">
+          <label htmlFor="roomDescription">Room Description</label>
+          <RoomDescriptionSelect setDescription={setRoomType} />
+        </div>
 
       {/* Room Location */}
-      <BuildingSelect setBuilding={setRoomLocation} />
+        <div className="inputGroup">
+          <label htmlFor="roomLocation">Room Location</label>
+          <BuildingSelect setBuilding={setRoomLocation} />
+        </div>
+      </div>
 
       {/* Buttons */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "2rem",
-          width: "100%",
-        }}
-      >
-        <button
-          onClick={() => navigate({ to: "/rooms" })}
-          style={{
-            border: "2px solid #d1d1d1",
-            backgroundColor: "#f1f1f1",
-            borderRadius: "0.9em",
-            cursor: "pointer",
-            padding: "0.8em 1.2em",
-            fontSize: "16px",
-            fontWeight: 500,
-            color: "#333",
-            transition: "background-color 0.2s ease-in-out",
-            width: "100%", // Full width
-            maxWidth: "100%", // Ensure it doesn't exceed the screen width
-            textAlign: "center", // Center text inside the button
-          }}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = "#e1e1e1")}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = "#f1f1f1")}
-        >
+      <div className="button-container">
+        <button onClick={() => navigate({ to: "/rooms" })} className="cancel-button">
           Cancel
         </button>
-        <button
-          onClick={onHandleInsert}
-          style={{
-            border: "2px solid #35487a",
-            backgroundColor: "#6b92e5",
-            borderRadius: "0.9em",
-            cursor: "pointer",
-            padding: "0.8em 1.2em",
-            fontSize: "16px",
-            fontWeight: 600,
-            color: "#fff",
-            transition: "background-color 0.2s ease-in-out",
-            width: "100%", // Full width
-            maxWidth: "100%", // Ensure it doesn't exceed the screen width
-            textAlign: "center", // Center text inside the button
-          }}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = "#35487a")}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = "#6b92e5")}
-        >
+        <button onClick={onHandleInsert} className="create-button">
           Create
         </button>
       </div>
-
-      {/* Style for animation in Add Room Forms */}
-      <style>
-        {`
-    .inputGroup input:focus ~ label,
-    .inputGroup input:valid ~ label {
-      transform: translateY(-50%) scale(0.9); /* Raised higher */
-      margin-left: 1.3em;
-      padding: 0.4em;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 5) 0%, rgba(255,255, 255, 3) 70%, transparent 100%);
-      border-radius: 20px; /* Rounded corners */
-    }
-
-    .inputGroup input:focus,
-    .inputGroup input:valid {
-      border-color: rgb(150, 150, 200);
-    }
-  `}
-      </style>
     </div>
-  );
+  )
 }
+
+export default RouteComponent
+

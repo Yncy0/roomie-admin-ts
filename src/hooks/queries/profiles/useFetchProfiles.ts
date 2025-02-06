@@ -7,7 +7,8 @@ export const fetchProfiles = () => {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("profiles")
-                .select("*");
+                .select("*")
+                .neq("is_archived", true);  // Excluding archived profiles
 
             if (error) {
                 console.log(error);
@@ -27,6 +28,7 @@ export const fetchProfilesWithId = (id: any) => {
                 .from("profiles")
                 .select("*")
                 .eq("id", id)
+                .neq("is_archived", true)  // Excluding archived profile by ID
                 .single();
 
             if (error) {

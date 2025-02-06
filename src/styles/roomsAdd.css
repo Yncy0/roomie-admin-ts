@@ -1,0 +1,83 @@
+.rooms-add-container {
+  padding: 2.5rem;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+}
+
+.rooms-add-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Centering Image Preview */
+.image-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.image-preview {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Grouping inputs into rows */
+.inputRow {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.inputRow .inputGroup {
+  flex: 1;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.inputGroup label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.inputGroup input,
+.inputGroup select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel-button,
+.create-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background: #ccc;
+}
+
+.create-button {
+  background: #007bff;
+  color: white;
+}

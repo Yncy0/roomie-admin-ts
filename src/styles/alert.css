@@ -1,7 +1,9 @@
+/* alert.css */
 .alert {
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%); /* This centers the alert horizontally */
   padding: 12px 20px;
   border-radius: 5px;
   color: white;

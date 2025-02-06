@@ -1,24 +1,27 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import DashboardTable from "@/components/DashboardTable";
-import BookingTrendsChart from "@/components/BookingTrendsChart";
-import RoomAvailabilityChart from "@/components/RoomAvailabilityChart";
-import "@/styles/dashboard.css";
-import Loader from "@/components/loader/Loader";
+// src/routes/index.lazy.tsx
+
+import { createLazyFileRoute } from "@tanstack/react-router"
+import { useState, useEffect } from "react"
+import DashboardTable from "@/components/DashboardTable"
+import BookingTrendsChart from "@/components/BookingTrendsChart"
+import RoomAvailabilityChart from "@/components/RoomAvailabilityChart"
+import AvailableRooms from "@/components/AvailableRooms"  // Import the AvailableRooms component
+import "@/styles/dashboard.css"
+import Loader from "@/components/loader/Loader"
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
-});
+})
 
 function Index() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, []);
+      setIsLoading(false)
+    }, 3000)
+    return () => clearTimeout(timeout)
+  }, [])
 
   return (
     <div className="dashboard-container">
@@ -29,15 +32,17 @@ function Index() {
           <h2 className="dashboard-title">Overview</h2>
           <div className="charts-section">
             <div className="chart-box">
-              <h3 className="chart-title">Available Rooms</h3>
+              <h3 className="chart-title">Room Availability</h3>
               <RoomAvailabilityChart />
             </div>
-
             <div className="chart-box">
               <h3 className="chart-title">Booking Trends</h3>
               <BookingTrendsChart />
             </div>
           </div>
+
+          {/* Include the AvailableRooms component */}
+          <AvailableRooms />
 
           <div className="activity-section">
             <DashboardTable />
@@ -45,7 +50,7 @@ function Index() {
         </>
       )}
     </div>
-  );
+  )
 }
 
-export default Index;
+export default Index

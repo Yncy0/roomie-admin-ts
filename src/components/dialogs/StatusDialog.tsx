@@ -1,91 +1,88 @@
-import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
-import { deleteBookedRoomsCancel } from "@/hooks/queries/booking/useDeleteBookedRooms";
-import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms";
-import { insertNotification } from "@/hooks/queries/useNotifications";
-import { Button, Dialog, Flex, Select } from "@radix-ui/themes";
-import { Pencil } from "lucide-react";
-import React from "react";
+"use client"
+
+import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs"
+import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms"
+import { insertNotification } from "@/hooks/queries/useNotifications"
+import { Button, Dialog, Flex } from "@radix-ui/themes"
+import { Pencil } from "lucide-react"
+import React from "react"
+import Alert from "@/components/alert"
 
 type Props = {
-  item: any;
-};
+  item: any
+}
 
 const StatusDialog = ({ item }: Props) => {
-  const [value, setValue] = React.useState(item.status);
-  const latestValueRef = React.useRef(value);
+  const [value, setValue] = React.useState(item.status)
+  const latestValueRef = React.useRef(value)
 
   React.useEffect(() => {
-    latestValueRef.current = value;
-  }, [value]);
+    latestValueRef.current = value
+  }, [value])
 
-  console.log(value);
+  const [alertMessage, setAlertMessage] = React.useState<string | null>(null)
+  const [alertType, setAlertType] = React.useState<"success" | "error" | "info" | "warning">("info")
 
-  const handleAccpet = async () => {
-    const update = updateBookedRoomsStatus(item.id, "INCOMING");
-    if (update) await update;
+  const handleAccept = async () => {
+    const update = updateBookedRoomsStatus(item.id, "INCOMING")
+    if (update) await update
 
-    // Use the latest value for notifications
-    insertNotification(
-      item.profiles.id,
-      `Your booking reacquest has been ACCEPTED`
-    );
+    insertNotification(item.profiles.id, `Booking request has been ACCEPTED`)
 
-    insertBacklogs(
-      "UPDATE",
-      `The booking request of ${item.profiles?.username} has been ACCEPT`
-    );
+    insertBacklogs("UPDATE", `The booking request of ${item.profiles?.username} has been ACCEPTED`)
 
-    alert("The statatus has been ACCEPTED");
-  };
+    setAlertType("success")
+    setAlertMessage("Booking has been ACCEPTED")
+  }
 
   const handleDecline = async () => {
-    const update = updateBookedRoomsStatus(item.id, "CANCELLED");
-    if (update) await update;
+    const update = updateBookedRoomsStatus(item.id, "CANCELLED")
+    if (update) await update
 
-    // Use the latest value for notifications
-    insertNotification(
-      item.profiles.id,
-      `Your booking reacquest has been DECLINED`
-    );
+    insertNotification(item.profiles.id, `Booking request has been DECLINED`)
 
-    insertBacklogs(
-      "UPDATE",
-      `The booking request of ${item.profiles?.username} has been DECLINE`
-    );
+    insertBacklogs("UPDATE", `The booking request of ${item.profiles?.username} has been DECLINED`)
 
-    alert("The statatus has been ACCEPTED");
-  };
+    setAlertType("error")
+    setAlertMessage("The status has been DECLINED")
+  }
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger>
-        <Button>
-          <Pencil />
-        </Button>
-      </Dialog.Trigger>
-      <Dialog.Content maxWidth="450px">
-        <Dialog.Title>Grant Status</Dialog.Title>
-        <Dialog.Description size="2" mb="4">
-          Would you like to accept this booking reservation?
-        </Dialog.Description>
-        <Flex gap="3" mt="4" justify="end">
-          <Dialog.Close>
-            <Button variant="soft" color="gray">
-              Cancel
-            </Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button color="red" onClick={handleDecline}>
-              Decline
-            </Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button onClick={handleAccpet}>Accept</Button>
-          </Dialog.Close>
-        </Flex>
-      </Dialog.Content>
-    </Dialog.Root>
-  );
-};
+    <>
+      {alertMessage && (
+        <Alert type={alertType} message={alertMessage} duration={3000} onClose={() => setAlertMessage(null)} />
+      )}
+      <Dialog.Root>
+        <Dialog.Trigger>
+          <Button>
+            <Pencil />
+          </Button>
+        </Dialog.Trigger>
+        <Dialog.Content maxWidth="450px">
+          <Dialog.Title>Grant Status</Dialog.Title>
+          <Dialog.Description size="2" mb="4">
+            Would you like to accept this booking reservation?
+          </Dialog.Description>
+          <Flex gap="3" mt="4" justify="end">
+            <Dialog.Close>
+              <Button variant="soft" color="gray">
+                Cancel
+              </Button>
+            </Dialog.Close>
+            <Dialog.Close>
+              <Button color="red" onClick={handleDecline}>
+                Decline
+              </Button>
+            </Dialog.Close>
+            <Dialog.Close>
+              <Button onClick={handleAccept}>Accept</Button>
+            </Dialog.Close>
+          </Flex>
+        </Dialog.Content>
+      </Dialog.Root>
+    </>
+  )
+}
 
-export default StatusDialog;
+export default StatusDialog
+
