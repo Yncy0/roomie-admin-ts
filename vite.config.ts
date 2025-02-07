@@ -12,4 +12,20 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://vjvuhazfxkuqegqlkums.supabase.co", // Replace with your Supabase project URL
+        changeOrigin: true,
+        configure: (proxy, options) => {
+          proxy.on("proxyReq", (proxyReq, req, res) => {
+            proxyReq.setHeader(
+              "Origin",
+              "https://vjvuhazfxkuqegqlkums.supabase.co",
+            ); // Replace with your Supabase project URL
+          });
+        },
+      },
+    },
+  },
 });

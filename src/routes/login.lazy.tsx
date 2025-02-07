@@ -1,4 +1,4 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import React from "react";
 import loaderImage from "@/components/loader/loader.png";
 import supabase from "@/utils/supabase";
@@ -16,6 +16,8 @@ function RouteComponent() {
   const [emailError, setEmailError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+
+  const nav = useNavigate();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -65,10 +67,7 @@ function RouteComponent() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 w-full">
-      <form
-        onSubmit={() => signInWithEmail()}
-        className="w-full max-w-md bg-white p-8 rounded shadow "
-      >
+      <div className="w-full max-w-md bg-white p-8 rounded shadow ">
         <div className="flex flex-row items-center justify-center pb-2">
           <img src={loaderImage} className="w-28 h-28 " />
         </div>
@@ -109,12 +108,15 @@ function RouteComponent() {
           )}
         </div>
         <button
-          type="submit"
+          onClick={() => {
+            signInWithEmail();
+            nav({ to: "/" });
+          }}
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
         >
           {loading ? "Loading..." : "Login"}
         </button>
-      </form>
+      </div>
     </div>
   );
 }
