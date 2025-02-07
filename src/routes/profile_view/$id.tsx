@@ -109,6 +109,8 @@ function UserView() {
           time_out: formData.time_out,
           course_id: courseId,
           profile_id: profileId,
+          timef_in: formData.time_in,
+          timef_out: formData.time_out
         }
 
         if (selectedEvent) {
@@ -129,6 +131,7 @@ function UserView() {
           time_in: formatTimestamptz(formData.date, formData.time_in),
           time_out: formatTimestamptz(formData.date, formData.time_out),
           profile_id: profileId,
+          
         }
 
         if (selectedEvent) {

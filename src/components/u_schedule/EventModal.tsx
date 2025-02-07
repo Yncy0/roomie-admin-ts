@@ -27,7 +27,7 @@ interface EventData {
 
 interface EventModalProps {
   modalOpen: boolean
-  closeModal: () => void
+  closeModal: (clearForm?: boolean) => void
   modalType: "booking" | "schedule"
   formData: EventData
   setFormData: React.Dispatch<React.SetStateAction<EventData>>
@@ -76,8 +76,14 @@ const EventModal: React.FC<EventModalProps> = ({
     }
   }, [modalOpen])
 
+  useEffect(() => {
+    if (!modalOpen) {
+      setFormData({})
+    }
+  }, [modalOpen, setFormData])
+
   return (
-    <Modal open={modalOpen} onClose={closeModal}>
+    <Modal open={modalOpen} onClose={() => closeModal(true)}>
       <Box
         sx={{
           position: "absolute",
