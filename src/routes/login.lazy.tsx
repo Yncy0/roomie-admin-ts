@@ -110,7 +110,6 @@ function RouteComponent() {
         <button
           onClick={() => {
             signInWithEmail();
-            nav({ to: "/" });
           }}
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
         >

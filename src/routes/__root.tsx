@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BodyComponent from "@/components/BodyComponent";
 import Navbar from "../components/Navbar";
-import { createRootRoute } from "@tanstack/react-router";
+import { createRootRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Theme } from "@radix-ui/themes";
 import "../styles/style.css";
 import AuthProvider, { useAuth } from "@/providers/AuthProvider";
@@ -15,11 +15,14 @@ type PrivateRouteProps = {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
+  const nav = useNavigate();
 
   if (!isAuthenticated) {
     // Redirect to login if not authenticated
-    window.location.href = "/login";
+    nav({ to: "/login" });
     return null;
+  } else {
+    nav({ to: "/" });
   }
 
   return (
@@ -36,7 +39,9 @@ export const Route = createRootRoute({
     <AuthProvider>
       <QueryClientProvider client={new QueryClient()}>
         <Theme className="root_theme">
-          <BodyComponent />
+          <PrivateRoute>
+            <BodyComponent />
+          </PrivateRoute>
           {/* <TanStackRouterDevtools /> */}
         </Theme>
       </QueryClientProvider>

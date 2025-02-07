@@ -8,7 +8,7 @@ export const fetchProfiles = () => {
             const { data, error } = await supabase
                 .from("profiles")
                 .select("*")
-                .neq("is_archived", true);  // Excluding archived profiles
+                .neq("is_archived", true); // Excluding archived profiles
 
             if (error) {
                 console.log(error);
@@ -28,8 +28,27 @@ export const fetchProfilesWithId = (id: any) => {
                 .from("profiles")
                 .select("*")
                 .eq("id", id)
-                .neq("is_archived", true)  // Excluding archived profile by ID
+                .neq("is_archived", true) // Excluding archived profile by ID
                 .single();
+
+            if (error) {
+                console.log(error);
+                throw error;
+            }
+
+            return data;
+        },
+    });
+};
+
+export const fetchProfilesSingle = () => {
+    return useQuery({
+        queryKey: ["profiles"],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("*")
+                .single(); // Excluding archived profiles
 
             if (error) {
                 console.log(error);
