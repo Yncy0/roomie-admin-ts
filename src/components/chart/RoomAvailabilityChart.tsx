@@ -1,43 +1,39 @@
 import { Bar } from "react-chartjs-2"
-import { fetchAvailableBookedRooms } from "@/hooks/queries/booking/fetchAvailableBookedRooms"
+import { fetchAvailableRooms } from "@/hooks/queries/rooms/fetchAvailableRooms"
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js"
-import "@/styles/RoomAvailabilityChart.css"
+import "@/styles/Dashboard/RoomAvailabilityChart.css"
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const RoomAvailabilityChart: React.FC = () => {
   // Fetch room availability data
-  const { data, isLoading, isError } = fetchAvailableBookedRooms()
+  const { data, isLoading, isError } = fetchAvailableRooms()
 
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error fetching room data.</p>
 
-  const { totalRooms, availableRooms, bookedRooms } = data || {
-    totalRooms: 0,
-    availableRooms: 0,
-    bookedRooms: [],
-  }
-
-  // Get the list of available rooms
-  const bookedRoomIds = new Set(bookedRooms.map((room) => Number(room.room_id))) // Ensure room_id is treated as a number
+  // Extract data safely
+  const totalRooms = data?.totalRooms ?? 0
+  const availableRooms = data?.availableRoomsCount ?? 0
+  const totalBookingsToday = data?.totalBookingsToday ?? 0
 
   // Chart data
   const chartData = {
-    labels: ["Total Rooms", "Available Rooms", "Booked Rooms"],
+    labels: ["Total Rooms", "Available Rooms", "Total Bookings Today"],
     datasets: [
       {
-        label: "Room Status",
-        data: [totalRooms, availableRooms, bookedRooms.length],
+        label: "Room Status (Today)",
+        data: [totalRooms, availableRooms, totalBookingsToday],
         backgroundColor: [
-          "rgba(54, 162, 235, 0.6)", // Total Rooms
-          "rgba(75, 192, 192, 0.6)", // Available Rooms
-          "rgba(255, 99, 132, 0.6)", // Booked Rooms
+          "#5374d8", // Total Rooms
+          "#8bb2ee", // Available Rooms
+          "#cbe3fa", // Total Bookings
         ],
         borderColor: [
-          "rgb(54, 162, 235)", // Total Rooms
-          "rgb(75, 192, 192)", // Available Rooms
-          "rgb(255, 99, 132)", // Booked Rooms
+          "#5374d8", // Total Rooms
+          "#8bb2ee", // Available Rooms
+          "#cbe3fa", // Total Bookings
         ],
         borderWidth: 1,
       },
@@ -57,7 +53,6 @@ const RoomAvailabilityChart: React.FC = () => {
 
   return (
     <div className="room-availability-chart">
-      {/* Bar Chart */}
       <div className="chart-container">
         <Bar data={chartData} options={options} />
       </div>
@@ -66,4 +61,3 @@ const RoomAvailabilityChart: React.FC = () => {
 }
 
 export default RoomAvailabilityChart
-

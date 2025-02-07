@@ -1,12 +1,12 @@
 import React from "react";
 import { fetchBacklogs } from "@/hooks/queries/backlogs/useFetchBacklogs";
-import { Table } from "@radix-ui/themes";
+import { Table, Select } from "@radix-ui/themes";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import PaginationControls from "@/components/PaginationControls";
 import Loader from "@/components/loader/Loader";
-import Alert from "@/components/alert";
-import "@/styles/backlogs.css";
+import Alert from "@/components/Alert";
+import "@/styles/Backlogs/backlogs.css";
 
 export const Route = createLazyFileRoute("/backlogs")({
   component: Backlogs,
@@ -20,12 +20,13 @@ function Backlogs() {
   const [showLoader, setShowLoader] = React.useState(true);
   const [showAlert, setShowAlert] = React.useState(false);
   const [prevDataLength, setPrevDataLength] = React.useState(data.length);
+  const [actionFilter, setActionFilter] = React.useState("All"); // Filter state
 
   // Simulate a 4-second loader display
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       setShowLoader(false); // Hide the loader after 4 seconds
-    }, 4000); // 4000 ms = 4 seconds
+    }, 4000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -34,10 +35,17 @@ function Backlogs() {
   React.useEffect(() => {
     if (data.length > prevDataLength) {
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
+      setTimeout(() => setShowAlert(false), 3000);
     }
     setPrevDataLength(data.length);
   }, [data.length, prevDataLength]);
+
+  // Filtered data based on action type
+  const filteredData = React.useMemo(() => {
+    return actionFilter === "All"
+      ? data
+      : data.filter((item) => item.action === actionFilter);
+  }, [data, actionFilter]);
 
   // Handle pagination logic
   const handlePagination = (action: string) => {
@@ -45,17 +53,17 @@ function Backlogs() {
     else if (action === "prev") setCurrentPage((prev) => Math.max(prev - 1, 0));
     else if (action === "next")
       setCurrentPage((prev) =>
-        Math.min(prev + 1, Math.ceil(data.length / rowsPerPage) - 1)
+        Math.min(prev + 1, Math.ceil(filteredData.length / rowsPerPage) - 1)
       );
     else if (action === "last")
-      setCurrentPage(Math.ceil(data.length / rowsPerPage) - 1);
+      setCurrentPage(Math.ceil(filteredData.length / rowsPerPage) - 1);
   };
 
   // Paginate the data
   const paginatedData = React.useMemo(() => {
     const start = currentPage * rowsPerPage;
-    return data.slice(start, start + rowsPerPage);
-  }, [data, currentPage, rowsPerPage]);
+    return filteredData.slice(start, start + rowsPerPage);
+  }, [filteredData, currentPage, rowsPerPage]);
 
   if (showLoader || !data.length) return <Loader />;
 
@@ -63,6 +71,21 @@ function Backlogs() {
     <div className="backlogs-container">
       {showAlert && <Alert type="info" message="New updates have been added!" />}
       <h1 className="title">Activity Logs</h1>
+
+      {/* Action Filter Dropdown */}
+      <div className="filter-container">
+        <label className="filter-label">Filter by Action:</label>
+        <Select.Root value={actionFilter} onValueChange={setActionFilter}>
+          <Select.Trigger placeholder="Select Action" />
+          <Select.Content>
+            <Select.Item value="All">All</Select.Item>
+            <Select.Item value="INSERT">INSERT</Select.Item>
+            <Select.Item value="UPDATE">UPDATE</Select.Item>
+            <Select.Item value="DELETE">DELETE</Select.Item>
+          </Select.Content>
+        </Select.Root>
+      </div>
+
       <Table.Root className="table">
         <Table.Header className="table-header">
           <Table.Row>
@@ -81,25 +104,33 @@ function Backlogs() {
           </Table.Row>
         </Table.Header>
         <Table.Body className="table-body">
-          {paginatedData.map((items, index) => (
-            <Table.Row key={index} className="table-row">
-              <Table.Cell className="table-cell">{items.action}</Table.Cell>
-              <Table.Cell className="table-cell">{items.event}</Table.Cell>
-              <Table.Cell className="table-cell">
-                {dayjs(items.created_at).format("MM/DD/YYYY")}
-              </Table.Cell>
-              <Table.Cell className="table-cell">
-                {dayjs(items.created_at).format("HH:mm:ss a")}
+          {paginatedData.length > 0 ? (
+            paginatedData.map((item, index) => (
+              <Table.Row key={index} className="table-row">
+                <Table.Cell className="table-cell">{item.action}</Table.Cell>
+                <Table.Cell className="table-cell">{item.event}</Table.Cell>
+                <Table.Cell className="table-cell">
+                  {dayjs(item.created_at).format("MM/DD/YYYY")}
+                </Table.Cell>
+                <Table.Cell className="table-cell">
+                  {dayjs(item.created_at).format("HH:mm:ss a")}
+                </Table.Cell>
+              </Table.Row>
+            ))
+          ) : (
+            <Table.Row>
+              <Table.Cell colSpan={4} className="no-data">
+                No matching logs found.
               </Table.Cell>
             </Table.Row>
-          ))}
+          )}
         </Table.Body>
       </Table.Root>
 
       {/* Pagination Controls */}
       <PaginationControls
         currentPage={currentPage}
-        totalPages={Math.ceil(data.length / rowsPerPage)}
+        totalPages={Math.ceil(filteredData.length / rowsPerPage)}
         handlePagination={handlePagination}
       />
     </div>

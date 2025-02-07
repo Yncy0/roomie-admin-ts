@@ -5,7 +5,7 @@ import Alert from "@/components/Alert"
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs"
 import { fetchBuildingsWithId } from "@/hooks/queries/buildings/useFetchBuildings"
 import { updateBuilding } from "@/hooks/queries/buildings/useUpdateBuilding"
-import "@/styles/buildingAdd.css"
+import "@/styles/Buildings/buildingAdd.css"
 
 export const Route = createFileRoute("/building_edit/$id")({
   component: RouteComponent,

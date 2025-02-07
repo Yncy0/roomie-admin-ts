@@ -1,6 +1,6 @@
 import { Dialog, Button, Flex, TextField, Text } from "@radix-ui/themes";
 import React from "react";
-import Alert from "@/components/alert"; // Import the Alert component
+import Alert from "@/components/Alert"; // Import the Alert component
 
 const ProfileAddDialog = () => {
   const [username, setUsername] = React.useState("");

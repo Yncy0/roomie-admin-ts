@@ -1,12 +1,10 @@
-"use client"
-
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs"
 import { updateBookedRoomsStatus } from "@/hooks/queries/booking/useUpdateBookedRooms"
 import { insertNotification } from "@/hooks/queries/useNotifications"
 import { Button, Dialog, Flex } from "@radix-ui/themes"
 import { Pencil } from "lucide-react"
 import React from "react"
-import Alert from "@/components/alert"
+import Alert from "@/components/Alert"
 
 type Props = {
   item: any

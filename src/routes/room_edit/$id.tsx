@@ -10,7 +10,7 @@ import Alert from "@/components/Alert"
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs"
 import { fetchRoomsWithId } from "@/hooks/queries/rooms/useFetchRooms"
 import { updateRooms } from "@/hooks/queries/rooms/useUpdateRooms"
-import "@/styles/roomsAdd.css"
+import "@/styles/Rooms/roomsAdd.css"
 
 export const Route = createFileRoute("/room_edit/$id")({
   component: RouteComponent,

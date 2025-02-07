@@ -1,0 +1,148 @@
+/* General container for the page */
+.container {
+  min-width: 100%; /* Ensures the container takes up full width */
+  gap: 1.75rem; /* Space between child elements */
+  display: flex; /* Flexbox layout for column direction */
+  flex-direction: column; /* Stacks items vertically */
+  padding: 1.5rem; /* Padding inside the container */
+}
+
+/* Title at the top of the page */
+.title {
+  margin-top: 10px;
+  text-align: center; /* Centers the title */
+  font-size: 1.25rem; /* Font size for the title */
+  font-weight: 600; /* Bold text */
+  color: #4b5563; /* Dark gray color */
+}
+
+/* Table styles */
+.table {
+  width: 100%; /* Table width */
+  max-width: 1200px; /* Optional: Limit max width of the table */
+  margin: 0 auto; /* Center the table horizontally */
+  border-collapse: collapse;
+  margin-top: 0; /* Remove top margin */
+  margin-bottom: 0; /* Remove bottom margin */
+  outline: none;
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow below the table */
+  overflow: hidden; /* Ensure corners stay rounded */
+}
+
+/* Table header background */
+.table-header {
+  background-color: white; /* Light gray background for header */
+}
+
+/* Table column header cells */
+.table-column-header-cell {
+  padding: 12px;
+  text-align: center; /* Centers the text */
+  color: #718EBF; /* Text color for headers */
+}
+
+/* Table rows */
+.table-row {
+  border-bottom: 1px solid #bbb; /* Light border for rows */
+}
+
+/* Remove bottom border from the last row */
+.table-row:last-child {
+  border-bottom: none; /* Removes the last row's bottom border */
+}
+
+/* Table cells inside rows */
+.table-cell {
+  padding: 12px; /* Padding inside cells */
+  text-align: center; /* Center-align text */
+  font-size: 0.875rem; /* Smaller font size */
+  background-color: white; /* White background for cells */
+}
+
+/* Status badge styles */
+.status-badge {
+  padding: 0.25rem 0.5rem; /* Padding inside badge */
+  font-size: 0.75rem; /* Smaller font size */
+  border-radius: 0.25rem; /* Rounded corners for badge */
+}
+
+/* Filter & Sort Controls */
+.controls {
+  margin-left: 16px;
+  margin-top: 15px;
+  display: flex; /* Flexbox layout */
+  gap: 1rem; /* Space between the filter and sort controls */
+  margin-bottom: -10px; /* Remove bottom margin */
+  justify-content: flex-start; /* Align controls to the left */
+}
+
+/* Styling for Select dropdown */
+.controls .SelectRoot {
+  min-width: 200px; /* Set a minimum width for the select dropdown */
+  border-radius: 0.375rem; /* Rounded corners for the dropdown */
+  border: 1px solid #ccc; /* Light border for the dropdown */
+  background-color: white; /* White background for dropdown */
+  padding: 0.5rem; /* Padding inside the dropdown */
+  font-size: 0.875rem; /* Font size for dropdown items */
+}
+
+/* Hover effect for Select dropdown */
+.controls .SelectRoot:hover {
+  border-color: #718EBF; /* Border color change on hover */
+}
+
+/* Styling for Select trigger */
+.controls .SelectTrigger {
+  padding: 0.5rem; /* Padding for the select trigger */
+  font-size: 0.875rem; /* Font size */
+  color: #4b5563; /* Text color for the dropdown */
+}
+
+/* Styling for Select content (dropdown items) */
+.controls .SelectContent {
+  border-radius: 0.375rem; /* Rounded corners for the dropdown content */
+}
+
+/* Styling for Select dropdown items */
+.controls .SelectItem {
+  padding: 0.5rem; /* Padding inside dropdown items */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Hover effect for Select dropdown items */
+.controls .SelectItem:hover {
+  background-color: #f3f4f6; /* Light background on hover */
+}
+
+/* Styling for Sort Button */
+.controls .Button {
+  padding: 0.75rem 1.5rem; /* More prominent padding for the button */
+  background-color: #3b82f6; /* Blue background for the button */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 0.375rem; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 0.875rem; /* Font size */
+}
+
+/* Hover effect for Sort Button */
+.controls .Button:hover {
+  background-color: #2563eb; /* Darker blue on hover */
+}
+
+/* Focus effect for Sort Button */
+.controls .Button:focus {
+  outline: 2px solid #2563eb; /* Outline for accessibility */
+  outline-offset: 2px;
+}
+
+/* Label styling for filter and sort controls */
+.filter-label,
+.sort-label {
+  font-size: 1rem; /* Font size for labels */
+  font-weight: 600; /* Bold for emphasis */
+  color: #4b5563; /* Dark gray color */
+  margin-right: 1rem; /* Space between the label and the controls */
+  display: inline-block; /* Aligns labels inline with controls */
+}

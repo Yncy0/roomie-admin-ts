@@ -17,7 +17,10 @@ const ProfileEditDialog = ({ items }: Props) => {
   const [userDepartment, setUserDepartment] = useState(items.user_department);
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [open, setOpen] = useState(false); // State for controlling dialog visibility
+  const [open, setOpen] = useState(false);
+
+  const roles = ["Admin", "Faculty", "Professor"];
+  const departments = ["CITE", "CITHM", "CASE", "CAMP", "CBEA", "COM"];
 
   const handleUpdate = async () => {
     try {
@@ -28,10 +31,9 @@ const ProfileEditDialog = ({ items }: Props) => {
         setAlertMessage("Profile updated successfully!");
         setShowAlert(true);
 
-        // Hide alert and close the dialog after 2 seconds
         setTimeout(() => {
           setShowAlert(false);
-          setOpen(false); // Close dialog
+          setOpen(false);
         }, 2000);
       }
     } catch (error) {
@@ -77,22 +79,27 @@ const ProfileEditDialog = ({ items }: Props) => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
-          <label>
-            <Text as="div" size="2" mb="1" weight="bold">User Role</Text>
-            <TextField.Root
-              defaultValue={items.user_role}
-              placeholder="Enter role"
-              onChange={(e) => setUserRole(e.target.value)}
-            />
-          </label>
-          <label>
-            <Text as="div" size="2" mb="1" weight="bold">User Department</Text>
-            <TextField.Root
-              defaultValue={items.user_department}
-              placeholder="Enter department"
-              onChange={(e) => setUserDepartment(e.target.value)}
-            />
-          </label>
+          
+          {/* Role and Department in One Row */}
+          <Flex gap="3">
+            <label style={{ flex: 1 }}>
+              <Text as="div" size="2" mb="1" weight="bold">User Role</Text>
+              <select value={userRole} onChange={(e) => setUserRole(e.target.value)} style={{ width: "100%", padding: "8px" }}>
+                {roles.map((role) => (
+                  <option key={role} value={role}>{role}</option>
+                ))}
+              </select>
+            </label>
+
+            <label style={{ flex: 1 }}>
+              <Text as="div" size="2" mb="1" weight="bold">User Department</Text>
+              <select value={userDepartment} onChange={(e) => setUserDepartment(e.target.value)} style={{ width: "100%", padding: "8px" }}>
+                {departments.map((dept) => (
+                  <option key={dept} value={dept}>{dept}</option>
+                ))}
+              </select>
+            </label>
+          </Flex>
         </Flex>
 
         <Flex gap="3" mt="4" justify="end">

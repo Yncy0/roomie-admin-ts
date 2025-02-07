@@ -1,45 +1,41 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { fetchBookedRooms } from "@/hooks/queries/booking/useFetchBookedRooms";
 import dayjs from "dayjs";
-import "../styles/bookedRooms.css";
-
-import { Table, Badge, Dialog } from "@radix-ui/themes";
+import "../styles/BookedRooms/bookedRooms.css";
+import { Table, Badge, Dialog, Select } from "@radix-ui/themes";
 import StatusDialog from "@/components/dialogs/StatusDialog";
 import PaginationControls from "@/components/PaginationControls";
 import { useState, useEffect } from "react";
 import Loader from "@/components/loader/Loader";
 
 export const Route = createLazyFileRoute("/booked_rooms")({
-  component: BookedRoomss,
+  component: BookedRooms,
 });
 
-function BookedRoomss() {
+function BookedRooms() {
   const { data, isLoading, error } = fetchBookedRooms();
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 5; // Adjust as needed
-
+  const pageSize = 5;
+  const [statusFilter, setStatusFilter] = useState("All");
   const [showLoader, setShowLoader] = useState(true);
 
-  // Simulate a 4-second loader display
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setShowLoader(false); // Hide the loader after 4 seconds
-    }, 4000); // 4000 ms = 4 seconds
-
-    // Cleanup the timeout if the component unmounts
+      setShowLoader(false);
+    }, 4000);
     return () => clearTimeout(timeout);
   }, []);
 
-  // Show loader when loading or before 4 seconds
   if (showLoader || isLoading) return <Loader />;
-
-  // Handle error
   if (error) return <div className="error-message">Error: {error.message}</div>;
 
-  const totalPages = Math.ceil((data?.length || 0) / pageSize);
+  // Filter by status
+  const filteredData = (data ?? []).filter(
+    (booking) => statusFilter === "All" || booking.status === statusFilter
+  );
 
-  // Paginate the data
-  const paginatedData = data?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) || [];
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const paginatedData = filteredData.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
   const handlePagination = (action: string) => {
     if (action === "first") setCurrentPage(0);
@@ -51,6 +47,23 @@ function BookedRoomss() {
   return (
     <div className="container">
       <h1 className="title">Booked Rooms List</h1>
+
+      {/* Filter Controls */}
+      <div className="controls">
+        {/* Label or Text Before Filter */}
+        <span className="filter-label">Filter by Status:</span>
+
+        <Select.Root value={statusFilter} onValueChange={setStatusFilter}>
+          <Select.Trigger placeholder="Filter by Status" />
+          <Select.Content>
+            <Select.Item value="All">All</Select.Item>
+            <Select.Item value="PENDING">Pending</Select.Item>
+            <Select.Item value="INCOMING">Incoming</Select.Item>
+            <Select.Item value="ONGOING">Ongoing</Select.Item>
+          </Select.Content>
+        </Select.Root>
+      </div>
+
       <Table.Root className="table">
         <Table.Header className="table-header">
           <Table.Row className="table-row">
@@ -66,27 +79,35 @@ function BookedRoomss() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {paginatedData.map((booking, index) => (
-            <Table.Row key={index} className="table-row">
-              <Table.Cell className="table-cell">{booking.date}</Table.Cell>
-              <Table.Cell className="table-cell">{dayjs(booking.time_in).format("HH:mm:ss")}</Table.Cell>
-              <Table.Cell className="table-cell">{dayjs(booking.time_out).format("HH:mm:ss")}</Table.Cell>
-              <Table.Cell className="table-cell">{booking.profiles?.username}</Table.Cell>
-              <Table.Cell className="table-cell">{booking.rooms?.room_name}</Table.Cell>
-              <Table.Cell className="table-cell">{booking.course_and_section}</Table.Cell>
-              <Table.Cell className="table-cell">{booking.subject_code}</Table.Cell>
-              <Table.Cell className="table-cell">
-                <div className="flex flex-row items-center gap-2">
-                  <Badge color="orange" className="status-badge">{booking.status}</Badge>
-                </div>
-              </Table.Cell>
-              <Table.Cell className="table-cell">
+          {paginatedData.length > 0 ? (
+            paginatedData.map((booking, index) => (
+              <Table.Row key={index} className="table-row">
+                <Table.Cell className="table-cell">{booking.date || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{dayjs(booking.time_in).format("HH:mm:ss") || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{dayjs(booking.time_out).format("HH:mm:ss") || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{booking.profiles?.username || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{booking.rooms?.room_name || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{booking.course_and_section || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{booking.subject_code || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">
+                  <div className="flex flex-row items-center gap-2">
+                    <Badge color="orange" className="status-badge">{booking.status || "No Data"}</Badge>
+                  </div>
+                </Table.Cell>
+                <Table.Cell className="table-cell">
                   <Dialog.Root>
                     <StatusDialog item={booking} />
                   </Dialog.Root>
+                </Table.Cell>
+              </Table.Row>
+            ))
+          ) : (
+            <Table.Row>
+              <Table.Cell colSpan={9} className="table-cell no-data">
+                No Data Available
               </Table.Cell>
             </Table.Row>
-          ))}
+          )}
         </Table.Body>
       </Table.Root>
 
@@ -99,3 +120,5 @@ function BookedRoomss() {
     </div>
   );
 }
+
+export default BookedRooms;

@@ -5,7 +5,7 @@ import PaginationControls from "@/components/PaginationControls";
 import { fetchProfiles } from "@/hooks/queries/profiles/useArchiveProfiles";
 import { fetchArchivedSchedule } from "@/hooks/queries/schedule/useArchiveSchedule";
 import Loader from "@/components/loader/Loader";
-import "@/styles/archive.css";
+import "@/styles/Archive/archive.css";
 
 export const Route = createLazyFileRoute("/archive")({
   component: Archive,

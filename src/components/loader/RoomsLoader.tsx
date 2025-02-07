@@ -1,4 +1,4 @@
-import "@/styles/roomsLoader.css";
+import "@/styles/Rooms/roomsLoader.css";
 
 const RoomsLoader = () => {
   return (

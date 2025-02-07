@@ -1,5 +1,5 @@
-import supabase from "@/utils/supabase";
-import { useQuery } from "@tanstack/react-query";
+import supabase from "@/utils/supabase"
+import { useQuery } from "@tanstack/react-query"
 
 // Fetch all bookings and group them by month on the client-side
 export const fetchBookingsPerMonth = () => {
@@ -9,26 +9,31 @@ export const fetchBookingsPerMonth = () => {
       const { data, error } = await supabase
         .from("booked_rooms")
         .select("created_at")
-        .order("created_at", { ascending: true });  // Order by the created_at timestamp
+        .order("created_at", { ascending: true }) // Order by date
 
       if (error) {
-        console.log(error);
-        throw error;
+        console.error("Error fetching bookings:", error)
+        throw error
       }
 
+      // Define all months to ensure each is represented
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ]
+      const bookingsCount: Record<string, number> = Object.fromEntries(
+        monthNames.map((month) => [month, 0])
+      )
+
       // Group bookings by month
-      const bookingsByMonth = data?.reduce((acc: Record<string, number>, booking) => {
-        // Extract the month from created_at and convert it to a short month name (e.g., "Jan", "Feb")
-        const month = new Date(booking.created_at).toLocaleString("default", {
-          month: "short", // Month in short format ("Jan", "Feb", etc.)
-        });
+      data.forEach(({ created_at }) => {
+        const monthIndex = new Date(created_at).getMonth() // Get month index (0-11)
+        const monthName = monthNames[monthIndex]
+        bookingsCount[monthName] += 1
+      })
 
-        // Increment the count for the month
-        acc[month] = (acc[month] || 0) + 1;
-        return acc;
-      }, {});
-
-      return bookingsByMonth;  // Returns an object with month names as keys and counts as values
+      return bookingsCount // Returns an object with full month names and counts
     },
-  });
-};
+    refetchInterval: 60000, // Refresh data every 60 seconds
+  })
+}

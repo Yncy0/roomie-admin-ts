@@ -1,5 +1,5 @@
 import { Select } from "@radix-ui/themes";
-import "@/styles/roomsAdd.css";
+import "@/styles/Rooms/roomsAdd.css";
 
 
 type Props = {
