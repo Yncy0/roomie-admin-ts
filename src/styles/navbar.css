@@ -20,6 +20,7 @@
     transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth fade-in effect */
     font-weight: 500; /* Makes the text slightly bold */
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    z-index: 9999; /* Ensures tooltip is always on top */
     margin-left: 10px; /* Adds spacing between icon and tooltip */
   }
   
