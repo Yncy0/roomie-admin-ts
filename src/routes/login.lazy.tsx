@@ -26,11 +26,11 @@ function RouteComponent() {
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setPassword(value);
-    setPasswordError(
-      passwordPattern.test(value)
-        ? ""
-        : "Password must be at least 8 characters long and contain both letters and numbers"
-    );
+    // setPasswordError(
+    //   passwordPattern.test(value)
+    //     ? ""
+    //     : "Password must be at least 8 characters long and contain both letters and numbers"
+    // );
   };
 
   async function signInWithEmail() {

@@ -5,11 +5,15 @@ import { createRootRoute } from "@tanstack/react-router";
 import { Theme } from "@radix-ui/themes";
 import "../styles/style.css";
 import AuthProvider, { useAuth } from "@/providers/AuthProvider";
-import { PropsWithChildren } from "react";
+import { ReactNode } from "react";
 
 //import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
-const PrivateRoute: React.FC = ({ children }: PropsWithChildren) => {
+type PrivateRouteProps = {
+  children: ReactNode;
+};
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {

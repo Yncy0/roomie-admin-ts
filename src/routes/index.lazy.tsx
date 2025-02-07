@@ -16,9 +16,6 @@ function Index() {
   const [isLoading, setIsLoading] = useState(true);
 
   const { isAuthenticated } = useAuth();
-  const nav = useNavigate();
-
-  if (!isAuthenticated) nav({ to: "/login" });
 
   useEffect(() => {
     const timeout = setTimeout(() => {
