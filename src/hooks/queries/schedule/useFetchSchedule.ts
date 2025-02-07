@@ -37,7 +37,6 @@ export const fetchScheduleWithId = (id: any) => {
         },
     });
 };
-
 export const fetchScheduleWithUserId = (id: any) => {
     return useQuery({
         queryKey: ["schedule", id],
