@@ -69,11 +69,11 @@
 
 /* Filter & Sort Controls */
 .controls {
-  margin-left: 16px;
+  margin-left: 20px;
   margin-top: 15px;
   display: flex; /* Flexbox layout */
-  gap: 1rem; /* Space between the filter and sort controls */
-  margin-bottom: -10px; /* Remove bottom margin */
+  gap: 2px; /* Space between the filter and sort controls */
+  margin-bottom: -35px; /* Remove bottom margin */
   justify-content: flex-start; /* Align controls to the left */
 }
 
@@ -143,6 +143,7 @@
   font-size: 1rem; /* Font size for labels */
   font-weight: 600; /* Bold for emphasis */
   color: #4b5563; /* Dark gray color */
+  margin-top: 4px;
   margin-right: 1rem; /* Space between the label and the controls */
   display: inline-block; /* Aligns labels inline with controls */
 }

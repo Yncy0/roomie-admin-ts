@@ -3,11 +3,12 @@
     flex-direction: column;
     gap: 20px;
     margin: 20px;
+    margin-top: 40px;
   }
   
   .title {
     text-align: center;
-    font-size: 1.25rem;
+    font-size: 1.65rem;
     font-weight: 600;
     color: #4b5563;
   }
@@ -70,4 +71,67 @@
   .table {
     margin: 10px;
   }
+}
+
+/* Sorting dropdown styles (same as filter) */
+.filter-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: -30px;
+  margin-left: 15px;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+.filter-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4b5563;
+  padding: 5px; 
+}
+
+.SelectRoot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.SelectTrigger {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #4b5563;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.SelectTrigger:hover {
+  border-color: #718ebf;
+}
+
+.SelectTrigger:focus {
+  outline: none;
+  border-color: #4b6eaf;
+}
+
+.SelectContent {
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+}
+
+.SelectItem {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.SelectItem:hover {
+  background-color: #f1f5f9;
 }

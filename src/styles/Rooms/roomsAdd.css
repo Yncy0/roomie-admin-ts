@@ -11,6 +11,7 @@
 .rooms-add-title {
   font-size: 24px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 /* Centering Image Preview */
@@ -71,6 +72,9 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  width:200px;
+  height:50px;
+  text-align:center;
 }
 
 .cancel-button {
@@ -81,3 +85,4 @@
   background: #007bff;
   color: white;
 }
+

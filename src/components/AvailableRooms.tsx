@@ -1,11 +1,11 @@
 import React from "react"
 import { fetchAvailableBookedRooms } from "@/hooks/queries/booking/fetchAvailableBookedRooms"
-import '@/styles/Dashboard/AvailableRooms.css' // Import the CSS file here
+//import '@/styles/Dashboard/AvailableRooms.css' // Import the CSS file here
 
 interface Room {
   id: number
   room_name: string
-  building: string
+  room_location: string
 }
 
 const AvailableRooms: React.FC = () => {
@@ -15,16 +15,16 @@ const AvailableRooms: React.FC = () => {
   if (isError) return <p>Error fetching room data.</p>
   if (!data || !data.availableRooms) return <p>No room data available.</p>
 
-  const availableRoomsByBuilding = data.availableRooms.reduce(
+  const availableRoomsByLocation = data.availableRooms.reduce(
     (acc, room: Room) => {
-      if (!acc[room.building]) acc[room.building] = []
-      acc[room.building].push(room.room_name)
+      if (!acc[room.room_location]) acc[room.room_location] = []
+      acc[room.room_location].push(room.room_name)
       return acc
     },
     {} as Record<string, string[]>,
   )
 
-  const buildings = Object.keys(availableRoomsByBuilding).sort()
+  const locations = Object.keys(availableRoomsByLocation).sort()
 
   const splitIntoColumns = (rooms: string[], columnsPerRow: number) => {
     const rows = []
@@ -37,15 +37,15 @@ const AvailableRooms: React.FC = () => {
   return (
     <div className="chart-box">
       <h3 className="text-lg font-semibold mb-2">Available Rooms</h3>
-      {buildings.length > 0 ? (
+      {locations.length > 0 ? (
         <div className="columns-wrapper">
-          {buildings.map((building) => {
-            const rooms = availableRoomsByBuilding[building]
+          {locations.map((location) => {
+            const rooms = availableRoomsByLocation[location]
             const columns = splitIntoColumns(rooms, 4) // Split rooms into 4 columns per row
 
             return (
-              <div key={building} className="building-column">
-                <h4 className="font-semibold mb-2">{building}</h4>
+              <div key={location} className="location-column">
+                <h4 className="font-semibold mb-2">{location}</h4>
                 {columns.map((column, index) => (
                   <ul key={index}>
                     {column.map((room, idx) => (

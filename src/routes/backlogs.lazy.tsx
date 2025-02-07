@@ -21,6 +21,7 @@ function Backlogs() {
   const [showAlert, setShowAlert] = React.useState(false);
   const [prevDataLength, setPrevDataLength] = React.useState(data.length);
   const [actionFilter, setActionFilter] = React.useState("All"); // Filter state
+  const [sortOrder, setSortOrder] = React.useState("asc"); // Sort order state
 
   // Simulate a 4-second loader display
   React.useEffect(() => {
@@ -47,23 +48,32 @@ function Backlogs() {
       : data.filter((item) => item.action === actionFilter);
   }, [data, actionFilter]);
 
+  // Sort the data by date
+  const sortedData = React.useMemo(() => {
+    return [...filteredData].sort((a, b) => {
+      const dateA = dayjs(a.created_at);
+      const dateB = dayjs(b.created_at);
+      return sortOrder === "asc" ? dateA.diff(dateB) : dateB.diff(dateA);
+    });
+  }, [filteredData, sortOrder]);
+
   // Handle pagination logic
   const handlePagination = (action: string) => {
     if (action === "first") setCurrentPage(0);
     else if (action === "prev") setCurrentPage((prev) => Math.max(prev - 1, 0));
     else if (action === "next")
       setCurrentPage((prev) =>
-        Math.min(prev + 1, Math.ceil(filteredData.length / rowsPerPage) - 1)
+        Math.min(prev + 1, Math.ceil(sortedData.length / rowsPerPage) - 1)
       );
     else if (action === "last")
-      setCurrentPage(Math.ceil(filteredData.length / rowsPerPage) - 1);
+      setCurrentPage(Math.ceil(sortedData.length / rowsPerPage) - 1);
   };
 
   // Paginate the data
   const paginatedData = React.useMemo(() => {
     const start = currentPage * rowsPerPage;
-    return filteredData.slice(start, start + rowsPerPage);
-  }, [filteredData, currentPage, rowsPerPage]);
+    return sortedData.slice(start, start + rowsPerPage);
+  }, [sortedData, currentPage, rowsPerPage]);
 
   if (showLoader || !data.length) return <Loader />;
 
@@ -72,18 +82,31 @@ function Backlogs() {
       {showAlert && <Alert type="info" message="New updates have been added!" />}
       <h1 className="title">Activity Logs</h1>
 
-      {/* Action Filter Dropdown */}
-      <div className="filter-container">
-        <label className="filter-label">Filter by Action:</label>
-        <Select.Root value={actionFilter} onValueChange={setActionFilter}>
-          <Select.Trigger placeholder="Select Action" />
-          <Select.Content>
-            <Select.Item value="All">All</Select.Item>
-            <Select.Item value="INSERT">INSERT</Select.Item>
-            <Select.Item value="UPDATE">UPDATE</Select.Item>
-            <Select.Item value="DELETE">DELETE</Select.Item>
-          </Select.Content>
-        </Select.Root>
+      {/* Action Filter and Sort by Date in Row */}
+      <div className="filter-container row">
+        <div className="filter-item">
+          <label className="filter-label">Filter by Action:</label>
+          <Select.Root value={actionFilter} onValueChange={setActionFilter}>
+            <Select.Trigger placeholder="Select Action" />
+            <Select.Content>
+              <Select.Item value="All">All</Select.Item>
+              <Select.Item value="INSERT">INSERT</Select.Item>
+              <Select.Item value="UPDATE">UPDATE</Select.Item>
+              <Select.Item value="DELETE">DELETE</Select.Item>
+            </Select.Content>
+          </Select.Root>
+        </div>
+
+        <div className="filter-item">
+          <label className="filter-label">Sort by Date:</label>
+          <Select.Root value={sortOrder} onValueChange={setSortOrder}>
+            <Select.Trigger placeholder="Select Order" />
+            <Select.Content>
+              <Select.Item value="asc">Ascending</Select.Item>
+              <Select.Item value="desc">Descending</Select.Item>
+            </Select.Content>
+          </Select.Root>
+        </div>
       </div>
 
       <Table.Root className="table">
@@ -130,7 +153,7 @@ function Backlogs() {
       {/* Pagination Controls */}
       <PaginationControls
         currentPage={currentPage}
-        totalPages={Math.ceil(filteredData.length / rowsPerPage)}
+        totalPages={Math.ceil(sortedData.length / rowsPerPage)}
         handlePagination={handlePagination}
       />
     </div>

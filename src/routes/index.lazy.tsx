@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import DashboardTable from "@/components/DashboardTable"
 import BookingTrendsChart from "@/components/chart/BookingTrendsChart"
 import RoomAvailabilityChart from "@/components/chart/RoomAvailabilityChart"
-import AvailableRooms from "@/components/AvailableRooms"
+//import AvailableRooms from "@/components/AvailableRooms"
 import "@/styles/Dashboard/dashboard.css"
 import Loader from "@/components/loader/Loader"
 
@@ -39,8 +39,8 @@ function Index() {
             </div>
           </div>
 
-          {/* Include the AvailableRooms component */}
-          <AvailableRooms />
+          {/* Include the AvailableRooms component
+          <AvailableRooms />*/}
 
           <div className="activity-section">
             <DashboardTable />

@@ -34,8 +34,15 @@ function BookedRooms() {
     (booking) => statusFilter === "All" || booking.status === statusFilter
   );
 
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-  const paginatedData = filteredData.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+  // Sort data to ensure "PENDING" status comes first
+  const sortedData = filteredData.sort((a, b) => {
+    if (a.status === "PENDING" && b.status !== "PENDING") return -1; // "PENDING" comes first
+    if (a.status !== "PENDING" && b.status === "PENDING") return 1; // "PENDING" comes first
+    return 0; // Maintain existing order for other statuses
+  });
+
+  const totalPages = Math.ceil(sortedData.length / pageSize);
+  const paginatedData = sortedData.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
   const handlePagination = (action: string) => {
     if (action === "first") setCurrentPage(0);

@@ -4,12 +4,12 @@ import supabase from "@/utils/supabase"
 interface Room {
   id: number
   room_name: string
-  building_id?: number // Optional if not present in the database
+  room_location?: string // Optional field for location
 }
 
 interface Building {
-  id: string // Changed to string based on error
-  building_name: string | null
+  id: string
+  room_location: string | null
 }
 
 interface BookedRoom {
@@ -47,27 +47,27 @@ export const fetchAvailableBookedRooms = () => {
         throw roomsError
       }
 
-      // Fetch buildings (only if building_id exists)
+      // Fetch building locations (room_location)
       let buildingMap: Record<string, string> = {}
 
       if (roomsData.some(room => room.building_id !== undefined)) {
         const { data: buildingsData, error: buildingsError } = await supabase
           .from("building") // Ensure table name is correct in your schema
-          .select("id, building_name")
+          .select("id, room_location") // Fetch room_location instead of building_name
 
         if (buildingsError) {
           console.warn("Skipping building data due to error:", buildingsError)
         } else {
           buildingsData?.forEach((b: Building) => {
-            buildingMap[b.id] = b.building_name || "Unknown Building"
+            buildingMap[b.id] = b.room_location || "Unknown Location" // Updated field
           })
         }
       }
 
-      // Attach building names to rooms
-      const roomsWithBuildings: (Room & { building: string })[] = roomsData.map((room: Room) => ({
+      // Attach room location to rooms
+      const roomsWithLocations: (Room & { room_location: string })[] = roomsData.map((room: Room) => ({
         ...room,
-        building: room.building_id ? buildingMap[room.building_id] || "Unknown Building" : "No Building Info",
+        room_location: room.building_id ? buildingMap[room.building_id] || "No Location Info" : "No Location Info",
       }))
 
       // Fetch current bookings
@@ -85,7 +85,7 @@ export const fetchAvailableBookedRooms = () => {
       const bookedRoomIds = new Set(bookingsData.map((booking: { room_id: string | null }) => Number(booking.room_id)))
 
       // Filter out booked rooms
-      const availableRooms = roomsWithBuildings.filter((room) => !bookedRoomIds.has(room.id))
+      const availableRooms = roomsWithLocations.filter((room) => !bookedRoomIds.has(room.id))
 
       return { availableRooms }
     },
