@@ -6,6 +6,7 @@ import { Theme } from "@radix-ui/themes";
 import "../styles/style.css";
 import AuthProvider, { useAuth } from "@/providers/AuthProvider";
 import { ReactNode } from "react";
+import React from "react";
 
 //import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
@@ -17,13 +18,14 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const nav = useNavigate();
 
-  if (!isAuthenticated) {
-    // Redirect to login if not authenticated
-    nav({ to: "/login" });
-    return null;
-  } else {
-    nav({ to: "/" });
-  }
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      // Redirect to login if not authenticated
+      nav({ to: "/login" });
+    } else {
+      nav({ to: "/" });
+    }
+  }, [isAuthenticated, nav]);
 
   return (
     <div className="flex flex-row">

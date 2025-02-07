@@ -9,13 +9,16 @@ import {
   faUserGroup,
   faCalendar,
   faBook,
-  faCalendarPlus,
   faBuilding,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "../lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ButtonIcon } from "@radix-ui/react-icons";
+import { IconButton } from "@radix-ui/themes";
+import supabase from "@/utils/supabase";
 
 interface NavItem {
   icon: typeof faLayerGroup;
@@ -81,7 +84,7 @@ export default function NavBar() {
         )}
       </button>
 
-      <div className="flex-col flex gap-6">
+      <div className="flex-col flex gap-6 ">
         {navItems.map((item) => (
           <Link
             key={item.href}
@@ -98,6 +101,9 @@ export default function NavBar() {
           </Link>
         ))}
       </div>
+      <IconButton variant="ghost" onClick={() => supabase.auth.signOut()}>
+        <FontAwesomeIcon icon={faRightFromBracket} color="white" />
+      </IconButton>
     </nav>
   );
 }
