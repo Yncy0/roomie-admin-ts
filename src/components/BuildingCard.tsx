@@ -56,9 +56,13 @@ const BuildingCard: React.FC<BuildingCardProps> = ({
 
       {/* View More Details Button */}
       <div className="pt-4">
-        <button className="view-details-button" onClick={handleViewDetails}>
-          View Details
-        </button>
+      <button
+        className="view-details-button bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+        onClick={handleViewDetails}
+      >
+      View Details
+      </button>
+
       </div>
 
       {/* Modal */}

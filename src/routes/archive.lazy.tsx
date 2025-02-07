@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Table } from "@radix-ui/themes";
 import PaginationControls from "@/components/PaginationControls";
 import { fetchProfiles } from "@/hooks/queries/profiles/useArchiveProfiles";
-import { fetchArchivedRooms } from "@/hooks/queries/rooms/useArchiveRooms";
 import { fetchArchivedSchedule } from "@/hooks/queries/schedule/useArchiveSchedule";
 import Loader from "@/components/loader/Loader";
 import "@/styles/archive.css";
@@ -14,12 +13,10 @@ export const Route = createLazyFileRoute("/archive")({
 
 function Archive() {
   const [currentPageUsers, setCurrentPageUsers] = useState(0);
-  const [currentPageRooms, setCurrentPageRooms] = useState(0);
   const [currentPageSchedules, setCurrentPageSchedules] = useState(0);
   const itemsPerPage = 5;
 
   const { data: archivedUsers, isLoading: isLoadingUsers, error: usersError } = fetchProfiles();
-  const { data: archivedRooms, isLoading: isLoadingRooms, error: roomsError } = fetchArchivedRooms();
   const { data: archivedSchedule, isLoading: isLoadingSchedule, error: scheduleError } = fetchArchivedSchedule();
 
   const [showLoader, setShowLoader] = useState(true);
@@ -57,23 +54,6 @@ function Archive() {
     }
   };
 
-  const handlePaginationRooms = (action: string) => {
-    switch (action) {
-      case "first":
-        setCurrentPageRooms(0);
-        break;
-      case "prev":
-        setCurrentPageRooms((prev) => Math.max(0, prev - 1));
-        break;
-      case "next":
-        setCurrentPageRooms((prev) => Math.min(Math.ceil((archivedRooms?.length || 0) / itemsPerPage) - 1, prev + 1));
-        break;
-      case "last":
-        setCurrentPageRooms(Math.ceil((archivedRooms?.length || 0) / itemsPerPage) - 1);
-        break;
-    }
-  };
-
   const handlePaginationSchedules = (action: string) => {
     switch (action) {
       case "first":
@@ -91,7 +71,7 @@ function Archive() {
     }
   };
 
-  if (showLoader || isLoadingUsers || isLoadingRooms || isLoadingSchedule) {
+  if (showLoader || isLoadingUsers || isLoadingSchedule) {
     return <Loader />; // Display loader while data is loading or until 4 seconds pass
   }
 
@@ -132,42 +112,6 @@ function Archive() {
           </>
         ) : (
           <p>No archived users found.</p>
-        )}
-      </div>
-
-      {/* Archived Rooms */}
-      <div className="archive-section">
-        <h2 className="archive-section-header">Archived Rooms</h2>
-        {roomsError ? (
-          <p className="archive-error-message">Error: {roomsError.message}</p>
-        ) : archivedRooms && archivedRooms.length > 0 ? (
-          <>
-            <Table.Root className="archive-table-root">
-              <Table.Header>
-                <Table.Row>
-                  <Table.ColumnHeaderCell>Room Name</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell>Capacity</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell>Location</Table.ColumnHeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {paginateData(archivedRooms, currentPageRooms).map((room) => (
-                  <Table.Row key={room.id}>
-                    <Table.Cell>{room.room_name}</Table.Cell>
-                    <Table.Cell>{room.capacity}</Table.Cell>
-                    <Table.Cell>{room.location}</Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Root>
-            <PaginationControls
-              currentPage={currentPageRooms}
-              totalPages={Math.ceil((archivedRooms?.length || 0) / itemsPerPage)}
-              handlePagination={handlePaginationRooms}
-            />
-          </>
-        ) : (
-          <p>No archived rooms found.</p>
         )}
       </div>
 

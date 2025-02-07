@@ -1,0 +1,59 @@
+/* General Styles for Select Container */
+.SelectRoot {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+  }
+  
+  /* Style for the Trigger (the button part of the select) */
+  .SelectTrigger {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  /* Style for the Select dropdown container */
+  .SelectContent {
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+  
+  /* Style for the group of items inside the Select */
+  .SelectGroup {
+    padding: 10px;
+  }
+  
+  /* Style for the label inside the Select */
+  .SelectLabel {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  /* Style for each item inside the Select */
+  .SelectItem {
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .SelectItem:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Style for the selected item */
+  .SelectItem[data-state="checked"] {
+    background-color: #007bff;
+    color: white;
+  }
+  

@@ -31,16 +31,17 @@ export const fetchAvailableBookedRooms = () => {
         bookingsData?.map((booking) => ({
           id: Number(booking.id),
           room_id: Number(booking.room_id),
-          room_name: roomMap.get(booking.room_id) || "Unknown Room",
+          room_name: roomMap.get(booking.room_id) || "Unknown Room", // Handle null here
           user_id: booking.profile_id ? Number(booking.profile_id) : 0,
-          booked_time: booking.created_at,
+          booked_time: booking.created_at || "", // Handle null created_at
           status: booking.status,
         })) || []
 
-      // Filter for "ON GOING" status
-      const bookedRooms = bookings.filter((booking) => booking.status === "ON GOING")
+      // Filter for "ON GOING" and "INCOMING" statuses
+      const excludedStatuses = ["ON GOING", "INCOMING"]
+      const bookedRooms = bookings.filter((booking) => excludedStatuses.includes(booking.status))
 
-      // Calculate available rooms
+      // Calculate available rooms by subtracting the booked rooms
       const availableRooms = totalRooms - bookedRooms.length
 
       return {
@@ -54,4 +55,3 @@ export const fetchAvailableBookedRooms = () => {
     refetchInterval: 5000, // Refresh every 5 seconds to keep it real-time
   })
 }
-

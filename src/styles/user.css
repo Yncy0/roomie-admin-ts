@@ -62,65 +62,42 @@
     position: absolute;
     left: 8px;
   }
-  /* Role selection container */
-  .role-select-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1px solid #D4DDEC;
-    border-radius: 4px;
-    background-color: #D4DDEC;
-    padding: 8px;
-    outline: none;
-  }
-  
-  /* Role icon */
-  .role-icon {
-    width: 16px;
-    height: 16px;
-    color: #818FA7;
-    position: absolute;
-    left: 8px;
-  }
-  
-  /* Role select dropdown */
-  .role-select {
-    width: 100%;
-    padding-left: 30px;
-    border: none;
-    outline: none;
-    color: #818FA7;
-  }
-  
-  /* Department selection container */
-  .department-select-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1px solid #D4DDEC;
-    border-radius: 4px;
-    background-color: #D4DDEC;
-    padding: 8px;
-    outline: none;
-  }
-  
-  /* Department icon */
-  .department-icon {
-    width: 16px;
-    height: 16px;
-    color: #818FA7;
-    position: absolute;
-    left: 8px;
-  }
-  
-  /* Department select dropdown */
-  .department-select {
-    width: 100%;
-    padding-left: 30px;
-    border: none;
-    outline: none;
-    color: #818FA7;
-  }
+  /* Filter containers (Role and Department select) */
+.role-select-container,
+.department-select-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd; /* Match search input border color */
+  border-radius: 15px; /* Rounded corners to match search input */
+  background-color: white; /* Match search input background color */
+  padding: 8px;
+  outline: none;
+  width: 250px; /* Optional: Set a fixed width for consistency */
+}
+
+/* Icon placement */
+.role-icon,
+.department-icon {
+  position: absolute;
+  left: 10px; /* Adjusted left positioning */
+  width: 16px;
+  height: 16px;
+  color: #818FA7;
+  pointer-events: none; /* Prevents the icon from interfering with clicks */
+}
+
+/* Role and Department select dropdown */
+.role-select,
+.department-select {
+  width: 100%;
+  padding-left: 32px; /* Increase padding to accommodate icon */
+  border: none;
+  outline: none;
+  color: #818FA7;
+  font-size: 1rem; /* Optional: Ensure consistent font size */
+}
+
   
   /* Add User button */
   .add-user-button {
@@ -223,3 +200,10 @@
     text-align: center;
     margin-top: 20px;
   }
+
+  .no-data-cell {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+  }
+  

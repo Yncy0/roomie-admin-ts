@@ -20,7 +20,7 @@ export const Route = createLazyFileRoute("/users")({
 });
 
 function Users() {
-  const { data, error, isLoading } = fetchProfiles(); // Assuming isLoading is part of the hook's return
+  const { data, error, isLoading } = fetchProfiles();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -35,10 +35,7 @@ function Users() {
     return (data || []).filter((item) => {
       const matchesSearch = searchQuery
         ? Object.values(item).some((value) =>
-            value
-              ?.toString()
-              .toLowerCase()
-              .startsWith(searchQuery.toLowerCase())
+            value?.toString().toLowerCase().startsWith(searchQuery.toLowerCase())
           )
         : true;
 
@@ -46,8 +43,7 @@ function Users() {
         ? item.user_role?.toLowerCase() === selectedRole.toLowerCase()
         : true;
       const matchesDepartment = selectedDepartment
-        ? item.user_department?.toLowerCase() ===
-          selectedDepartment.toLowerCase()
+        ? item.user_department?.toLowerCase() === selectedDepartment.toLowerCase()
         : true;
 
       return matchesSearch && matchesRole && matchesDepartment;
@@ -63,8 +59,7 @@ function Users() {
   const handlePagination = (action: string) => {
     if (action === "first") setCurrentPage(0);
     if (action === "prev" && currentPage > 0) setCurrentPage(currentPage - 1);
-    if (action === "next" && currentPage < totalPages - 1)
-      setCurrentPage(currentPage + 1);
+    if (action === "next" && currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
     if (action === "last") setCurrentPage(totalPages - 1);
   };
 
@@ -103,6 +98,7 @@ function Users() {
               <option value="">Role</option>
               <option value="Admin">Admin</option>
               <option value="Professor">Professor</option>
+              <option value="Faculty">Faculty</option>
             </select>
           </div>
 
@@ -121,94 +117,79 @@ function Users() {
             </select>
           </div>
         </div>
-
-        {/* "Add User" Button */}
-        <button className="add-user-button">Add User</button>
       </div>
 
       {/* Table */}
       <Table.Root className="table">
         <Table.Header className="table-header">
           <Table.Row>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Avatar
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Username
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Mobile Number
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Email
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Role
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Department/Faculty
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Edit
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              Delete
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="table-column-header-cell">
-              View
-            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Avatar</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Username</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Mobile Number</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Email</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Role</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Department/Faculty</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Edit</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">Delete</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="table-column-header-cell">View</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {paginatedData.map((item, index) => (
-            <Table.Row key={index} className="table-row">
-              <Table.Cell className="avatar-cell">
-                <Avatar.Root>
-                  <Avatar.Image
-                    src={item.avatar_url || "/path/to/default-avatar.png"}
-                    alt="Avatar"
-                    className="avatar-img"
-                  />
-                  <Avatar.Fallback className="avatar-fallback">
-                    {item.username?.[0] || "U"}
-                  </Avatar.Fallback>
-                </Avatar.Root>
-              </Table.Cell>
-              <Table.Cell className="table-cell">{item.username}</Table.Cell>
-              <Table.Cell className="table-cell">
-                {item.mobile_number}
-              </Table.Cell>
-              <Table.Cell className="table-cell">{item.email}</Table.Cell>
-              <Table.Cell className="table-cell">{item.user_role}</Table.Cell>
-              <Table.Cell className="table-cell">
-                {item.user_department}
-              </Table.Cell>
-              <Table.Cell className="table-cell">
-                <Dialog.Root>
-                  <ProfileEditDialog items={item} />
-                </Dialog.Root>
-              </Table.Cell>
-              <Table.Cell className="table-cell">
-                <Dialog.Root>
-                  <ProfileDeleteDialog />
-                </Dialog.Root>
-              </Table.Cell>
-              <Table.Cell className="table-cell">
-                <IconButton>
-                  <EyeOpenIcon
-                    width={18}
-                    height={18}
-                    onClick={() =>
-                      navigate({
-                        to: "/profile_view/$id",
-                        params: { id: item.id },
-                      })
-                    }
-                  />
-                </IconButton>
+          {paginatedData.length > 0 ? (
+            paginatedData.map((item, index) => (
+              <Table.Row key={index} className="table-row">
+                <Table.Cell className="avatar-cell">
+                  <Avatar.Root>
+                    <Avatar.Image
+                      src={item.avatar_url || "/path/to/default-avatar.png"}
+                      alt="Avatar"
+                      className="avatar-img"
+                    />
+                    <Avatar.Fallback className="avatar-fallback">
+                      {item.username?.[0] || "U"}
+                    </Avatar.Fallback>
+                  </Avatar.Root>
+                </Table.Cell>
+                <Table.Cell className="table-cell">{item.username}</Table.Cell>
+                <Table.Cell className="table-cell">{item.mobile_number}</Table.Cell>
+                <Table.Cell className="table-cell">{item.email}</Table.Cell>
+                <Table.Cell className="table-cell">{item.user_role}</Table.Cell>
+                <Table.Cell className="table-cell">{item.user_department}</Table.Cell>
+                <Table.Cell className="table-cell">
+                  <Dialog.Root>
+                    <ProfileEditDialog items={item} />
+                  </Dialog.Root>
+                </Table.Cell>
+                <Table.Cell className="table-cell">
+                  <Dialog.Root>
+                    <ProfileDeleteDialog
+                      profileId={item.id}
+                    />
+                  </Dialog.Root>
+                </Table.Cell>
+                <Table.Cell className="table-cell">
+                  <IconButton>
+                    <EyeOpenIcon
+                      width={18}
+                      height={18}
+                      onClick={() =>
+                        navigate({
+                          to: "/profile_view/$id",
+                          params: { id: item.id },
+                        })
+                      }
+                    />
+                  </IconButton>
+                </Table.Cell>
+              </Table.Row>
+            ))
+          ) : (
+            <Table.Row>
+              <Table.Cell colSpan={9} className="no-data-cell">
+                No data found
               </Table.Cell>
             </Table.Row>
-          ))}
+          )}
         </Table.Body>
       </Table.Root>
 

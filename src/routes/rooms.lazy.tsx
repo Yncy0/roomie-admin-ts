@@ -22,8 +22,10 @@ function Rooms() {
   const [showLoader, setShowLoader] = React.useState(true);
   const [showRoomsLoader, setShowRoomsLoader] = React.useState(false);
   const { data = [], isLoading, error } = fetchRooms();
-  const roomsPerRow = 3; // Maintain the correct number of rooms per row
+  const navigate = useNavigate();
+  const roomsPerRow = 3;
 
+  // Define columns for the table
   const columns = React.useMemo(
     () => [
       {
@@ -31,16 +33,8 @@ function Rooms() {
         accessorKey: "rooms",
         cell: ({ row }: any) => (
           <div className="rooms-row">
-            {row.original.rooms.map((item: any) => (
-              <RoomsCard
-                key={item.id}
-                id={item.id}
-                room_image={item.room_image}
-                location={item.location}
-                room_name={item.room_name}
-                room_capacity={item.room_capacity}
-                room_type={item.room_type}
-              />
+            {row.original.rooms.map((room: any) => (
+              <RoomsCard key={room.id} {...room} />
             ))}
           </div>
         ),
@@ -49,14 +43,15 @@ function Rooms() {
     []
   );
 
+  // Paginate rooms data
   const paginatedData = React.useMemo(() => {
     const totalPages = Math.ceil(data.length / roomsPerRow);
-    return Array.from({ length: totalPages }, (_, pageIndex) => {
-      const start = pageIndex * roomsPerRow;
-      return { rooms: data.slice(start, start + roomsPerRow) };
-    });
+    return Array.from({ length: totalPages }, (_, pageIndex) => ({
+      rooms: data.slice(pageIndex * roomsPerRow, (pageIndex + 1) * roomsPerRow),
+    }));
   }, [data, roomsPerRow]);
 
+  // React Table configuration
   const table = useReactTable({
     data: paginatedData,
     columns,
@@ -66,43 +61,54 @@ function Rooms() {
   });
 
   const handlePagination = (action: string) => {
+    if (table.getPageCount() === 0) return;
+
     setShowRoomsLoader(true);
     setTimeout(() => {
-      if (action === "first") table.setPageIndex(0);
-      else if (action === "prev") table.previousPage();
-      else if (action === "next") table.nextPage();
-      else if (action === "last") table.setPageIndex(table.getPageCount() - 1);
+      switch (action) {
+        case "first":
+          table.setPageIndex(0);
+          break;
+        case "prev":
+          if (table.getCanPreviousPage()) table.previousPage();
+          break;
+        case "next":
+          if (table.getCanNextPage()) table.nextPage();
+          break;
+        case "last":
+          table.setPageIndex(table.getPageCount() - 1);
+          break;
+      }
       setShowRoomsLoader(false);
-    }, 1000);
+    }, 500);
   };
 
+  // Hide loader once data is fetched
   React.useEffect(() => {
-    if (!isLoading && data.length > 0) setShowLoader(false);
-  }, [isLoading, data]);
+    if (!isLoading) setShowLoader(false);
+  }, [isLoading]);
 
   if (error) return <div className="rooms-error">Error loading rooms</div>;
-
-  const navigate = useNavigate();
 
   const totalPages = table.getPageCount();
   const currentPage = table.getState().pagination.pageIndex;
 
   return (
-    <Card className="rooms-container">
-      <div className="rooms-header">
-        <Heading size="4">Rooms</Heading>
-        <Button
-          onClick={() => navigate({ to: "/rooms_add" })}
-          className="rooms-add-button"
-        >
-          Add Room
-        </Button>
-      </div>
-
+    <>
       {showLoader ? (
         <Loader />
       ) : (
-        <>
+        <Card className="rooms-container">
+          <div className="rooms-header">
+            <Heading size="4">Rooms</Heading>
+            <Button
+              onClick={() => navigate({ to: "/rooms_add" })}
+              className="rooms-add-button"
+            >
+              Add Room
+            </Button>
+          </div>
+
           {showRoomsLoader ? (
             <RoomsLoader />
           ) : (
@@ -121,15 +127,15 @@ function Rooms() {
               </Table.Body>
             </Table.Root>
           )}
-        </>
-      )}
 
-      <PaginationControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePagination={handlePagination}
-      />
-    </Card>
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePagination={handlePagination}
+          />
+        </Card>
+      )}
+    </>
   );
 }
 

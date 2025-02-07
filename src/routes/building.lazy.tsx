@@ -9,8 +9,8 @@ import {
 import { fetchBuildings } from "@/hooks/queries/buildings/useFetchBuildings"; // Use the updated fetchBuildings
 import { Table, Button, Card, Heading } from "@radix-ui/themes";
 import BuildingCard from "@/components/BuildingCard"; // Ensure you're importing BuildingCard
-import Loader from "@/components/loader/Loader";
-import BuildingLoader from "@/components/loader/BuildingLoader";
+import Loader from "@/components/loader/Loader"; // Loader component
+import BuildingLoader from "@/components/loader/BuildingLoader"; // BuildingLoader component
 import PaginationControls from "@/components/PaginationControls";
 import "@/styles/building.css";
 
@@ -25,7 +25,7 @@ function Buildings() {
 
   // Using the fetchBuildings hook to fetch building data (now using dummy data)
   const { data = [], isLoading, error } = fetchBuildings();
-  const buildingsPerRow = 3;
+  const buildingsPerRow = 3; // Number of buildings per row
 
   const nav = useNavigate();
 
@@ -33,7 +33,7 @@ function Buildings() {
     () => [
       {
         header: "Buildings",
-        accessorKey: "building",
+        accessorKey: "building", // This key is used for column referencing
         cell: ({ row }: any) => (
           <div className="buildings-row">
             {row.original.buildings.map((item: any) => (
@@ -66,7 +66,7 @@ function Buildings() {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize: 1 } },
+    initialState: { pagination: { pageSize: 1 } }, // Set to 1 to handle row of buildings per page
   });
 
   const handlePagination = (action: string) => {
@@ -84,18 +84,17 @@ function Buildings() {
     if (!isLoading && data.length > 0) setShowLoader(false);
   }, [isLoading, data]);
 
-  if (error)
-    return <div className="buildings-error">Error loading buildings</div>;
+  if (error) return <div className="buildings-error">Error loading buildings</div>;
 
   const totalPages = table.getPageCount();
   const currentPage = table.getState().pagination.pageIndex;
 
   return (
-    <Card className="buildings-container">
+    <>
       {showLoader ? (
         <Loader />
       ) : (
-        <>
+        <Card className="buildings-container">
           <div className="buildings-header">
             <Heading size="4">Buildings</Heading>
             <Button
@@ -130,9 +129,9 @@ function Buildings() {
             totalPages={totalPages}
             handlePagination={handlePagination}
           />
-        </>
+        </Card>
       )}
-    </Card>
+    </>
   );
 }
 

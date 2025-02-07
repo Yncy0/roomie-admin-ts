@@ -13,16 +13,14 @@ const RoomAvailabilityChart: React.FC = () => {
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error fetching room data.</p>
 
-  const { totalRooms, availableRooms, bookedRooms, allRooms } = data || {
+  const { totalRooms, availableRooms, bookedRooms } = data || {
     totalRooms: 0,
     availableRooms: 0,
     bookedRooms: [],
-    allRooms: [],
   }
 
   // Get the list of available rooms
   const bookedRoomIds = new Set(bookedRooms.map((room) => Number(room.room_id))) // Ensure room_id is treated as a number
-  const availableRoomsList = allRooms.filter((room) => !bookedRoomIds.has(room.id))
 
   // Chart data
   const chartData = {
@@ -63,24 +61,9 @@ const RoomAvailabilityChart: React.FC = () => {
       <div className="chart-container">
         <Bar data={chartData} options={options} />
       </div>
-
-      {/* Available Rooms Section */}
-      <div className="available-rooms-section">
-        <h3 className="text-lg font-semibold mb-2">📌 (NO TITLE YET)</h3>
-        {availableRoomsList.length > 0 ? (
-          <ul className="list-disc pl-5">
-            {availableRoomsList.map((room) => (
-              <li key={room.id} className="text-gray-700">
-                🔹 <strong>{room.room_name}</strong>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-available-rooms">❌ No rooms available at the moment.</p>
-        )}
-      </div>
     </div>
   )
 }
 
 export default RoomAvailabilityChart
+

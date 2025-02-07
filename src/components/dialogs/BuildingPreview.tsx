@@ -35,10 +35,11 @@ const BuildingPreview: React.FC<BuildingPreviewProps> = ({
           <Dialog.Title className="dialog-title">
             {buildingDetails.building_name}
           </Dialog.Title>
+          {/* Check if the building image exists, fallback to placeholder if not */}
           <img
             src={
               buildingDetails.building_image ||
-              "/assets/dummy/image-placeholder.png"
+              "/assets/dummy/image-placeholder.png" // Fallback image path
             }
             alt={buildingDetails.building_name}
             className="dialog-image"
@@ -51,12 +52,15 @@ const BuildingPreview: React.FC<BuildingPreviewProps> = ({
           </p>
 
           <div className="button-group">
-            <Button
-              onClick={onEdit}
-              className="dialog-button dialog-edit-button"
-            >
-              Edit Details
-            </Button>
+            {/* Edit button, only show if onEdit is passed */}
+            {onEdit && (
+              <Button
+                onClick={onEdit}
+                className="dialog-button dialog-edit-button"
+              >
+                Edit Details
+              </Button>
+            )}
             <Button
               onClick={onClose}
               className="dialog-button dialog-close-button"

@@ -1,8 +1,8 @@
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs";
 import { updateProfiles } from "@/hooks/queries/profiles/useUpdateProfiles";
 import { Button, Dialog, Flex, TextField, Text } from "@radix-ui/themes";
-import React, { useState } from "react";
-import Alert from "@/components/alert";
+import { useState } from "react";
+import Alert from "@/components/Alert";
 import "@/styles/dialog.css";
 
 type Props = {

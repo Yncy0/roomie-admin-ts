@@ -1,4 +1,6 @@
 import { Select } from "@radix-ui/themes";
+import "@/styles/roomsAdd.css";
+
 
 type Props = {
   setDescription: (v: any) => void;
@@ -6,22 +8,30 @@ type Props = {
 
 const RoomDescriptionSelect = ({ setDescription }: Props) => {
   const handleChange = (value: any) => {
-    console.log("Selected Building ID:", value); // Debug statement
+    console.log("Selected Room Description:", value); // Debug statement
     setDescription(value);
   };
 
   return (
-    <Select.Root defaultValue="Lecture Room" onValueChange={handleChange}>
-      <Select.Trigger />
-      <Select.Content>
-        <Select.Group>
-          <Select.Label>Choose Room Description</Select.Label>
-          <Select.Item value="Lecture Room">Lecture Room</Select.Item>
-          <Select.Item value="Computer Lab">Computer Lab</Select.Item>
-          <Select.Item value="Facility">Facility</Select.Item>
-        </Select.Group>
-      </Select.Content>
-    </Select.Root>
+    <div className="SelectRoot">
+      <Select.Root defaultValue="Lecture Room" onValueChange={handleChange}>
+        <Select.Trigger className="SelectTrigger" />
+        <Select.Content className="SelectContent">
+          <Select.Group className="SelectGroup">
+            <Select.Label className="SelectLabel">Choose Room Description</Select.Label>
+            <Select.Item className="SelectItem" value="Lecture Room">
+              Lecture Room
+            </Select.Item>
+            <Select.Item className="SelectItem" value="Computer Lab">
+              Computer Lab
+            </Select.Item>
+            <Select.Item className="SelectItem" value="Facility">
+              Facility
+            </Select.Item>
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+    </div>
   );
 };
 
