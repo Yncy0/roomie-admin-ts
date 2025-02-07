@@ -1,25 +1,31 @@
-import { createLazyFileRoute } from "@tanstack/react-router"
-import { useState, useEffect } from "react"
-import DashboardTable from "@/components/DashboardTable"
-import BookingTrendsChart from "@/components/chart/BookingTrendsChart"
-import RoomAvailabilityChart from "@/components/chart/RoomAvailabilityChart"
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import DashboardTable from "@/components/DashboardTable";
+import BookingTrendsChart from "@/components/chart/BookingTrendsChart";
+import RoomAvailabilityChart from "@/components/chart/RoomAvailabilityChart";
 //import AvailableRooms from "@/components/AvailableRooms"
-import "@/styles/Dashboard/dashboard.css"
-import Loader from "@/components/loader/Loader"
+import "@/styles/Dashboard/dashboard.css";
+import Loader from "@/components/loader/Loader";
+import { useAuth } from "@/providers/AuthProvider";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
-})
+});
 
 function Index() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { isAuthenticated } = useAuth();
+  const nav = useNavigate();
+
+  if (!isAuthenticated) nav({ to: "/login" });
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
-    return () => clearTimeout(timeout)
-  }, [])
+      setIsLoading(false);
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <div className="dashboard-container">
@@ -48,7 +54,7 @@ function Index() {
         </>
       )}
     </div>
-  )
+  );
 }
 
-export default Index
+export default Index;
