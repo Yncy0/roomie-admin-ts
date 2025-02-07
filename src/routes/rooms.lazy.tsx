@@ -8,11 +8,11 @@ import {
 } from "@tanstack/react-table";
 import { fetchRooms } from "@/hooks/queries/rooms/useFetchRooms";
 import { Table, Button, Card, Heading } from "@radix-ui/themes";
-import RoomsCard from "@/components/RoomsCard";
+import RoomsCard from "@/components/cards/RoomsCard";
 import Loader from "@/components/loader/Loader";
-import RoomsLoader from "@/components/RoomsLoader";
+import RoomsLoader from "@/components/loader/RoomsLoader";
 import PaginationControls from "@/components/PaginationControls";
-import "@/styles/rooms.css";
+import "@/styles/Rooms/rooms.css";
 
 export const Route = createLazyFileRoute("/rooms")({
   component: Rooms,

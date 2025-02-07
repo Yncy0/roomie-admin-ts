@@ -1,9 +1,7 @@
-"use client"
-
 import { useState } from "react"
 import { Button, Dialog, Flex } from "@radix-ui/themes"
 import { useDeleteProfiles } from "@/hooks/queries/profiles/useDeleteProfiles"
-import Alert from "@/components/Alert" // Adjust the import path if needed
+import Alert from "@/components/Alert"
 import "@/styles/dialog.css"
 
 interface ProfileDeleteDialogProps {
@@ -43,7 +41,7 @@ const ProfileDeleteDialog: React.FC<ProfileDeleteDialogProps> = ({ profileId, on
 
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
         <Dialog.Trigger>
-          <Button color="red" variant="soft">
+          <Button className="delete-button">
             Delete
           </Button>
         </Dialog.Trigger>

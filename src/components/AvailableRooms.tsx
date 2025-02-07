@@ -1,61 +1,62 @@
-// src/components/AvailableRooms.tsx
-
 import React from "react"
 import { fetchAvailableBookedRooms } from "@/hooks/queries/booking/fetchAvailableBookedRooms"
+//import '@/styles/Dashboard/AvailableRooms.css' // Import the CSS file here
+
+interface Room {
+  id: number
+  room_name: string
+  room_location: string
+}
 
 const AvailableRooms: React.FC = () => {
   const { data, isLoading, isError } = fetchAvailableBookedRooms()
 
   if (isLoading) return <p>Loading available rooms...</p>
   if (isError) return <p>Error fetching room data.</p>
+  if (!data || !data.availableRooms) return <p>No room data available.</p>
 
-  // Group available rooms by building
-  const availableRoomsByBuilding = data
-    ? data.allRooms.reduce((acc, room) => {
-        // Check if the room is available (not booked)
-        if (!data.bookedRooms.some((bookedRoom) => bookedRoom.room_id === room.id)) {
-          const building = room.building || "Unknown Building"  // Fallback to "Unknown Building" if no building info
+  const availableRoomsByLocation = data.availableRooms.reduce(
+    (acc, room: Room) => {
+      if (!acc[room.room_location]) acc[room.room_location] = []
+      acc[room.room_location].push(room.room_name)
+      return acc
+    },
+    {} as Record<string, string[]>,
+  )
 
-          if (!acc[building]) {
-            acc[building] = []
-          }
-          acc[building].push(room.room_name || "Unknown Room")  // Fallback to "Unknown Room" if no room name
-        }
-        return acc
-      }, {} as Record<string, string[]>)
-    : {}
+  const locations = Object.keys(availableRoomsByLocation).sort()
 
-  // Get the list of building names (sorted)
-  const buildings = Object.keys(availableRoomsByBuilding)
+  const splitIntoColumns = (rooms: string[], columnsPerRow: number) => {
+    const rows = []
+    for (let i = 0; i < rooms.length; i += columnsPerRow) {
+      rows.push(rooms.slice(i, i + columnsPerRow))
+    }
+    return rows
+  }
 
   return (
     <div className="chart-box">
       <h3 className="text-lg font-semibold mb-2">Available Rooms</h3>
-      {buildings.length > 0 ? (
-        <table className="min-w-full table-auto">
-          <thead>
-            <tr>
-              {/* Header cells for each building */}
-              {buildings.map((building) => (
-                <th key={building} className="px-4 py-2">{building}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {/* Render available rooms under each building header */}
-              {buildings.map((building) => (
-                <td key={building} className="border px-4 py-2">
-                  <ul>
-                    {availableRoomsByBuilding[building].map((room, index) => (
-                      <li key={index}>{room}</li>
+      {locations.length > 0 ? (
+        <div className="columns-wrapper">
+          {locations.map((location) => {
+            const rooms = availableRoomsByLocation[location]
+            const columns = splitIntoColumns(rooms, 4) // Split rooms into 4 columns per row
+
+            return (
+              <div key={location} className="location-column">
+                <h4 className="font-semibold mb-2">{location}</h4>
+                {columns.map((column, index) => (
+                  <ul key={index}>
+                    {column.map((room, idx) => (
+                      <li key={idx}>{room}</li>
                     ))}
                   </ul>
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+                ))}
+              </div>
+            )
+          })}
+        </div>
       ) : (
         <p className="no-available-rooms">❌ No rooms available at the moment.</p>
       )}

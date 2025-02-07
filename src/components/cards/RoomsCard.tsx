@@ -1,7 +1,7 @@
 import { Dialog } from "@radix-ui/themes";
 import { useNavigate } from "@tanstack/react-router";
 //import React from "react";
-import RoomsPreview from "./dialogs/RoomsPreview";
+import RoomsPreview from "../dialogs/RoomsPreview";
 
 type Props = {
   id: string;

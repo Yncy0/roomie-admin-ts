@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useDashboardRooms from "@/hooks/queries/rooms/useDashboardRooms";
 import useDashboardBookedRooms from "@/hooks/queries/booking/useDashboardBookedRooms";
-import '@/styles/dashboardTable.css';  // Import your existing CSS file
+import '@/styles/Dashboard/dashboardTable.css';
 
 interface RoomUtilizationData {
   roomName: string;

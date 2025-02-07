@@ -1,7 +1,4 @@
 import React from "react";
-import * as Dialog from "@radix-ui/react-dialog"; // Radix Dialog component for modals
-import { Button } from "@radix-ui/themes"; // Radix button
-import "@/styles/BuildingPreview.css"; // Import the CSS file
 
 type BuildingPreviewProps = {
   buildingName: string;
@@ -9,7 +6,7 @@ type BuildingPreviewProps = {
   numOfRooms: number;
   numOfFloors: number;
   onClose: () => void;
-  onEdit?: () => void; // Add a new prop for the edit action
+  onEdit: () => void;
 };
 
 const BuildingPreview: React.FC<BuildingPreviewProps> = ({
@@ -18,59 +15,39 @@ const BuildingPreview: React.FC<BuildingPreviewProps> = ({
   numOfRooms,
   numOfFloors,
   onClose,
-  onEdit, // Destructure the new prop
+  onEdit,
 }) => {
-  const buildingDetails = {
-    building_name: buildingName,
-    num_of_rooms: numOfRooms,
-    num_of_floors: numOfFloors,
-    building_image: buildingImage,
-  };
-
   return (
-    <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
-      <Dialog.Overlay className="dialog-overlay" />
-      <Dialog.Content className="dialog-content">
+    <div className="dialog-overlay">
+      <div className="dialog-content">
         <div className="dialog-box">
-          <Dialog.Title className="dialog-title">
-            {buildingDetails.building_name}
-          </Dialog.Title>
-          {/* Check if the building image exists, fallback to placeholder if not */}
+          <div className="dialog-title">{buildingName}</div>
           <img
-            src={
-              buildingDetails.building_image ||
-              "/assets/dummy/image-placeholder.png" // Fallback image path
-            }
-            alt={buildingDetails.building_name}
+            src={buildingImage || "/assets/dummy/image-placeholder.png"}
+            alt={buildingName}
             className="dialog-image"
           />
-          <p className="dialog-details">
-            Rooms: {buildingDetails.num_of_rooms}
-          </p>
-          <p className="dialog-details">
-            Floors: {buildingDetails.num_of_floors}
-          </p>
-
+          <div className="dialog-info-container">
+            <div className="dialog-info-column">
+              <div className="dialog-details">
+                Rooms: {numOfRooms}
+              </div>
+              <div className="dialog-details">
+                Floors: {numOfFloors}
+              </div>
+            </div>
+          </div>
           <div className="button-group">
-            {/* Edit button, only show if onEdit is passed */}
-            {onEdit && (
-              <Button
-                onClick={onEdit}
-                className="dialog-button dialog-edit-button"
-              >
-                Edit Details
-              </Button>
-            )}
-            <Button
-              onClick={onClose}
-              className="dialog-button dialog-close-button"
-            >
+            <button onClick={onEdit} className="dialog-edit-button">
+              Edit
+            </button>
+            <button onClick={onClose} className="dialog-close-button">
               Close
-            </Button>
+            </button>
           </div>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </div>
+    </div>
   );
 };
 

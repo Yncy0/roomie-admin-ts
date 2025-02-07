@@ -1,4 +1,4 @@
-import "@/styles/buildingLoader.css";
+import "@/styles/Buildings/buildingLoader.css";
 
 const BuildingLoader = () => {
   return (

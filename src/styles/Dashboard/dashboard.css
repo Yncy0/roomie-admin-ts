@@ -4,13 +4,16 @@
   flex-direction: column;
   margin: 16px;
   gap: 24px;
+  
 }
 
 /* Title */
 .dashboard-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* Charts Section (Row Layout) */
@@ -18,7 +21,7 @@
   display: flex;
   flex-direction: row;  /* Ensures charts are in a row */
   justify-content: space-between;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* Individual Chart Box */
@@ -35,9 +38,9 @@
 
 /* Chart Titles */
 .chart-title {
-  font-size: 1.125rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-bottom: 5px;
 }
 
 /* Recent Activity */
@@ -91,14 +94,14 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Table Styling */
+/* Table Styling 
 .available-rooms-table {
   width: 100%;
   margin-top: 16px;
   border-collapse: collapse;
 }
 
-/* Table Header Styling */
+/* Table Header Styling 
 .available-rooms-table th {
   padding: 12px;
   background-color: #007bff;
@@ -108,17 +111,17 @@
   border: 1px solid #ddd;
 }
 
-/* Table Body Styling */
+/* Table Body Styling 
 .available-rooms-table td {
   padding: 12px;
   text-align: left;
   border: 1px solid #ddd;
 }
 
-/* Available Room Status */
+/* Available Room Status 
 .available-rooms-table td {
-  color: #28a745; /* Green for available */
-}
+  color: #28a745;
+}*/
 
 /* Loading Spinner */
 .loader {

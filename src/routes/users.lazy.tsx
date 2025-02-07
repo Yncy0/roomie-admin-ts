@@ -13,7 +13,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useState, useMemo } from "react";
 import Loader from "@/components/loader/Loader"; // Import the loader component
-import "../styles/user.css";
+import "../styles/Users/user.css";
 
 export const Route = createLazyFileRoute("/users")({
   component: Users,
@@ -114,6 +114,9 @@ function Users() {
               <option value="CITE">CITE</option>
               <option value="CBEA">CBEA</option>
               <option value="CASE">CASE</option>
+              <option value="CITHM">CITHM</option>
+              <option value="CAMP">CAMP</option>
+              <option value="COM">COM</option>
             </select>
           </div>
         </div>

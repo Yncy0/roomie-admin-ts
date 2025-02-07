@@ -8,11 +8,15 @@ import {
 } from "@tanstack/react-table";
 import { fetchBuildings } from "@/hooks/queries/buildings/useFetchBuildings"; // Use the updated fetchBuildings
 import { Table, Button, Card, Heading } from "@radix-ui/themes";
-import BuildingCard from "@/components/BuildingCard"; // Ensure you're importing BuildingCard
+import BuildingCard from "@/components/cards/BuildingCard"; // Ensure you're importing BuildingCard
 import Loader from "@/components/loader/Loader"; // Loader component
 import BuildingLoader from "@/components/loader/BuildingLoader"; // BuildingLoader component
 import PaginationControls from "@/components/PaginationControls";
-import "@/styles/building.css";
+import "@/styles/Buildings/building.css";
+import "@/styles/Buildings/buildingCard.css";
+import "@/styles/Buildings/buildingPreview.css";
+import "@/styles/Buildings/buildingAdd.css";
+import "@/styles/Buildings/buildingLoader.css";
 
 // Lazy load the page
 export const Route = createLazyFileRoute("/building")({

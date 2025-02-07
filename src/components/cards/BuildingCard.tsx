@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import BuildingPreview from "@/components/dialogs/BuildingPreview"; // Correct import
+import ReactDOM from "react-dom"; // Import ReactDOM for creating a portal
+import BuildingPreview from "@/components/dialogs/BuildingPreview";
 import { useNavigate } from "@tanstack/react-router";
 
 type BuildingCardProps = {
@@ -56,26 +57,27 @@ const BuildingCard: React.FC<BuildingCardProps> = ({
 
       {/* View More Details Button */}
       <div className="pt-4">
-      <button
-        className="view-details-button bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-        onClick={handleViewDetails}
-      >
-      View Details
-      </button>
-
+        <button
+          className="view-details-button"
+          onClick={handleViewDetails}
+        >
+          View Details
+        </button>
       </div>
 
-      {/* Modal */}
-      {isPreviewOpen && (
-        <BuildingPreview
-          buildingName={building_name}
-          buildingImage="/assets/dummy/image-placeholder.png"
-          numOfFloors={num_of_floors}
-          numOfRooms={num_of_rooms}
-          onClose={handleClosePreview}
-          onEdit={clickEdit}
-        />
-      )}
+      {/* Modal (Rendered using React Portal) */}
+      {isPreviewOpen &&
+        ReactDOM.createPortal(
+          <BuildingPreview
+            buildingName={building_name}
+            buildingImage={building_image}
+            numOfFloors={num_of_floors}
+            numOfRooms={num_of_rooms}
+            onClose={handleClosePreview}
+            onEdit={clickEdit}
+          />,
+          document.body // Render outside the container by appending to body
+        )}
     </div>
   );
 };

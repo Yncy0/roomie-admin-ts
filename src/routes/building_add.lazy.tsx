@@ -1,9 +1,7 @@
-"use client"
-
 import type React from "react"
 import { useState } from "react"
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router"
-import "@/styles/buildingAdd.css"
+import "@/styles/Buildings/buildingAdd.css"
 import imagePlaceholder from "@/assets/dummy/image-placeholder.png"
 import Input from "@/components/Input"
 import { insertBacklogs } from "@/hooks/queries/backlogs/useInsertBacklogs"
