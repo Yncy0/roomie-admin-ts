@@ -31,6 +31,9 @@ function Users() {
 
   if (error) return <div className="error-message">Error: {error.message}</div>;
 
+  const roles = ["Admin", "UBMS Facilitator", "MIS Facilitator", "Professor"];
+  const departments = ["CITE", "CITHM", "CASE", "CAMP", "CBEA", "COM"];
+
   const filteredData = useMemo(() => {
     return (data || []).filter((item) => {
       const matchesSearch = searchQuery
@@ -95,10 +98,13 @@ function Users() {
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
             >
-              <option value="">Role</option>
+              {/* <option value="">Role</option>
               <option value="Admin">Admin</option>
               <option value="Professor">Professor</option>
-              <option value="Faculty">Faculty</option>
+              <option value="Faculty">Faculty</option> */}
+              {roles.map((role) => (
+                <option key={role} value={role}>{role}</option>
+              ))}
             </select>
           </div>
 
@@ -110,13 +116,16 @@ function Users() {
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
             >
-              <option value="">Department/Faculty</option>
+              {/* <option value="">Department/Faculty</option>
               <option value="CITE">CITE</option>
               <option value="CBEA">CBEA</option>
               <option value="CASE">CASE</option>
               <option value="CITHM">CITHM</option>
               <option value="CAMP">CAMP</option>
-              <option value="COM">COM</option>
+              <option value="COM">COM</option> */}
+                 {departments.map((dept) => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
             </select>
           </div>
         </div>

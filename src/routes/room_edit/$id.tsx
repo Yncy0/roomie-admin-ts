@@ -53,6 +53,20 @@ function RouteComponent() {
     }
   }
 
+  const handleRoomNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+
+    // Add space after "SA" followed by numbers
+    let formattedValue = value.replace(/(sa|mr|pp)(\d{1,})/gi, (match, prefix, numbers) => {
+      return `${prefix.toUpperCase()} ${numbers}`;
+    });
+
+    // Add space between camelCase words
+    formattedValue = formattedValue.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+    setRoomName(formattedValue);
+  };
+
   const onHandleUpdate = async () => {
     try {
       await updateRooms(id, roomName, roomImage, roomType, roomCapacity, roomLocation)
@@ -117,7 +131,7 @@ function RouteComponent() {
         htmlFor="roomName"
         placeholder=""
         value={roomName}
-        onChange={(e) => setRoomName(e.target.value)}
+        onChange={handleRoomNameChange}
         label="Room Name"
         type="text"
       />

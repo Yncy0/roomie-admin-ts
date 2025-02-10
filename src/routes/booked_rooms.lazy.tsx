@@ -90,8 +90,8 @@ function BookedRooms() {
             paginatedData.map((booking, index) => (
               <Table.Row key={index} className="table-row">
                 <Table.Cell className="table-cell">{booking.date || "No Data"}</Table.Cell>
-                <Table.Cell className="table-cell">{dayjs(booking.time_in).format("HH:mm:ss") || "No Data"}</Table.Cell>
-                <Table.Cell className="table-cell">{dayjs(booking.time_out).format("HH:mm:ss") || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{dayjs(booking.time_in).format("hh:mm a") || "No Data"}</Table.Cell>
+                <Table.Cell className="table-cell">{dayjs(booking.time_out).format("hh:mm a") || "No Data"}</Table.Cell>
                 <Table.Cell className="table-cell">{booking.profiles?.username || "No Data"}</Table.Cell>
                 <Table.Cell className="table-cell">{booking.rooms?.room_name || "No Data"}</Table.Cell>
                 <Table.Cell className="table-cell">{booking.course_and_section || "No Data"}</Table.Cell>

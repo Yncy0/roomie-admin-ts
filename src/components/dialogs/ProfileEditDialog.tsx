@@ -21,7 +21,7 @@ const ProfileEditDialog = ({ items }: Props) => {
   const [alertType, setAlertType] = useState<"success" | "error">("success");
   const [open, setOpen] = useState(false);
 
-  const roles = ["Admin", "Faculty", "Professor"];
+  const roles = ["Admin", "UBMS Facilitator", "MIS Facilitator", "Professor"];
   const departments = ["CITE", "CITHM", "CASE", "CAMP", "CBEA", "COM"];
 
   const handleUpdate = async () => {
